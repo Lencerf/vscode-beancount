@@ -26,7 +26,7 @@
                 "beancount.instantAlignment": {
                     "type": "boolean",
                     "default": true,
-                    "description": "If it is set to true, the amount (like 1.00 BTC) will be aligned once the decimal point is inserted."
+                    "description": "Set to true to align the amount (like 1.00 BTC) once a decimal point is inserted."
                 }
             }
         },
