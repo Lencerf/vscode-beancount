@@ -8,7 +8,7 @@
         "vscode": "^1.10.0"
     },
     "categories": [
-        "Other"
+        "Languages"
     ],
     "activationEvents": [
         "onCommand:extension.sayHello"
@@ -18,6 +18,17 @@
         "commands": [{
             "command": "extension.sayHello",
             "title": "Hello World"
+        }],
+        "languages": [{
+            "id": "beancount",
+            "aliases": ["Beancount", "beancount"],
+            "extensions": [".beancount",".bean"],
+            "configuration": "./language-configuration.json"
+        }],
+        "grammars": [{
+            "language": "beancount",
+            "scopeName": "text.beancount",
+            "path": "./syntaxes/beancount.tmLanguage"
         }]
     },
     "scripts": {
