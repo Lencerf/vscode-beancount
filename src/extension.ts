@@ -33,18 +33,18 @@ function alignSingleLine(line: number) {
     var accountArray = accountRegex.exec(originalText)
     if (accountArray == null) { return } // A commodity record always accors with an account.
     // find a number with a decimal point
-    const amountRegex = /([\-|\+]?)((?:\d|\d[\d,]*\d)?)(\.)/
+    const amountRegex = /([\-|\+]?)(?:\d|\d[\d,]*\d)(\.)/
     var amountArray = amountRegex.exec(originalText)
     if (amountArray == null) { return }
+    //console.log(amountArray)
     let contentBefore = ("s" + originalText.substring(0, amountArray.index)).trim().substring(1);
     var contentAfterAmount = ""
     if (amountArray.index + amountArray[0].length < originalText.length) {
         // get all the contents after the decimal point
         contentAfterAmount = originalText.substring(amountArray.index + amountArray[0].length)
     }
-    let dotPosition = amountArray.index + amountArray[0].length - 1
     let targetDotPosition = vscode.workspace.getConfiguration("beancount")["separatorColumn"] - 1;
-    let whiteLength = targetDotPosition - contentBefore.length - (amountArray[1].length + amountArray[2].length)
+    let whiteLength = targetDotPosition - contentBefore.length - (amountArray[0].length - 1)
     if (whiteLength > 0) {
         let newText = contentBefore + (new Array(whiteLength + 1).join(' ')) + amountArray[0] + contentAfterAmount
         let r = new vscode.Range(new vscode.Position(line,0), new vscode.Position(line, originalText.length))
