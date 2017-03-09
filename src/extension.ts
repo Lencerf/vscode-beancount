@@ -88,7 +88,7 @@ class AlignCommodityController {
         let text = e.contentChanges[0].text;
         let rangeLength = e.contentChanges[0].rangeLength;
         let line = e.contentChanges[0].range.start.line;
-        if (text == "." && rangeLength == 0) {
+        if (text == "." && rangeLength == 0 && vscode.workspace.getConfiguration("beancount")["instantAlignment"]) {
             // the user just inserted a new decimal point
             alignSingleLine(line) 
         }

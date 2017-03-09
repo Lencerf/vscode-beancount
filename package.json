@@ -22,6 +22,11 @@
                     "type": "integer",
                     "default": 50,
                     "description": "Specify the column of the decimal separator."
+                },
+                "beancount.instantAlignment": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "If it is set to true, the amount (like 1.00 BTC) will be aligned once the decimal point is inserted."
                 }
             }
         },
