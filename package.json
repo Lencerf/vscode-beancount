@@ -11,8 +11,6 @@
         "Languages"
     ],
     "activationEvents": [
-        "onCommand:extension.sayHello",
-        "onCommand:extension.alignCommodity",
         "onLanguage:beancount"
     ],
     "main": "./out/src/extension",
@@ -28,13 +26,9 @@
             }
         },
         "commands": [{
-            "command": "extension.sayHello",
-            "title": "Hello World"
-        },{
             "command": "extension.alignCommodity",
             "title": "Align Commodity"
-        }
-        ],
+        }],
         "languages": [{
             "id": "beancount",
             "aliases": ["Beancount", "beancount"],

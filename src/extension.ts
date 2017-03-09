@@ -7,20 +7,6 @@ import * as vscode from 'vscode';
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
 
-    // Use the console to output diagnostic information (console.log) and errors (console.error)
-    // This line of code will only be executed once when your extension is activated
-    console.log('Congratulations, your extension "beancount" is now active!');
-
-    // The command has been defined in the package.json file
-    // Now provide the implementation of the command with  registerCommand
-    // The commandId parameter must match the command field in package.json
-    let disposable = vscode.commands.registerCommand('extension.sayHello', () => {
-        // The code you place here will be executed every time your command is executed
-
-        // Display a message box to the user
-        vscode.window.showInformationMessage('Hello World!');
-    });
-
     vscode.commands.registerCommand('extension.alignCommodity',()=>{
         // Align commodity for all lines
         let lc = vscode.window.activeTextEditor.document.lineCount;
@@ -34,8 +20,6 @@ export function activate(context: vscode.ExtensionContext) {
 
     let controller = new AlignCommodityController()
     context.subscriptions.push(controller);
-
-    context.subscriptions.push(disposable);
 }
 
 function alignSingleLine(line: number) {
@@ -100,7 +84,7 @@ class AlignCommodityController {
     }
 
     private _onEvent(e: vscode.TextDocumentChangeEvent) {
-        console.log(e.contentChanges);
+        //console.log(e.contentChanges);
         let text = e.contentChanges[0].text;
         let rangeLength = e.contentChanges[0].rangeLength;
         let line = e.contentChanges[0].range.start.line;
