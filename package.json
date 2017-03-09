@@ -11,14 +11,29 @@
         "Languages"
     ],
     "activationEvents": [
-        "onCommand:extension.sayHello"
+        "onCommand:extension.sayHello",
+        "onCommand:extension.alignCommodity"
     ],
     "main": "./out/src/extension",
     "contributes": {
+        "configuration": {
+            "title": "Beancount Configuration",
+            "properties": {
+                "beancount.separatorColumn": {
+                    "type": "integer",
+                    "default": 50,
+                    "description": "Specify the column of the decimal separator."
+                }
+            }
+        },
         "commands": [{
             "command": "extension.sayHello",
             "title": "Hello World"
-        }],
+        },{
+            "command": "extension.alignCommodity",
+            "title": "Align Commodity"
+        }
+        ],
         "languages": [{
             "id": "beancount",
             "aliases": ["Beancount", "beancount"],
