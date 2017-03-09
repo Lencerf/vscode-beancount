@@ -12,7 +12,8 @@
     ],
     "activationEvents": [
         "onCommand:extension.sayHello",
-        "onCommand:extension.alignCommodity"
+        "onCommand:extension.alignCommodity",
+        "onLanguage:beancount"
     ],
     "main": "./out/src/extension",
     "contributes": {
