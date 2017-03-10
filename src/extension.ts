@@ -2,6 +2,7 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
+import { Position, Range} from 'vscode';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -25,15 +26,15 @@ export function activate(context: vscode.ExtensionContext) {
         let date = (today.getDate() < 10 ? "0" : "") + today.getDate().toString();
         let dateString = year + '-' + month + '-' + date;
         const originalCursorPosition = vscode.window.activeTextEditor.selection.active
-        let r = new vscode.Range(originalCursorPosition, originalCursorPosition)
+        let r = new Range(originalCursorPosition, originalCursorPosition)
         let edit = new vscode.TextEdit(r, dateString)
         let wEdit = new vscode.WorkspaceEdit();
         wEdit.set(vscode.window.activeTextEditor.document.uri, [edit]);
         vscode.workspace.applyEdit(wEdit);
     })
 
-    let controller = new AlignCommodityController()
-    context.subscriptions.push(controller);
+    let inputCapturer = new InputCapturer()
+    context.subscriptions.push(inputCapturer);
 }
 
 function alignSingleLine(line: number) {
@@ -61,7 +62,7 @@ function alignSingleLine(line: number) {
     let whiteLength = targetDotPosition - contentBefore.length - (amountArray[0].length - 1)
     if (whiteLength > 0) {
         let newText = contentBefore + (new Array(whiteLength + 1).join(' ')) + amountArray[0] + contentAfterAmount
-        let r = new vscode.Range(new vscode.Position(line,0), new vscode.Position(line, originalText.length))
+        let r = new vscode.Range(new Position(line,0), new Position(line, originalText.length))
         let edit = new vscode.TextEdit(r, newText)
         let wEdit = new vscode.WorkspaceEdit();
         wEdit.set(activeEditor.document.uri, [edit]);
@@ -69,7 +70,7 @@ function alignSingleLine(line: number) {
         // move cursor position
         
         if (line == originalCursorPosition.line) {
-            var newPosition = new vscode.Position(originalCursorPosition.line, 1 + originalCursorPosition.character + newText.length - originalLength)
+            var newPosition = new Position(originalCursorPosition.line, 1 + originalCursorPosition.character + newText.length - originalLength)
             //console.log(originalCursorPosition, newPosition)
             activeEditor.selection = new vscode.Selection(newPosition, newPosition)
         }
@@ -81,9 +82,9 @@ export function deactivate() {
 }
 
 /**
- * AlignCommodityController
+ * InputCapturer
  */
-class AlignCommodityController {
+class InputCapturer {
     private _disposable: vscode.Disposable;
 
     constructor() {
@@ -105,6 +106,20 @@ class AlignCommodityController {
         if (text == "." && rangeLength == 0 && vscode.workspace.getConfiguration("beancount")["instantAlignment"]) {
             // the user just inserted a new decimal point
             alignSingleLine(line) 
+        }
+        if (text == "\n" && rangeLength == 0) {
+            // the user just inserted a new line
+            let lineText = vscode.window.activeTextEditor.document.lineAt(line).text
+            let transRegex = /([0-9]{4})([\-|/])([0-9]{2})([\-|/])([0-9]{2}) (\*|\!)/
+            let transArray = transRegex.exec(lineText)
+            if ( transArray != null ) {
+                // the user inserted a new line under a transaction
+                let r = new Range(new Position(line + 1, 0), new Position(line + 1, 0));
+                let edit = new vscode.TextEdit(r, "    ");
+                let wEdit = new vscode.WorkspaceEdit();
+                wEdit.set(vscode.window.activeTextEditor.document.uri, [edit]);
+                vscode.workspace.applyEdit(wEdit); // insert four spaces for a new posting line
+            }          
         }
     }
 }
