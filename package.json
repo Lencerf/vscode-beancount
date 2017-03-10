@@ -31,8 +31,11 @@
             }
         },
         "commands": [{
-            "command": "extension.alignCommodity",
+            "command": "beancount.alignCommodity",
             "title": "Align Commodity"
+        }, {
+            "command": "beancount.insertDate",
+            "title": "Insert Date"
         }],
         "languages": [{
             "id": "beancount",

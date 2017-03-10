@@ -7,7 +7,7 @@ import * as vscode from 'vscode';
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
 
-    vscode.commands.registerCommand('extension.alignCommodity',()=>{
+    vscode.commands.registerCommand('beancount.alignCommodity',()=>{
         // Align commodity for all lines
         let lc = vscode.window.activeTextEditor.document.lineCount;
         for (var i = 0; i < lc; i++) {
@@ -16,6 +16,20 @@ export function activate(context: vscode.ExtensionContext) {
                 alignSingleLine(i)
             }
         }
+    })
+
+    vscode.commands.registerCommand('beancount.insertDate', ()=>{
+        const today = new Date();
+        let year = today.getFullYear().toString();
+        let month = (today.getMonth() + 1 < 10 ? "0" : "") + (today.getMonth() + 1).toString();
+        let date = (today.getDate() < 10 ? "0" : "") + today.getDate().toString();
+        let dateString = year + '-' + month + '-' + date;
+        const originalCursorPosition = vscode.window.activeTextEditor.selection.active
+        let r = new vscode.Range(originalCursorPosition, originalCursorPosition)
+        let edit = new vscode.TextEdit(r, dateString)
+        let wEdit = new vscode.WorkspaceEdit();
+        wEdit.set(vscode.window.activeTextEditor.document.uri, [edit]);
+        vscode.workspace.applyEdit(wEdit);
     })
 
     let controller = new AlignCommodityController()
