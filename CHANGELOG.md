@@ -1,4 +1,4 @@
-# Change Log
+## Change Log
 
-## [Unreleased]
+### 0.0.1 (2017-03-14)
 - Initial release

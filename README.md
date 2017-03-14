@@ -6,6 +6,7 @@ Simple Beancount support for VSCode
 
 1. Syntax highlight (syntax file from [draug3n/sublime-beancount](https://github.com/draug3n/sublime-beancount/blob/master/beancount.tmLanguage))
 2. Decimal point alignment
+3. Insert current Date
 
 ## Extension Settings
 
