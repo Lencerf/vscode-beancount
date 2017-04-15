@@ -119,7 +119,7 @@ class InputCapturer {
                 let edit = new vscode.TextEdit(r, ' '.repeat(tabSize));
                 let wEdit = new vscode.WorkspaceEdit();
                 wEdit.set(vscode.window.activeTextEditor.document.uri, [edit]);
-                vscode.workspace.applyEdit(wEdit); // insert four spaces for a new posting line
+                vscode.workspace.applyEdit(wEdit); // insert spaces for a new posting line
             }
         }
     }
