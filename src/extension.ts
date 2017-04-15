@@ -68,7 +68,7 @@ function alignSingleLine(line: number) {
         wEdit.set(activeEditor.document.uri, [edit]);
         vscode.workspace.applyEdit(wEdit);
         // move cursor position
-        
+
         if (line == originalCursorPosition.line) {
             var newPosition = new Position(originalCursorPosition.line, 1 + originalCursorPosition.character + newText.length - originalLength)
             //console.log(originalCursorPosition, newPosition)
@@ -105,7 +105,7 @@ class InputCapturer {
         let line = e.contentChanges[0].range.start.line;
         if (text == "." && rangeLength == 0 && vscode.workspace.getConfiguration("beancount")["instantAlignment"]) {
             // the user just inserted a new decimal point
-            alignSingleLine(line) 
+            alignSingleLine(line)
         }
         if (text == "\n" && rangeLength == 0) {
             // the user just inserted a new line
@@ -115,11 +115,12 @@ class InputCapturer {
             if ( transArray != null ) {
                 // the user inserted a new line under a transaction
                 let r = new Range(new Position(line + 1, 0), new Position(line + 1, 0));
-                let edit = new vscode.TextEdit(r, "    ");
+                let tabSize = vscode.workspace.getConfiguration("editor")["tabSize"];
+                let edit = new vscode.TextEdit(r, ' '.repeat(tabSize));
                 let wEdit = new vscode.WorkspaceEdit();
                 wEdit.set(vscode.window.activeTextEditor.document.uri, [edit]);
                 vscode.workspace.applyEdit(wEdit); // insert four spaces for a new posting line
-            }          
+            }
         }
     }
 }
