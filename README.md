@@ -1,4 +1,4 @@
-# beancount README
+# Beancount
 
 Simple Beancount support for VSCode
 

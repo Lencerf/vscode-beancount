@@ -46,7 +46,7 @@ function alignSingleLine(line: number) {
     // find an account name first
     const accountRegex = /([A-Z][A-Za-z0-9\-]+)(:)/
     var accountArray = accountRegex.exec(originalText)
-    if (accountArray == null) { return } // A commodity record always accors with an account.
+    if (accountArray == null) { return } // A commodity record always starts with an account.
     // find a number with a decimal point
     const amountRegex = /([\-|\+]?)(?:\d|\d[\d,]*\d)(\.)/
     var amountArray = amountRegex.exec(originalText)
