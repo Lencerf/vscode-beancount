@@ -21,6 +21,10 @@ To be found...
 
 ## Release Notes
 
+### 0.0.2
+
+Made the extension honor editor.tabSize when inserting new postings
+
 ### 0.0.1
 
 Alpha version.
