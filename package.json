@@ -55,6 +55,10 @@
         "postinstall": "node ./node_modules/vscode/bin/install",
         "test": "node ./node_modules/vscode/bin/test"
     },
+    "dependencies": {
+        "vscode-languageclient": "^3.2.0",
+        "beancount-language-server": "^1.0.0"
+    },
     "devDependencies": {
         "typescript": "^2.0.3",
         "vscode": "^1.0.0",
