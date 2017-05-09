@@ -27,6 +27,11 @@
                     "type": "boolean",
                     "default": true,
                     "description": "Set to true to align the amount (like 1.00 BTC) once a decimal point is inserted."
+                },
+                "beancount.beanQuery":{
+                    "type": "string",
+                    "default": "/usr/local/bin/bean-query",
+                    "description": "Path to the bean-query executable to use to provide completions"
                 }
             }
         },
@@ -54,6 +59,10 @@
         "compile": "tsc -watch -p ./",
         "postinstall": "node ./node_modules/vscode/bin/install",
         "test": "node ./node_modules/vscode/bin/test"
+    },
+    "dependencies": {
+        "vscode-languageclient": "^3.2.0",
+        "beancount-language-server": "^1.1.0"
     },
     "devDependencies": {
         "typescript": "^2.0.3",

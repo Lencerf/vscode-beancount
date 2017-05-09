@@ -2,13 +2,15 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
-import { Position, Range} from 'vscode';
+import { Position, Range } from 'vscode';
+import { LanguageClient, LanguageClientOptions, SettingMonitor, ServerOptions, TransportKind } from 'vscode-languageclient';
+import * as path from 'path';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
 
-    vscode.commands.registerCommand('beancount.alignCommodity',()=>{
+    vscode.commands.registerCommand('beancount.alignCommodity', () => {
         // Align commodity for all lines
         let lc = vscode.window.activeTextEditor.document.lineCount;
         for (var i = 0; i < lc; i++) {
@@ -19,7 +21,7 @@ export function activate(context: vscode.ExtensionContext) {
         }
     })
 
-    vscode.commands.registerCommand('beancount.insertDate', ()=>{
+    vscode.commands.registerCommand('beancount.insertDate', () => {
         const today = new Date();
         let year = today.getFullYear().toString();
         let month = (today.getMonth() + 1 < 10 ? "0" : "") + (today.getMonth() + 1).toString();
@@ -35,6 +37,23 @@ export function activate(context: vscode.ExtensionContext) {
 
     let inputCapturer = new InputCapturer()
     context.subscriptions.push(inputCapturer);
+
+    let serverModule = context.asAbsolutePath(path.join('./node_modules', 'beancount-language-server', 'dist', 'server.js'));
+    let debugOptions = { execArgv: ["--nolazy", "--debug=6009"] };
+    let serverOptions: ServerOptions = {
+        run: { module: serverModule, transport: TransportKind.ipc },
+        debug: { module: serverModule, transport: TransportKind.ipc, options: debugOptions }
+    }
+    let clientOptions: LanguageClientOptions = {
+        documentSelector: ['beancount'],
+        synchronize: {
+            fileEvents: vscode.workspace.createFileSystemWatcher('**/.clientrc'),
+            configurationSection: 'beancount.beanQuery'
+        }
+    }
+
+    let client = new LanguageClient('Beancount', serverOptions, clientOptions).start();
+    context.subscriptions.push(client);
 }
 
 function alignSingleLine(line: number) {
@@ -62,7 +81,7 @@ function alignSingleLine(line: number) {
     let whiteLength = targetDotPosition - contentBefore.length - (amountArray[0].length - 1)
     if (whiteLength > 0) {
         let newText = contentBefore + (new Array(whiteLength + 1).join(' ')) + amountArray[0] + contentAfterAmount
-        let r = new vscode.Range(new Position(line,0), new Position(line, originalText.length))
+        let r = new vscode.Range(new Position(line, 0), new Position(line, originalText.length))
         let edit = new vscode.TextEdit(r, newText)
         let wEdit = new vscode.WorkspaceEdit();
         wEdit.set(activeEditor.document.uri, [edit]);
@@ -112,7 +131,7 @@ class InputCapturer {
             let lineText = vscode.window.activeTextEditor.document.lineAt(line).text
             let transRegex = /([0-9]{4})([\-|/])([0-9]{2})([\-|/])([0-9]{2}) (\*|\!)/
             let transArray = transRegex.exec(lineText)
-            if ( transArray != null ) {
+            if (transArray != null) {
                 // the user inserted a new line under a transaction
                 let r = new Range(new Position(line + 1, 0), new Position(line + 1, 0));
                 let tabSize = vscode.workspace.getConfiguration("editor")["tabSize"];
