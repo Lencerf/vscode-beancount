@@ -47,7 +47,8 @@ export function activate(context: vscode.ExtensionContext) {
     let clientOptions: LanguageClientOptions = {
         documentSelector: ['beancount'],
         synchronize: {
-            fileEvents: vscode.workspace.createFileSystemWatcher('**/.clientrc')
+            fileEvents: vscode.workspace.createFileSystemWatcher('**/.clientrc'),
+            configurationSection: 'beancount.beanQuery'
         }
     }
 
