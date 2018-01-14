@@ -21,6 +21,10 @@ To be found...
 
 ## Release Notes
 
+### 0.0.3
+
+Add wordPattern regex to improve autocompletion. [@dcyoung05](https://github.com/Lencerf/vscode-beancount/pull/6)
+
 ### 0.0.2
 
 Made the extension honor editor.tabSize when inserting new postings
