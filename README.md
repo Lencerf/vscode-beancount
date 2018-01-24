@@ -21,6 +21,10 @@ To be found...
 
 ## Release Notes
 
+### 0.1.0
+
+Automatically check bean file and show errors in VSCode.
+
 ### 0.0.3
 
 Add wordPattern regex to improve autocompletion. [@dcyoung05](https://github.com/Lencerf/vscode-beancount/pull/6)
@@ -28,7 +32,3 @@ Add wordPattern regex to improve autocompletion. [@dcyoung05](https://github.com
 ### 0.0.2
 
 Made the extension honor editor.tabSize when inserting new postings
-
-### 0.0.1
-
-Alpha version.

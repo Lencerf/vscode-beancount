@@ -1,5 +1,8 @@
 ## Change Log
 
+### 0.1.0 (2018-01-24)
+- Automatically check bean file and show errors in VSCode.
+
 ### 0.0.3 (2018-01-14)
 - Add wordPattern regex to improve autocompletion. [@dcyoung05](https://github.com/Lencerf/vscode-beancount/pull/6)
 

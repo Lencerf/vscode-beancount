@@ -2,10 +2,17 @@
     "name": "beancount",
     "displayName": "Beancount",
     "description": "VSCode extension for Beancount",
-    "version": "0.0.3",
+    "version": "0.1.0",
     "publisher": "Lencerf",
     "engines": {
         "vscode": "^1.10.0"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Lencerf/vscode-beancount.git"
+    },
+    "bugs": {
+        "url": "https://github.com/Lencerf/vscode-beancount/issues"
     },
     "categories": [
         "Languages"
@@ -27,6 +34,11 @@
                     "type": "boolean",
                     "default": true,
                     "description": "Set to true to align the amount (like 1.00 BTC) once a decimal point is inserted."
+                },
+                "beancount.mainBeanFile": {
+                    "tpye": "string",
+                    "default": "",
+                    "description": "The main Beancount file. If left blank, the current file will be checked."
                 }
             }
         },
