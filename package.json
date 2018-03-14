@@ -59,6 +59,10 @@
             "language": "beancount",
             "scopeName": "text.beancount",
             "path": "./syntaxes/beancount.tmLanguage"
+        }],
+        "snippets": [{
+                "language": "beancount",
+                "path": "./snippets/beancount.json"
         }]
     },
     "scripts": {
