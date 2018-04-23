@@ -64,6 +64,9 @@ export function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push(vscode.workspace.onDidSaveTextDocument((e:vscode.TextDocument) => {
         let mainBeanFile = vscode.window.activeTextEditor.document.fileName
+        if(vscode.window.activeTextEditor.document.languageId != 'beancount') {
+            return
+        }
         if (existsSync(vscode.workspace.getConfiguration("beancount")["mainBeanFile"])) {
             mainBeanFile = vscode.workspace.getConfiguration("beancount")["mainBeanFile"]
         }

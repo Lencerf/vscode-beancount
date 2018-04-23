@@ -16,7 +16,7 @@ This extension contributes the following settings:
 * `beancount.separatorColumn`: specify the column of the decimal separator.
 * `beancount.instantAlignment`: Set to `true` to align the amount (like 1.00 BTC) once a decimal point is inserted.
 * `beancount.mainBeanFile`: If you are splitting beancount files into multiple files, then specify this option so that
-this extension can get all account information. If left blank, the extension will consider the file in the current
+this extension can get all account information. If it is left blank, the extension will consider the file in the current
 window as the main file.
 
 ## Known Issues

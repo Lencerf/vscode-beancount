@@ -38,7 +38,7 @@
                 "beancount.mainBeanFile": {
                     "tpye": "string",
                     "default": "",
-                    "description": "The main Beancount file. If left blank, the current file will be checked."
+                    "description": "The main Beancount file. If it is left blank, the current file will be checked."
                 }
             }
         },
