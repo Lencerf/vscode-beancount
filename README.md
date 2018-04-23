@@ -25,6 +25,10 @@ To be found...
 
 ## Release Notes
 
+### 0.1.1
+
+The extension now will not check unrelated files. [#8](https://github.com/Lencerf/vscode-beancount/issues/8)
+
 ### 0.1.0
 
 Automatically check bean file and show errors in VSCode.
@@ -33,6 +37,4 @@ Automatically check bean file and show errors in VSCode.
 
 Add wordPattern regex to improve autocompletion. [@dcyoung05](https://github.com/Lencerf/vscode-beancount/pull/6)
 
-### 0.0.2
-
-Made the extension honor editor.tabSize when inserting new postings
+### [More](https://github.com/Lencerf/vscode-beancount/blob/master/CHANGELOG.md)

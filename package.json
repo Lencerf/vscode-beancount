@@ -2,7 +2,7 @@
     "name": "beancount",
     "displayName": "Beancount",
     "description": "VSCode extension for Beancount",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "publisher": "Lencerf",
     "engines": {
         "vscode": "^1.10.0"
@@ -42,24 +42,37 @@
                 }
             }
         },
-        "commands": [{
-            "command": "beancount.alignCommodity",
-            "title": "Align Commodity"
-        }, {
-            "command": "beancount.insertDate",
-            "title": "Insert Date"
-        }],
-        "languages": [{
-            "id": "beancount",
-            "aliases": ["Beancount", "beancount"],
-            "extensions": [".beancount",".bean"],
-            "configuration": "./language-configuration.json"
-        }],
-        "grammars": [{
-            "language": "beancount",
-            "scopeName": "text.beancount",
-            "path": "./syntaxes/beancount.tmLanguage"
-        }]
+        "commands": [
+            {
+                "command": "beancount.alignCommodity",
+                "title": "Align Commodity"
+            },
+            {
+                "command": "beancount.insertDate",
+                "title": "Insert Date"
+            }
+        ],
+        "languages": [
+            {
+                "id": "beancount",
+                "aliases": [
+                    "Beancount",
+                    "beancount"
+                ],
+                "extensions": [
+                    ".beancount",
+                    ".bean"
+                ],
+                "configuration": "./language-configuration.json"
+            }
+        ],
+        "grammars": [
+            {
+                "language": "beancount",
+                "scopeName": "text.beancount",
+                "path": "./syntaxes/beancount.tmLanguage"
+            }
+        ]
     },
     "scripts": {
         "vscode:prepublish": "tsc -p ./",

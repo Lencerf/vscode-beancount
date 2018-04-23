@@ -1,5 +1,8 @@
 ## Change Log
 
+### 0.1.1 (2018-04-22)
+- The extension now will not check unrelated files. [#8](https://github.com/Lencerf/vscode-beancount/issues/8)
+
 ### 0.1.0 (2018-01-24)
 - Automatically check bean file and show errors in VSCode.
 
