@@ -47,41 +47,31 @@
                 }
             }
         },
-        "commands": [
-            {
-                "command": "beancount.alignCommodity",
-                "title": "Align Commodity"
-            },
-            {
-                "command": "beancount.insertDate",
-                "title": "Insert Date"
-            },
-            {
-                "command": "beancount.runFava",
-                "title": "Run Fava"
-            }
-        ],
-        "languages": [
-            {
-                "id": "beancount",
-                "aliases": [
-                    "Beancount",
-                    "beancount"
-                ],
-                "extensions": [
-                    ".beancount",
-                    ".bean"
-                ],
-                "configuration": "./language-configuration.json"
-            }
-        ],
-        "grammars": [
-            {
+        "commands": [{
+            "command": "beancount.alignCommodity",
+            "title": "Align Commodity"
+        }, {
+            "command": "beancount.insertDate",
+            "title": "Insert Date"
+        }, {
+            "command": "beancount.runFava",
+            "title": "Run Fava"
+        }],
+        "languages": [{
+            "id": "beancount",
+            "aliases": ["Beancount", "beancount"],
+            "extensions": [".beancount",".bean"],
+            "configuration": "./language-configuration.json"
+        }],
+        "grammars": [{
+            "language": "beancount",
+            "scopeName": "text.beancount",
+            "path": "./syntaxes/beancount.tmLanguage"
+        }],
+        "snippets": [{
                 "language": "beancount",
-                "scopeName": "text.beancount",
-                "path": "./syntaxes/beancount.tmLanguage"
-            }
-        ]
+                "path": "./snippets/beancount.json"
+        }]
     },
     "scripts": {
         "vscode:prepublish": "tsc -p ./",

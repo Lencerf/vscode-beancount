@@ -8,6 +8,7 @@ Simple Beancount support for VSCode
 2. Decimal point alignment
 3. Insert current Date
 4. Auto check after saving
+5. Code snippets
 
 ## Extension Settings
 
