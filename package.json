@@ -2,7 +2,7 @@
     "name": "beancount",
     "displayName": "Beancount",
     "description": "VSCode extension for Beancount",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "publisher": "Lencerf",
     "engines": {
         "vscode": "^1.10.0"
@@ -38,7 +38,12 @@
                 "beancount.mainBeanFile": {
                     "tpye": "string",
                     "default": "",
-                    "description": "The main Beancount file. If left blank, the current file will be checked."
+                    "description": "The main Beancount file. If it is left blank, the current file will be checked."
+                },
+                "beancount.runFavaOnActivate": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "If it is set to true, fava will run once this extension is activated."
                 }
             }
         },
@@ -48,6 +53,9 @@
         }, {
             "command": "beancount.insertDate",
             "title": "Insert Date"
+        }, {
+            "command": "beancount.runFava",
+            "title": "Run Fava"
         }],
         "languages": [{
             "id": "beancount",
@@ -77,5 +85,8 @@
         "mocha": "^2.3.3",
         "@types/node": "^6.0.40",
         "@types/mocha": "^2.2.32"
+    },
+    "dependencies": {
+        "opn": "^5.3.0"
     }
 }

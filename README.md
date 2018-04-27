@@ -17,7 +17,7 @@ This extension contributes the following settings:
 * `beancount.separatorColumn`: specify the column of the decimal separator.
 * `beancount.instantAlignment`: Set to `true` to align the amount (like 1.00 BTC) once a decimal point is inserted.
 * `beancount.mainBeanFile`: If you are splitting beancount files into multiple files, then specify this option so that
-this extension can get all account information. If left blank, the extension will consider the file in the current
+this extension can get all account information. If it is left blank, the extension will consider the file in the current
 window as the main file.
 
 ## Known Issues
@@ -25,6 +25,10 @@ window as the main file.
 To be found...
 
 ## Release Notes
+
+### 0.1.1
+
+The extension now will not check unrelated files. [#8](https://github.com/Lencerf/vscode-beancount/issues/8)
 
 ### 0.1.0
 
@@ -34,6 +38,4 @@ Automatically check bean file and show errors in VSCode.
 
 Add wordPattern regex to improve autocompletion. [@dcyoung05](https://github.com/Lencerf/vscode-beancount/pull/6)
 
-### 0.0.2
-
-Made the extension honor editor.tabSize when inserting new postings
+### [More](https://github.com/Lencerf/vscode-beancount/blob/master/CHANGELOG.md)
