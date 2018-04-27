@@ -3,10 +3,60 @@ import * as vscode from 'vscode';
 import { Position, Range} from 'vscode';
 import { spawn } from 'child_process';
 import { existsSync } from 'fs';
+import * as opn from 'opn'
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
+class FavaManager implements vscode.Disposable {
+    private _terminal: vscode.Terminal
+    constructor() {
+        this._terminal = null;
+    }
+
+    public onDidCloseTerminal() {
+        this._terminal = null
+    }
+    
+    public openFava(showPrompt=false) {
+        let beanFile = ""
+        if (existsSync(vscode.workspace.getConfiguration("beancount")["mainBeanFile"])) {
+            beanFile = vscode.workspace.getConfiguration("beancount")["mainBeanFile"]
+        } else if(vscode.window.activeTextEditor.document.languageId == 'beancount') {
+            beanFile = vscode.window.activeTextEditor.document.fileName
+        } else {
+            vscode.window.showInformationMessage("Current file is not a bean file!")
+            return
+        }
+        if (this._terminal == null) {
+            this._terminal = vscode.window.createTerminal("Fava")
+        }
+        this._terminal.sendText('fava "'.concat(beanFile, '"'), true) 
+        if (showPrompt) {
+            this._terminal.show()
+            let result = vscode.window.showInformationMessage("Fava is running in the terminal below. Do you want to open a browser to view the balances?", "Yes")
+            result.then((value:string)=>{
+                if(value == "Yes") {
+                    opn("http://localhost:5000/")
+                }
+            })
+        }
+    }
+    public dispose() {
+        this._terminal.dispose()
+    }
+}
+
 export function activate(context: vscode.ExtensionContext) {
+
+    const favaManager = new FavaManager()
+
+    if (vscode.workspace.getConfiguration("beancount")["runFavaOnActivate"]) {
+        favaManager.openFava(false)
+    }
+
+    vscode.commands.registerCommand('beancount.runFava', ()=>{   
+        favaManager.openFava(true)
+    })
 
     vscode.commands.registerCommand('beancount.alignCommodity',()=>{
         // Align commodity for all lines
@@ -35,6 +85,10 @@ export function activate(context: vscode.ExtensionContext) {
 
     //let inputCapturer = new InputCapturer()
     //context.subscriptions.push(inputCapturer);
+
+    context.subscriptions.push(vscode.window.onDidCloseTerminal(()=>{
+        favaManager.onDidCloseTerminal()
+    }))
 
     context.subscriptions.push(vscode.workspace.onDidChangeTextDocument((e:vscode.TextDocumentChangeEvent)=>{
         let text = e.contentChanges[0].text;
