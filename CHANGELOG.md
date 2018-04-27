@@ -1,5 +1,10 @@
 ## Change Log
 
+### 0.2.0 (2018-04-26)
+
+- Code snippets ([@vlamacko](https://github.com/Lencerf/vscode-beancount/pull/7))
+- Run Fava to view balances 
+
 ### 0.1.1 (2018-04-22)
 - The extension now will not check unrelated files. [#8](https://github.com/Lencerf/vscode-beancount/issues/8)
 
