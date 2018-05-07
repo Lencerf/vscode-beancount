@@ -3,6 +3,7 @@ import * as vscode from 'vscode';
 import { Position, Range} from 'vscode';
 import { spawn } from 'child_process';
 import { existsSync } from 'fs';
+import { chdir } from 'process';
 import * as opn from 'opn'
 
 // this method is called when your extension is activated
@@ -125,6 +126,7 @@ export function activate(context: vscode.ExtensionContext) {
         if(vscode.window.activeTextEditor.document.languageId != 'beancount') {
             return
         }
+        chdir(vscode.workspace.workspaceFolders[0].uri.path);
         if (existsSync(vscode.workspace.getConfiguration("beancount")["mainBeanFile"])) {
             mainBeanFile = vscode.workspace.getConfiguration("beancount")["mainBeanFile"]
         }
