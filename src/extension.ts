@@ -91,6 +91,10 @@ export function activate(context: vscode.ExtensionContext) {
     }))
 
     context.subscriptions.push(vscode.workspace.onDidChangeTextDocument((e:vscode.TextDocumentChangeEvent)=>{
+        if (e.contentChanges.length == 0) {
+            //protect against empty contentChanges arrays...
+            return;
+        }
         let text = e.contentChanges[0].text;
         let rangeLength = e.contentChanges[0].rangeLength;
         let line = e.contentChanges[0].range.start.line;
