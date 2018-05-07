@@ -1,5 +1,9 @@
 ## Change Log
 
+
+### 0.2.1 (2018-05-06)
+* Fix a bug related to an empty contentChanges array. ([@robotkid](https://github.com/Lencerf/vscode-beancount/pull/9))
+
 ### 0.2.0 (2018-04-26)
 
 - Code snippets ([@vlamacko](https://github.com/Lencerf/vscode-beancount/pull/7))

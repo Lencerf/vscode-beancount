@@ -46,6 +46,9 @@ see GitHub [issue page](https://github.com/Lencerf/vscode-beancount/issues)
 
 ## Release Notes
 
+### 0.2.1
+* Fix a bug related to an empty contentChanges array. ([@robotkid](https://github.com/Lencerf/vscode-beancount/pull/9))
+
 ### 0.2.0
 
 * Code snippets ([@vlamacko](https://github.com/Lencerf/vscode-beancount/pull/7))
@@ -54,9 +57,5 @@ see GitHub [issue page](https://github.com/Lencerf/vscode-beancount/issues)
 ### 0.1.1
 
 The extension now will not check unrelated files. [#8](https://github.com/Lencerf/vscode-beancount/issues/8)
-
-### 0.1.0
-
-Automatically check bean file and show errors in VSCode.
 
 ### [More](https://github.com/Lencerf/vscode-beancount/blob/master/CHANGELOG.md)
