@@ -1,24 +1,30 @@
 'use strict';
+// The module 'vscode' contains the VS Code extensibility API
+// Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import { Position, Range} from 'vscode';
-import { spawn } from 'child_process';
+import { chdir } from 'process'; 
 import { existsSync } from 'fs';
-import { chdir } from 'process';
-import * as opn from 'opn'
+import { spawn } from 'child_process';
 
-// this method is called when your extension is activated
-// your extension is activated the very first time the command is executed
 class FavaManager implements vscode.Disposable {
     private _terminal: vscode.Terminal
+    private _terminalClosed: boolean
     constructor() {
-        this._terminal = null;
+        this._terminal = vscode.window.createTerminal("Fava");
+        this._terminalClosed = false
     }
 
     public onDidCloseTerminal() {
-        this._terminal = null
+        this._terminalClosed = true
     }
     
     public openFava(showPrompt=false) {
+        if(vscode.workspace.workspaceFolders == undefined 
+            || vscode.window.activeTextEditor == undefined) {
+            return
+        }
+        chdir(vscode.workspace.workspaceFolders[0].uri.path)
         let beanFile = ""
         if (existsSync(vscode.workspace.getConfiguration("beancount")["mainBeanFile"])) {
             beanFile = vscode.workspace.getConfiguration("beancount")["mainBeanFile"]
@@ -28,16 +34,19 @@ class FavaManager implements vscode.Disposable {
             vscode.window.showInformationMessage("Current file is not a bean file!")
             return
         }
-        if (this._terminal == null) {
+        if (this._terminalClosed) {
             this._terminal = vscode.window.createTerminal("Fava")
         }
+        
+        this._terminal.sendText('cd "'.concat(vscode.workspace.workspaceFolders[0].uri.path, '"'), true)
         this._terminal.sendText('fava "'.concat(beanFile, '"'), true) 
         if (showPrompt) {
             this._terminal.show()
             let result = vscode.window.showInformationMessage("Fava is running in the terminal below. Do you want to open a browser to view the balances?", "Yes")
-            result.then((value:string)=>{
+            result.then((value:string | undefined)=>{
                 if(value == "Yes") {
-                    opn("http://localhost:5000/")
+                    vscode.commands.executeCommand('vscode.open', vscode.Uri.parse(
+                        "http://localhost:5000/"))
                 }
             })
         }
@@ -47,6 +56,9 @@ class FavaManager implements vscode.Disposable {
     }
 }
 
+
+// this method is called when your extension is activated
+// your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
 
     const favaManager = new FavaManager()
@@ -60,6 +72,9 @@ export function activate(context: vscode.ExtensionContext) {
     })
 
     vscode.commands.registerCommand('beancount.alignCommodity',()=>{
+        if (vscode.window.activeTextEditor == undefined) {
+            return
+        }
         // Align commodity for all lines
         let lc = vscode.window.activeTextEditor.document.lineCount;
         for (var i = 0; i < lc; i++) {
@@ -71,6 +86,9 @@ export function activate(context: vscode.ExtensionContext) {
     })
 
     vscode.commands.registerCommand('beancount.insertDate', ()=>{
+        if (vscode.window.activeTextEditor == undefined) {
+            return
+        }
         const today = new Date();
         let year = today.getFullYear().toString();
         let month = (today.getMonth() + 1 < 10 ? "0" : "") + (today.getMonth() + 1).toString();
@@ -92,6 +110,9 @@ export function activate(context: vscode.ExtensionContext) {
     }))
 
     context.subscriptions.push(vscode.workspace.onDidChangeTextDocument((e:vscode.TextDocumentChangeEvent)=>{
+        if (vscode.window.activeTextEditor == undefined) {
+            return
+        }
         if (e.contentChanges.length == 0) {
             //protect against empty contentChanges arrays...
             return;
@@ -122,6 +143,10 @@ export function activate(context: vscode.ExtensionContext) {
 
 
     context.subscriptions.push(vscode.workspace.onDidSaveTextDocument((e:vscode.TextDocument) => {
+        if (vscode.workspace.workspaceFolders == undefined ||
+            vscode.window.activeTextEditor == undefined) {
+            return
+        }
         let mainBeanFile = vscode.window.activeTextEditor.document.fileName
         if(vscode.window.activeTextEditor.document.languageId != 'beancount') {
             return
@@ -134,8 +159,7 @@ export function activate(context: vscode.ExtensionContext) {
 
         let bcDiag = vscode.languages.createDiagnosticCollection('Beancount')
         bcDiag.clear()
-
-        run_cmd('python3', [checkpy, mainBeanFile], function(text) {
+        run_cmd('python3', [checkpy, mainBeanFile], function(text: string) {
             var lines = text.split('\n').filter(line=>line.length>0);
             const diagsCollection: { [key: string]: vscode.Diagnostic[] } = {}
             lines.forEach(line => {
@@ -156,21 +180,22 @@ export function activate(context: vscode.ExtensionContext) {
     }))
 }
 
-function run_cmd(cmd, args, callBack) {
-    var spawn = require('child_process').spawn;
+function run_cmd(cmd:string, args:Array<string>, callBack: (stdout: string) => void) {
     var child = spawn(cmd, args);
     var resp = "";
-
     child.stdout.on('data', function (buffer) { resp += buffer.toString() });
     child.stdout.on('end', function() { callBack (resp) });
 }
 
 function alignSingleLine(line: number) {
+    if(vscode.window.activeTextEditor == undefined) {
+        return
+    }
     let activeEditor = vscode.window.activeTextEditor
     let originalText = activeEditor.document.lineAt(line).text
     // save the original text length and cursor position
     const originalLength = originalText.length
-    const originalCursorPosition = vscode.window.activeTextEditor.selection.active
+    const originalCursorPosition = activeEditor.selection.active
     // find an account name first
     const accountRegex = /([A-Z][A-Za-z0-9\-]+)(:)/
     var accountArray = accountRegex.exec(originalText)
