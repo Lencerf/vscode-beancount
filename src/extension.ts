@@ -102,12 +102,15 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.workspace.applyEdit(wEdit);
     })
 
-    //let inputCapturer = new InputCapturer()
-    //context.subscriptions.push(inputCapturer);
 
-    context.subscriptions.push(vscode.window.onDidCloseTerminal(()=>{
-        favaManager.onDidCloseTerminal()
-    }))
+    context.subscriptions.push(vscode.window.onDidCloseTerminal(
+        function(terminal) { 
+            if (terminal.name == "Fava") {
+                favaManager.onDidCloseTerminal()
+            }
+        }
+    ))
+    
 
     context.subscriptions.push(vscode.workspace.onDidChangeTextDocument((e:vscode.TextDocumentChangeEvent)=>{
         if (vscode.window.activeTextEditor == undefined) {
