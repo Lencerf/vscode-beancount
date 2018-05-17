@@ -20,25 +20,25 @@ class FavaManager implements vscode.Disposable {
     }
     
     public openFava(showPrompt=false) {
-        if(vscode.workspace.workspaceFolders == undefined 
-            || vscode.window.activeTextEditor == undefined) {
-            return
+        if(vscode.workspace.workspaceFolders != undefined ) {
+            chdir(vscode.workspace.workspaceFolders[0].uri.path)
         }
-        chdir(vscode.workspace.workspaceFolders[0].uri.path)
         let beanFile = ""
         if (existsSync(vscode.workspace.getConfiguration("beancount")["mainBeanFile"])) {
             beanFile = vscode.workspace.getConfiguration("beancount")["mainBeanFile"]
-        } else if(vscode.window.activeTextEditor.document.languageId == 'beancount') {
+        } else if (vscode.window.activeTextEditor != undefined &&
+            vscode.window.activeTextEditor.document.languageId == 'beancount') {
             beanFile = vscode.window.activeTextEditor.document.fileName
         } else {
-            vscode.window.showInformationMessage("Current file is not a bean file!")
+            vscode.window.showInformationMessage("The current file is not a bean file!")
             return
         }
         if (this._terminalClosed) {
             this._terminal = vscode.window.createTerminal("Fava")
         }
-        
-        this._terminal.sendText('cd "'.concat(vscode.workspace.workspaceFolders[0].uri.path, '"'), true)
+        if(vscode.workspace.workspaceFolders != undefined) {
+            this._terminal.sendText('cd "'.concat(vscode.workspace.workspaceFolders[0].uri.path, '"'), true)
+        }
         this._terminal.sendText('fava "'.concat(beanFile, '"'), true) 
         if (showPrompt) {
             this._terminal.show()
@@ -146,15 +146,16 @@ export function activate(context: vscode.ExtensionContext) {
 
 
     context.subscriptions.push(vscode.workspace.onDidSaveTextDocument((e:vscode.TextDocument) => {
-        if (vscode.workspace.workspaceFolders == undefined ||
-            vscode.window.activeTextEditor == undefined) {
+        if (vscode.window.activeTextEditor == undefined) {
             return
         }
         let mainBeanFile = vscode.window.activeTextEditor.document.fileName
         if(vscode.window.activeTextEditor.document.languageId != 'beancount') {
             return
         }
-        chdir(vscode.workspace.workspaceFolders[0].uri.path);
+        if (vscode.workspace.workspaceFolders != undefined) {
+            chdir(vscode.workspace.workspaceFolders[0].uri.path)
+        }
         if (existsSync(vscode.workspace.getConfiguration("beancount")["mainBeanFile"])) {
             mainBeanFile = vscode.workspace.getConfiguration("beancount")["mainBeanFile"]
         }
