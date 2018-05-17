@@ -21,7 +21,7 @@ This extension contributes the following settings:
 
 * `beancount.separatorColumn`: specify the column of the decimal separator.
 * `beancount.instantAlignment`: Set it to `true` to align the amount (like 1.00 BTC) once a decimal point is inserted.
-* `beancount.mainBeanFile`: If you are splitting beancount files into multiple files, then specify this option so that
+* `beancount.mainBeanFile`: If you are splitting beancount files into multiple files, set this value to either the full path or the relative path to your main bean file so that
 this extension can get all account information. If it is left blank, the extension will consider the file in the current
 window as the main file.
 * `beancount.runFavaOnActivate`: If it is set to `true`, fava will run once this extension is activated.
@@ -46,16 +46,13 @@ see GitHub [issue page](https://github.com/Lencerf/vscode-beancount/issues)
 
 ## Release Notes
 
+### 0.2.2
+* Fix some potential bugs;
+* `beancount.mainBeanFile` now cen be set to either a relative path or a full path. ([@robotkid](https://github.com/Lencerf/vscode-beancount/pull/10))
+
 ### 0.2.1
 * Fix a bug related to an empty contentChanges array. ([@robotkid](https://github.com/Lencerf/vscode-beancount/pull/9))
 
 ### 0.2.0
-
 * Code snippets ([@vlamacko](https://github.com/Lencerf/vscode-beancount/pull/7))
 * Run Fava to view balances 
-
-### 0.1.1
-
-The extension now will not check unrelated files. [#8](https://github.com/Lencerf/vscode-beancount/issues/8)
-
-### [More](https://github.com/Lencerf/vscode-beancount/blob/master/CHANGELOG.md)

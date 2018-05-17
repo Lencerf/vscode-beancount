@@ -1,5 +1,8 @@
 ## Change Log
 
+### 0.2.2 (2018-05-17)
+* Fix some potential bugs;
+* `beancount.mainBeanFile` now cen be set to either a relative path or a full path. ([@robotkid](https://github.com/Lencerf/vscode-beancount/pull/10))
 
 ### 0.2.1 (2018-05-06)
 * Fix a bug related to an empty contentChanges array. ([@robotkid](https://github.com/Lencerf/vscode-beancount/pull/9))

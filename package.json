@@ -2,7 +2,7 @@
     "name": "beancount",
     "displayName": "Beancount",
     "description": "VSCode extension for Beancount",
-    "version": "0.2.1",
+    "version": "0.2.2",
     "publisher": "Lencerf",
     "engines": {
         "vscode": "^1.23.0"
@@ -38,7 +38,7 @@
                 "beancount.mainBeanFile": {
                     "tpye": "string",
                     "default": "",
-                    "description": "The main Beancount file. If it is left blank, the current file will be checked."
+                    "description": "If you are splitting beancount files into multiple files, set this value to either the full path or the relative path to your main bean file so that this extension can get all account information. If it is left blank, the extension will consider the file in the current window as the main file."
                 },
                 "beancount.runFavaOnActivate": {
                     "type": "boolean",
