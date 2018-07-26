@@ -26,5 +26,12 @@
         ["\"", "\""],
         ["'", "'"]
     ],
+    "folding": {
+        "offSide": false,
+        "markers": {
+            "start": ";#region",
+            "end": ";#endregion"
+        }
+    },
     "wordPattern": "[\\w:-]+|[\\d.]+|[\\d-/]|(\"[\\w- ]+\")"
 }
