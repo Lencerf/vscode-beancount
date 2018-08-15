@@ -1,5 +1,9 @@
 ## Change Log
 
+### 0.2.4 (2018-08-15)
+* Fix a bug where duplicate diagnostic entries show up
+* Add code folding markers ([@zacharylawrence](https://github.com/Lencerf/vscode-beancount/pull/11))
+
 ### 0.2.3 (2018-05-17)
 * Correctly handle terminal-close event.
 
