@@ -63,6 +63,8 @@ export function activate(context: vscode.ExtensionContext) {
 
     const favaManager = new FavaManager()
 
+    var bcDiag = vscode.languages.createDiagnosticCollection('Beancount')
+
     if (vscode.workspace.getConfiguration("beancount")["runFavaOnActivate"]) {
         favaManager.openFava(false)
     }
@@ -160,8 +162,7 @@ export function activate(context: vscode.ExtensionContext) {
             mainBeanFile = vscode.workspace.getConfiguration("beancount")["mainBeanFile"]
         }
         let checkpy = context.asAbsolutePath("/pythonFiles/beancheck.py")
-
-        let bcDiag = vscode.languages.createDiagnosticCollection('Beancount')
+        
         bcDiag.clear()
         run_cmd('python3', [checkpy, mainBeanFile], function(text: string) {
             var lines = text.split('\n').filter(line=>line.length>0);
@@ -225,7 +226,7 @@ function alignSingleLine(line: number) {
         wEdit.set(activeEditor.document.uri, [edit]);
         vscode.workspace.applyEdit(wEdit);
         // move cursor position
-
+        
         if (line == originalCursorPosition.line) {
             var newPosition = new Position(originalCursorPosition.line, 1 + originalCursorPosition.character + newText.length - originalLength)
             //console.log(originalCursorPosition, newPosition)
