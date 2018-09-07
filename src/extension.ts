@@ -39,14 +39,14 @@ class FavaManager implements vscode.Disposable {
         if(vscode.workspace.workspaceFolders != undefined) {
             this._terminal.sendText('cd "'.concat(vscode.workspace.workspaceFolders[0].uri.path, '"'), true)
         }
-        this._terminal.sendText('fava "'.concat(beanFile, '"'), true) 
+        this._terminal.sendText('fava -H 127.0.0.1 "'.concat(beanFile, '"'), true) 
         if (showPrompt) {
             this._terminal.show()
             let result = vscode.window.showInformationMessage("Fava is running in the terminal below. Do you want to open a browser to view the balances?", "Yes")
             result.then((value:string | undefined)=>{
                 if(value == "Yes") {
                     vscode.commands.executeCommand('vscode.open', vscode.Uri.parse(
-                        "http://localhost:5000/"))
+                        "http://127.0.0.1:5000/"))
                 }
             })
         }
