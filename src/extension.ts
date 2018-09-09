@@ -80,7 +80,7 @@ export function activate(context: vscode.ExtensionContext) {
         // Align commodity for all lines
         let lc = vscode.window.activeTextEditor.document.lineCount;
         for (var i = 0; i < lc; i++) {
-            // ommit comments
+            // omit comments
             if (vscode.window.activeTextEditor.document.lineAt(i).text.trim()[0] != ";") {
                 alignSingleLine(i)
             }
@@ -199,7 +199,6 @@ function alignSingleLine(line: number) {
     let activeEditor = vscode.window.activeTextEditor
     let originalText = activeEditor.document.lineAt(line).text
     // save the original text length and cursor position
-    const originalLength = originalText.length
     const originalCursorPosition = activeEditor.selection.active
     // find an account name first
     const accountRegex = /([A-Z][A-Za-z0-9\-]+)(:)/
@@ -224,14 +223,11 @@ function alignSingleLine(line: number) {
         let edit = new vscode.TextEdit(r, newText)
         let wEdit = new vscode.WorkspaceEdit();
         wEdit.set(activeEditor.document.uri, [edit]);
-        vscode.workspace.applyEdit(wEdit);
-        // move cursor position
-        
-        if (line == originalCursorPosition.line) {
-            var newPosition = new Position(originalCursorPosition.line, 1 + originalCursorPosition.character + newText.length - originalLength)
-            //console.log(originalCursorPosition, newPosition)
-            activeEditor.selection = new vscode.Selection(newPosition, newPosition)
-        }
+        vscode.workspace.applyEdit(wEdit).then(function(value) {
+            if (value && line == originalCursorPosition.line) {
+                activeEditor.selection = new vscode.Selection(line, targetDotPosition+1, line, targetDotPosition+1);
+            }
+        });
     }
 }
 
