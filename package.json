@@ -2,7 +2,7 @@
     "name": "beancount",
     "displayName": "Beancount",
     "description": "VSCode extension for Beancount",
-    "version": "0.2.4",
+    "version": "0.2.5",
     "publisher": "Lencerf",
     "engines": {
         "vscode": "^1.23.0"
@@ -36,7 +36,7 @@
                     "description": "Set to true to align the amount (like 1.00 BTC) once a decimal point is inserted."
                 },
                 "beancount.mainBeanFile": {
-                    "tpye": "string",
+                    "type": "string",
                     "default": "",
                     "description": "If you are splitting beancount files into multiple files, set this value to either the full path or the relative path to your main bean file so that this extension can get all account information. If it is left blank, the extension will consider the file in the current window as the main file."
                 },

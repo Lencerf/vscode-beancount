@@ -1,5 +1,9 @@
 ## Change Log
 
+### 0.2.5 (2018-09-09)
+* Fix a bug where the cursor is not correctly moved
+* Change Fava binding address to 127.0.0.1
+
 ### 0.2.4 (2018-08-15)
 * Fix a bug where duplicate diagnostic entries show up
 * Add code folding markers ([@zacharylawrence](https://github.com/Lencerf/vscode-beancount/pull/11))

@@ -46,13 +46,13 @@ see GitHub [issue page](https://github.com/Lencerf/vscode-beancount/issues)
 
 ## Release Notes
 
+### 0.2.5
+* Fix a bug where the cursor is not correctly moved
+* Change Fava binding address to 127.0.0.1
+
 ### 0.2.4
 * Fix a bug where duplicate diagnostic entries show up
 * Add code folding markers ([@zacharylawrence](https://github.com/Lencerf/vscode-beancount/pull/11))
 
 ### 0.2.3
 * Correctly handle terminal-close event.
-
-### 0.2.2
-* Fix some potential bugs;
-* `beancount.mainBeanFile` now cen be set to either a relative path or a full path. ([@robotkid](https://github.com/Lencerf/vscode-beancount/pull/10))
