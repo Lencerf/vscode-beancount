@@ -186,14 +186,14 @@ export function activate(context: vscode.ExtensionContext) {
     }))
 }
 
-function run_cmd(cmd:string, args:Array<string>, callBack: (stdout: string) => void) {
+export function run_cmd(cmd:string, args:Array<string>, callBack: (stdout: string) => void) {
     var child = spawn(cmd, args);
     var resp = "";
     child.stdout.on('data', function (buffer) { resp += buffer.toString() });
     child.stdout.on('end', function() { callBack (resp) });
 }
 
-function alignSingleLine(line: number) {
+ function alignSingleLine(line: number) {
     if(vscode.window.activeTextEditor == undefined) {
         return
     }
