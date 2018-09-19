@@ -2,7 +2,7 @@
     "name": "beancount",
     "displayName": "Beancount",
     "description": "VSCode extension for Beancount",
-    "version": "0.2.5",
+    "version": "0.2.6",
     "publisher": "Lencerf",
     "engines": {
         "vscode": "^1.23.0"
@@ -15,7 +15,8 @@
         "url": "https://github.com/Lencerf/vscode-beancount/issues"
     },
     "categories": [
-        "Languages"
+        "Linters",
+        "Formatters"
     ],
     "activationEvents": [
         "onLanguage:beancount"
@@ -44,6 +45,16 @@
                     "type": "boolean",
                     "default": false,
                     "description": "If it is set to true, fava will run once this extension is activated."
+                },
+                "beancount.favaPath": {
+                    "type": "string",
+                    "default": "fava",
+                    "description": "Specify the path of Fava if Fava is not installed in the main Python installation."
+                },
+                "beancount.python3Path": {
+                    "type": "string",
+                    "default": "python3",
+                    "description": "Specify the path of Python if beancount is not installed in the main Python installation."
                 }
             }
         },

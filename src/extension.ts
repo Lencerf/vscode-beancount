@@ -39,7 +39,8 @@ class FavaManager implements vscode.Disposable {
         if(vscode.workspace.workspaceFolders != undefined) {
             this._terminal.sendText('cd "'.concat(vscode.workspace.workspaceFolders[0].uri.path, '"'), true)
         }
-        this._terminal.sendText('fava -H 127.0.0.1 "'.concat(beanFile, '"'), true) 
+        let favaPath = vscode.workspace.getConfiguration("beancount")["favaPath"]
+        this._terminal.sendText(favaPath + ' -H 127.0.0.1 "'.concat(beanFile, '"'), true) 
         if (showPrompt) {
             this._terminal.show()
             let result = vscode.window.showInformationMessage("Fava is running in the terminal below. Do you want to open a browser to view the balances?", "Yes")
@@ -162,9 +163,9 @@ export function activate(context: vscode.ExtensionContext) {
             mainBeanFile = vscode.workspace.getConfiguration("beancount")["mainBeanFile"]
         }
         let checkpy = context.asAbsolutePath("/pythonFiles/beancheck.py")
-        
+        let python3Path = vscode.workspace.getConfiguration("beancount")["python3Path"]
         bcDiag.clear()
-        run_cmd('python3', [checkpy, mainBeanFile], function(text: string) {
+        run_cmd(python3Path, [checkpy, mainBeanFile], function(text: string) {
             var lines = text.split('\n').filter(line=>line.length>0);
             const diagsCollection: { [key: string]: vscode.Diagnostic[] } = {}
             lines.forEach(line => {

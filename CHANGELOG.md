@@ -1,5 +1,8 @@
 ## Change Log
 
+### 0.2.6 (2018-09-19)
+* Provide options to specify python3 and fava path [#12](https://github.com/Lencerf/vscode-beancount/issues/12)
+
 ### 0.2.5 (2018-09-09)
 * Fix a bug where the cursor is not correctly moved
 * Change Fava binding address to 127.0.0.1
