@@ -201,6 +201,7 @@ export function run_cmd(cmd:string, args:Array<string>, callBack: (stdout: strin
     let originalText = activeEditor.document.lineAt(line).text
     // save the original text length and cursor position
     const originalCursorPosition = activeEditor.selection.active
+    const originalLength = originalText.length
     // find an account name first
     const accountRegex = /([A-Z][A-Za-z0-9\-]+)(:)/
     var accountArray = accountRegex.exec(originalText)
@@ -226,7 +227,8 @@ export function run_cmd(cmd:string, args:Array<string>, callBack: (stdout: strin
         wEdit.set(activeEditor.document.uri, [edit]);
         vscode.workspace.applyEdit(wEdit).then(function(value) {
             if (value && line == originalCursorPosition.line) {
-                activeEditor.selection = new vscode.Selection(line, targetDotPosition+1, line, targetDotPosition+1);
+                const newPositionChar = 1 + originalCursorPosition.character + newText.length - originalLength
+                activeEditor.selection = new vscode.Selection(line, newPositionChar, line, newPositionChar);
             }
         });
     }
