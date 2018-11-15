@@ -46,12 +46,12 @@ see GitHub [issue page](https://github.com/Lencerf/vscode-beancount/issues)
 
 ## Release Notes
 
+### 0.2.9
+* Add accented characters support in wordPattern regex. [@NicolasP](https://github.com/Lencerf/vscode-beancount/pull/13)
+
 ### 0.2.7
 * Fix a bug where the cursor is not correctly moved
 
 ### 0.2.6
 * Provide options to specify python3 and fava path [#12](https://github.com/Lencerf/vscode-beancount/issues/12)
 
-### 0.2.5
-* Fix a bug where the cursor is not correctly moved
-* Change Fava binding address to 127.0.0.1

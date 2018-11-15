@@ -1,5 +1,8 @@
 ## Change Log
 
+### 0.2.8 (2018-11-15)
+* Add accented characters support in wordPattern regex. [@NicolasP](https://github.com/Lencerf/vscode-beancount/pull/13)
+
 ### 0.2.7 (2018-10-07)
 * Fix a bug where the cursor is not correctly moved
 
