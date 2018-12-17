@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { Position, TextDocument, CancellationToken, CompletionContext} from 'vscode';
+import { Range, Position, TextDocument, CancellationToken, CompletionContext} from 'vscode';
 import { Extension } from './extension';
 import { EOL } from 'os';
 
@@ -72,7 +72,7 @@ export class Completer implements vscode.CompletionItemProvider, vscode.HoverPro
         return new vscode.Hover(this.describeAccount(account_name, true), wordRange);
     }
 
-    provideCompletionItems(document: TextDocument, position: Position, token: CancellationToken, context: CompletionContext): Promise<vscode.CompletionItem[]> {
+    provideCompletionItems(document: TextDocument, position: Position, token: CancellationToken, context: CompletionContext): Promise<vscode.CompletionItem[] | vscode.CompletionList> {
         return new Promise((resolve, _reject) => {
             var list: vscode.CompletionItem[] = []
             if(document.lineAt(position.line).text[position.character-1] == '-') {
@@ -101,13 +101,18 @@ export class Completer implements vscode.CompletionItemProvider, vscode.HoverPro
                     }
                     resolve(list)
                     return
+                } else {
+                    const lineparts = document.lineAt(position.line).text.split(' ').filter(part => part.length > 0)
+                    if (lineparts.length == 3) {
+                        this.payees.forEach((v, i, a) => {
+                            const payee = new vscode.CompletionItem(v, vscode.CompletionItemKind.Constant)
+                            list.push(payee)
+                        })
+                    }
+                    this.narrations.forEach((v, i, a) => {
+                        list.push(new vscode.CompletionItem(v, vscode.CompletionItemKind.Text))
+                    })
                 }
-                this.payees.forEach((v, i, a) => {
-                    list.push(new vscode.CompletionItem(v, vscode.CompletionItemKind.Constant))
-                })
-                this.narrations.forEach((v, i, a) => {
-                    list.push(new vscode.CompletionItem(v, vscode.CompletionItemKind.Text))
-                })
             }
             resolve(list)
         })
