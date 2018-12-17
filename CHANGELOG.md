@@ -1,5 +1,11 @@
 ## Change Log
 
+### 0.3.0 (2018-12-16)
+* Auto-completion lists now include accounts, payees, and narrations appeared in other files.
+* Hover over account names to check account balances.
+* Remove command `beancount.insertDate`, which is replaced by auto-completion.
+* Temporarily remove `beancount.alignCommodity`.
+
 ### 0.2.8 (2018-11-15)
 * Add accented characters support in wordPattern regex. [@NicolasP](https://github.com/Lencerf/vscode-beancount/pull/13)
 

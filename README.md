@@ -1,8 +1,9 @@
 # Beancount
 
-Simple Beancount support for VSCode
+Simple [Beancount](http://furius.ca/beancount/) support for VSCode
 
-[![version](https://vsmarketplacebadge.apphb.com/version/Lencerf.beancount.svg)](https://marketplace.visualstudio.com/items?itemName=Lencerf.beancount)
+[![version](https://vsmarketplacebadge.apphb.com/version-short/Lencerf.beancount.svg)](https://marketplace.visualstudio.com/items?itemName=Lencerf.beancount)
+[![ratings](https://vsmarketplacebadge.apphb.com/rating-star/Lencerf.beancount.svg)](https://marketplace.visualstudio.com/items?itemName=Lencerf.beancount#review-details)
 [![installs](https://vsmarketplacebadge.apphb.com/installs-short/Lencerf.beancount.svg)](https://marketplace.visualstudio.com/items?itemName=Lencerf.beancount)
 [![license](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://raw.githubusercontent.com/Lencerf/vscode-beancount/master/LICENSE.txt)
 
@@ -11,9 +12,10 @@ Simple Beancount support for VSCode
 
 1. Syntax highlight (syntax file from [draug3n/sublime-beancount](https://github.com/draug3n/sublime-beancount/blob/master/beancount.tmLanguage))
 2. Decimal point alignment
-3. Insert current Date
-4. Auto check after saving
-5. Code snippets ([@vlamacko](https://github.com/Lencerf/vscode-beancount/pull/7))
+3. Auto-completion of account names, payees, and narrations
+4. Auto balance checking after saving files
+5. Hovers with account balances.
+6. Code snippets ([@vlamacko](https://github.com/Lencerf/vscode-beancount/pull/7))
 
 ## Extension Settings
 
@@ -24,9 +26,9 @@ This extension contributes the following settings:
 * `beancount.mainBeanFile`: If you are splitting beancount files into multiple files, set this value to either the full path or the relative path to your main bean file so that
 this extension can get all account information. If it is left blank, the extension will consider the file in the current
 window as the main file.
-* `beancount.runFavaOnActivate`: If it is set to `true`, fava will run once this extension is activated.
+* `beancount.runFavaOnActivate`: If it is set to `true`, [fava](https://github.com/beancount/fava) will run once this extension is activated.
 
-## Best practice
+## Recommended practices
 
 Split your ledger into several `.bean` files according to time or accounts and 
 put all your `open`/`close` in a main file. Include all other files in the 
@@ -38,7 +40,7 @@ BeanFolder
 ├── 2017-01.bean
 └── 2017-02.bean
 ```
-Open `BeanFolder` with VSCode and set `beancount.mainBeanFile` to the path of `main.bean` in the current [Workspace Settings](https://code.visualstudio.com/docs/getstarted/settings).
+Open `BeanFolder` with VSCode and set `beancount.mainBeanFile` to the full path of `main.bean` in the current [Workspace Settings](https://code.visualstudio.com/docs/getstarted/settings). Now once `BeanFolder` is opened in VSCode, this extension will be able to invoke beancount to check errors and calculate balances.
 
 ## Known Issues
 
@@ -46,12 +48,15 @@ see GitHub [issue page](https://github.com/Lencerf/vscode-beancount/issues)
 
 ## Release Notes
 
-### 0.2.9
+### 0.3.0
+* Auto-completion lists now include accounts, payees, and narrations appeared in other files.
+* Hover over account names to check account balances.
+* Remove command `beancount.insertDate`, which is replaced by auto-completion.
+* Temporarily remove `beancount.alignCommodity`.
+
+### 0.2.8
 * Add accented characters support in wordPattern regex. [@NicolasP](https://github.com/Lencerf/vscode-beancount/pull/13)
 
 ### 0.2.7
 * Fix a bug where the cursor is not correctly moved
-
-### 0.2.6
-* Provide options to specify python3 and fava path [#12](https://github.com/Lencerf/vscode-beancount/issues/12)
 
