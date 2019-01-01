@@ -1,14 +1,17 @@
 'use strict';
 import * as vscode from 'vscode';
-import { chdir } from 'process'; 
 import { existsSync } from 'fs';
+import { Extension } from './extension';
 
 export class FavaManager implements vscode.Disposable {
     private _terminal: vscode.Terminal
     private _terminalClosed: boolean
-    constructor() {
+    private extension: Extension
+
+    constructor(extension: Extension) {
         this._terminal = vscode.window.createTerminal("Fava");
         this._terminalClosed = false
+        this.extension = extension
     }
 
     public onDidCloseTerminal() {
@@ -16,24 +19,13 @@ export class FavaManager implements vscode.Disposable {
     }
     
     public openFava(showPrompt=false) {
-        if(vscode.workspace.workspaceFolders != undefined ) {
-            chdir(vscode.workspace.workspaceFolders[0].uri.path)
-        }
-        let beanFile = ""
-        if (existsSync(vscode.workspace.getConfiguration("beancount")["mainBeanFile"])) {
-            beanFile = vscode.workspace.getConfiguration("beancount")["mainBeanFile"]
-        } else if (vscode.window.activeTextEditor != undefined &&
-            vscode.window.activeTextEditor.document.languageId == 'beancount') {
-            beanFile = vscode.window.activeTextEditor.document.fileName
-        } else {
-            vscode.window.showInformationMessage("The current file is not a bean file!")
+        let beanFile = this.extension.getMainBeanFile() // this is the file given to fava
+        if (beanFile.length == 0 || !existsSync(beanFile)) {
+            vscode.window.showInformationMessage("No valid bean file is available.")
             return
         }
         if (this._terminalClosed) {
             this._terminal = vscode.window.createTerminal("Fava")
-        }
-        if(vscode.workspace.workspaceFolders != undefined) {
-            this._terminal.sendText('cd "'.concat(vscode.workspace.workspaceFolders[0].uri.path, '"'), true)
         }
         let favaPath = vscode.workspace.getConfiguration("beancount")["favaPath"]
         this._terminal.sendText(favaPath + ' -H 127.0.0.1 "'.concat(beanFile, '"'), true) 

@@ -1,7 +1,8 @@
 'use strict';
 import * as vscode from 'vscode';
-import { chdir } from 'process'; 
+// import { chdir } from 'process'; 
 import { existsSync } from 'fs';
+import { isAbsolute, join } from 'path';
 import { FavaManager } from './favaManager'
 import { Completer } from './completer'
 import { Formatter } from './formatter'
@@ -45,27 +46,39 @@ export class Extension {
 
     constructor() {
         this.completer = new Completer(this)
-        this.favaManager = new FavaManager()
+        this.favaManager = new FavaManager(this)
         this.diagnosticCollection = vscode.languages.createDiagnosticCollection('Beancount')
         this.formatter = new Formatter()
     }
 
+    public getMainBeanFile(): string {
+        let mainBeanFile = vscode.workspace.getConfiguration("beancount").get("mainBeanFile")
+        if (mainBeanFile == undefined || mainBeanFile == "") {
+            if (vscode.window.activeTextEditor != undefined && vscode.window.activeTextEditor.document.languageId == 'beancount') {
+                return vscode.window.activeTextEditor.document.fileName
+            } else {
+                return ""
+            }
+        } else {
+            if (isAbsolute(String(mainBeanFile))) {
+                return String(mainBeanFile)
+            } else {
+                if (vscode.workspace.workspaceFolders) {
+                    return join(vscode.workspace.workspaceFolders[0].uri.fsPath, String(mainBeanFile))
+                } else {
+                    return ""
+                }
+            }
+        }
+    }
+
     refreshData(context: vscode.ExtensionContext) {
-        if (vscode.window.activeTextEditor == undefined) {
-            return
-        }
-        let mainBeanFile = vscode.window.activeTextEditor.document.fileName
-        if(vscode.window.activeTextEditor.document.languageId != 'beancount') {
-            return
-        }
-        if (vscode.workspace.workspaceFolders != undefined) {
-            chdir(vscode.workspace.workspaceFolders[0].uri.path)
-        }
-        if (existsSync(vscode.workspace.getConfiguration("beancount")["mainBeanFile"])) {
-            mainBeanFile = vscode.workspace.getConfiguration("beancount")["mainBeanFile"]
-        }
+        let mainBeanFile = this.getMainBeanFile()
         let checkpy = context.asAbsolutePath("/pythonFiles/beancheck.py")
         let python3Path = vscode.workspace.getConfiguration("beancount")["python3Path"]
+        if (mainBeanFile.length == 0 || !existsSync(mainBeanFile)) {
+            return
+        }
         run_cmd(python3Path, [checkpy, mainBeanFile], (text: string) => {
             const errors_completions = text.split('\n', 2)
             this.provideDiagnostics(errors_completions[0])
