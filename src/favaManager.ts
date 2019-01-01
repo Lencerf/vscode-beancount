@@ -19,16 +19,20 @@ export class FavaManager implements vscode.Disposable {
     }
     
     public openFava(showPrompt=false) {
+        this.extension.logger.appendLine("will launch fava...")
         let beanFile = this.extension.getMainBeanFile() // this is the file given to fava
         if (beanFile.length == 0 || !existsSync(beanFile)) {
+            this.extension.logger.appendLine("quit launching fava.")
             vscode.window.showInformationMessage("No valid bean file is available.")
             return
         }
         if (this._terminalClosed) {
             this._terminal = vscode.window.createTerminal("Fava")
+            this.extension.logger.appendLine("created Fava terminal")
         }
         let favaPath = vscode.workspace.getConfiguration("beancount")["favaPath"]
         this._terminal.sendText(favaPath + ' -H 127.0.0.1 "'.concat(beanFile, '"'), true) 
+        this.extension.logger.appendLine(`executed [${favaPath} -H 127.0.0.1 "${beanFile}"]`)
         if (showPrompt) {
             this._terminal.show()
             let result = vscode.window.showInformationMessage("Fava is running in the terminal below. Do you want to open a browser to view the balances?", "Yes")
