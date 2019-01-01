@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { Range, Position, TextDocument, CancellationToken, CompletionContext} from 'vscode';
+import { Position, TextDocument, CancellationToken, CompletionContext} from 'vscode';
 import { Extension } from './extension';
 import { EOL } from 'os';
 
@@ -66,10 +66,18 @@ export class Completer implements vscode.CompletionItemProvider, vscode.HoverPro
 
     }
 
-    provideHover(document: TextDocument, position: Position, token: CancellationToken) {
-        const wordRange = document.getWordRangeAtPosition(position, this.wordPattern)
-        const account_name = document.getText(wordRange)
-        return new vscode.Hover(this.describeAccount(account_name, true), wordRange);
+    provideHover(document: vscode.TextDocument, position: vscode.Position, _token: vscode.CancellationToken) :
+    Thenable<vscode.Hover> {
+        return new Promise((resolve, _reject) => {
+            const wordRange = document.getWordRangeAtPosition(position, this.wordPattern)
+            const account_name = document.getText(wordRange)
+            const description = this.describeAccount(account_name, true)
+            if (description != "") {
+                resolve(new vscode.Hover(description, wordRange))
+            } else {
+                resolve()
+            }
+        })
     }
 
     provideCompletionItems(document: TextDocument, position: Position, token: CancellationToken, context: CompletionContext): Promise<vscode.CompletionItem[] | vscode.CompletionList> {
