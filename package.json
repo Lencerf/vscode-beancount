@@ -60,14 +60,6 @@
         },
         "commands": [
             {
-                "command": "beancount.alignCommodity",
-                "title": "Align Commodity"
-            },
-            {
-                "command": "beancount.insertDate",
-                "title": "Insert Date"
-            },
-            {
                 "command": "beancount.runFava",
                 "title": "Run Fava"
             }
