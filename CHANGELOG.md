@@ -1,5 +1,10 @@
 ## Change Log
 
+### 0.3.1 (2019-01-02)
+* Fix path problem on Windows
+* Add logs
+* other minor improvements
+
 ### 0.3.0 (2018-12-16)
 * Auto-completion lists now include accounts, payees, and narrations appeared in other files.
 * Hover over account names to check account balances.

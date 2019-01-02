@@ -30,23 +30,38 @@ window as the main file.
 
 ## Recommended practices
 
-Split your ledger into several `.bean` files according to time or accounts and 
+Split your ledger into several `.bean` files according to time and 
 put all your `open`/`close` in a main file. Include all other files in the 
 main file by the `include` command. For example, the file structure looks like this
 ```
 BeanFolder
+├── .vscode
+│   └── settings.json
 ├── main.bean
 ├── before2017.bean
 ├── 2017-01.bean
 └── 2017-02.bean
 ```
-Open `BeanFolder` with VSCode and set `beancount.mainBeanFile` to the full path of `main.bean` in the current [Workspace Settings](https://code.visualstudio.com/docs/getstarted/settings). Now once `BeanFolder` is opened in VSCode, this extension will be able to invoke beancount to check errors and calculate balances.
+Open `BeanFolder` with VSCode and set `beancount.mainBeanFile` to the full path of `main.bean` in the current [Workspace Settings](https://code.visualstudio.com/docs/getstarted/settings). That means if you
+open `.vscode/settings.json`, you should see something like this:
+```json
+{
+    "beancount.mainBeanFile": "main.bean"
+}
+``` 
+
+Now once `BeanFolder` is opened as a workspace in VSCode, this extension will be able to invoke beancount to check errors and calculate balances.
 
 ## Known Issues
 
 see GitHub [issue page](https://github.com/Lencerf/vscode-beancount/issues)
 
 ## Release Notes
+
+### 0.3.1
+* Fix path problem on Windows
+* Add logs
+* other minor improvements
 
 ### 0.3.0
 * Auto-completion lists now include accounts, payees, and narrations appeared in other files.
@@ -56,7 +71,4 @@ see GitHub [issue page](https://github.com/Lencerf/vscode-beancount/issues)
 
 ### 0.2.8
 * Add accented characters support in wordPattern regex. [@NicolasP](https://github.com/Lencerf/vscode-beancount/pull/13)
-
-### 0.2.7
-* Fix a bug where the cursor is not correctly moved
 
