@@ -20,7 +20,7 @@
 		</dict>
 		<dict>
 			<key>begin</key>
-			<string>^(poptag|pushtag)\s+(#)([A-Za-z0-9\-_/.]+)</string>
+			<string>^\s*(poptag|pushtag)\s+(#)([A-Za-z0-9\-_/.]+)</string>
 			<key>beginCaptures</key>
 			<dict>
 				<key>1</key>
@@ -59,7 +59,7 @@
 		</dict>
 		<dict>
 			<key>begin</key>
-			<string>^(include)\s+(\".*\")</string>
+			<string>^\s*(include)\s+(\".*\")</string>
 			<key>beginCaptures</key>
 			<dict>
 				<key>1</key>
@@ -93,7 +93,7 @@
 		</dict>
 		<dict>
 			<key>begin</key>
-			<string>^(option)\s+(\".*\")\s+(\".*\")</string>
+			<string>^\s*(option)\s+(\".*\")\s+(\".*\")</string>
 			<key>beginCaptures</key>
 			<dict>
 				<key>1</key>
@@ -132,7 +132,7 @@
 		</dict>
 		<dict>
 			<key>begin</key>
-			<string>^(plugin)\s+(\"(.*)\")\s+(\".*\")</string>
+			<string>^\s*(plugin)\s+(\"(.*)\")\s+(\".*\")</string>
 			<key>beginCaptures</key>
 			<dict>
 				<key>1</key>
