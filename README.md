@@ -16,6 +16,7 @@ Simple [Beancount](http://furius.ca/beancount/) support for VSCode
 4. Auto balance checking after saving files
 5. Hovers with account balances.
 6. Code snippets ([@vlamacko](https://github.com/Lencerf/vscode-beancount/pull/7))
+7. Region folding - use indentation (#5), or special comments (#11)
 
 ## Extension Settings
 
