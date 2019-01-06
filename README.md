@@ -13,10 +13,10 @@ Simple [Beancount](http://furius.ca/beancount/) support for VSCode
 1. Syntax highlight (syntax file from [draug3n/sublime-beancount](https://github.com/draug3n/sublime-beancount/blob/master/beancount.tmLanguage))
 2. Decimal point alignment
 3. Auto-completion of account names, payees, and narrations
-4. Auto balance checking after saving files
+4. Auto balance checking after saving files
 5. Hovers with account balances.
 6. Code snippets ([@vlamacko](https://github.com/Lencerf/vscode-beancount/pull/7))
-7. Region folding - use indentation (#5), or special comments (#11)
+7. Region folding - use indentation ([#5](https://github.com/Lencerf/vscode-beancount/issues/5)), or special comments ([#11](https://github.com/Lencerf/vscode-beancount/pull/11))
 
 ## Extension Settings
 
@@ -59,6 +59,10 @@ see GitHub [issue page](https://github.com/Lencerf/vscode-beancount/issues)
 
 ## Release Notes
 
+### 0.3.2
+* Recognize indented directives. [@zahanm](https://github.com/Lencerf/vscode-beancount/pull/15)
+* Fix the bug that only one commodity is shown in the hover.
+
 ### 0.3.1
 * Fix path problem on Windows
 * Add logs
@@ -69,7 +73,4 @@ see GitHub [issue page](https://github.com/Lencerf/vscode-beancount/issues)
 * Hover over account names to check account balances.
 * Remove command `beancount.insertDate`, which is replaced by auto-completion.
 * Temporarily remove `beancount.alignCommodity`.
-
-### 0.2.8
-* Add accented characters support in wordPattern regex. [@NicolasP](https://github.com/Lencerf/vscode-beancount/pull/13)
 
