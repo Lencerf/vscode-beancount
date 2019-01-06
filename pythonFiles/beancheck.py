@@ -31,7 +31,7 @@ for entry in entries:
             'open': entry.date.__str__(),
             'currencies': entry.currencies if entry.currencies else [],
             'close': "",
-            'balance': "0"
+            'balance': []
         }
     elif isinstance(entry, Close):
         try:
@@ -49,7 +49,7 @@ for line in f.getvalue().split('\n'):
             stripped_balance = parts[1].strip()
             if len(stripped_balance) > 0:
                 try:
-                    accounts[parts[0]]['balance'] = stripped_balance
+                    accounts[parts[0]]['balance'].append(stripped_balance)
                 except:
                     continue
 

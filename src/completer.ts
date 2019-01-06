@@ -7,7 +7,7 @@ interface Account {
     open: string
     close: string
     currencies: string
-    balance: string
+    balance: string[]
 }
 
 interface CompletionData {
@@ -43,14 +43,11 @@ export class Completer implements vscode.CompletionItemProvider, vscode.HoverPro
         this.narrations = data.narrations
     }
 
-    describeAccount(name: string, simple: boolean): string | vscode.MarkdownString {
+    describeAccount(name: string): string {
         if(name in this.accounts) {
-            if (simple) {
-                return new vscode.MarkdownString(name + "\n\nbalance: " + this.accounts[name].balance) 
-            }
             var lines = [
                 name,
-                "balance: " + this.accounts[name].balance,
+                "balance: " + (this.accounts[name].balance.length > 0 ? this.accounts[name].balance : "0"),
                 "opened on " + this.accounts[name].open
             ]
             if (this.accounts[name].close.length > 0) {
@@ -70,9 +67,20 @@ export class Completer implements vscode.CompletionItemProvider, vscode.HoverPro
     Thenable<vscode.Hover> {
         return new Promise((resolve, _reject) => {
             const wordRange = document.getWordRangeAtPosition(position, this.wordPattern)
-            const account_name = document.getText(wordRange)
-            const description = this.describeAccount(account_name, true)
-            if (description != "") {
+            const name = document.getText(wordRange)
+            if (name in this.accounts) {
+                let description
+                let balance_array = this.accounts[name].balance.map( (balance, index, balances) => {
+                    return "* " + balance
+                })
+                if (balance_array.length == 0) {
+                    description = new vscode.MarkdownString(name + "\n\nbalance: 0")
+                } else if (balance_array.length == 1) {
+                    description = new vscode.MarkdownString(name + "\n\nbalance: " + this.accounts[name].balance) 
+                } else {
+                    let balance_md = balance_array.join('\n')
+                    description = new vscode.MarkdownString(name + "\n\nbalance:\n" + balance_md) 
+                }   
                 resolve(new vscode.Hover(description, wordRange))
             } else {
                 resolve()
@@ -89,7 +97,7 @@ export class Completer implements vscode.CompletionItemProvider, vscode.HoverPro
             if (document.lineAt(position.line).text[0] == " ") {
                 for(let account in this.accounts) {
                     const item = new vscode.CompletionItem(account, vscode.CompletionItemKind.Variable)
-                    item.documentation = this.describeAccount(account, false)
+                    item.documentation = this.describeAccount(account)
                     list.push(item)
                 }
                 this.commodities.forEach((v, i, a) => {
