@@ -18,12 +18,16 @@ accounts = {}
 commodities = set()
 payees = set()
 narrations = set()
+tags = set()
+links = set()
 
 for entry in entries:
     if isinstance(entry, Transaction):
         payees.add(f'"{entry.payee}"')
         if not entry.narration.startswith("(Padding inserted"):
             narrations.add(f'"{entry.narration}"')
+            tags.update(entry.tags)
+            links.update(entry.links)
         for posting in entry.postings:
             commodities.add(posting.units.currency)
     elif isinstance(entry, Open):
@@ -60,6 +64,8 @@ output['accounts'] = accounts
 output['commodities'] = list(commodities)
 output['payees'] = list(payees)
 output['narrations'] = list(narrations)
+output['tags'] = list(tags)
+output['links'] = list(links)
 
 print(json.dumps(error_list))
 print(json.dumps(output))

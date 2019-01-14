@@ -15,6 +15,8 @@ interface CompletionData {
     commodities: string[]
     payees: string[]
     narrations: string[]
+    tags: string[]
+    links: string[]
 }
 
 export class Completer implements vscode.CompletionItemProvider, vscode.HoverProvider {
@@ -24,6 +26,8 @@ export class Completer implements vscode.CompletionItemProvider, vscode.HoverPro
     payees: string[]
     narrations: string[]
     commodities: string[]
+    tags: string[]
+    links: string[]
     wordPattern: RegExp
 
     constructor(extension: Extension) {
@@ -32,6 +36,8 @@ export class Completer implements vscode.CompletionItemProvider, vscode.HoverPro
         this.payees = []
         this.narrations = []
         this.commodities = []
+        this.tags = []
+        this.links = []
         this.wordPattern = new RegExp("[A-zÀ-ÿ:-]+|[\\d.]+|[\\d-/]|(\"[A-zÀ-ÿ- ]+\")")
     }
 
@@ -41,6 +47,8 @@ export class Completer implements vscode.CompletionItemProvider, vscode.HoverPro
         this.commodities = data.commodities
         this.payees = data.payees
         this.narrations = data.narrations
+        this.tags = data.tags
+        this.links = data.links
     }
 
     describeAccount(name: string): string {
@@ -90,13 +98,26 @@ export class Completer implements vscode.CompletionItemProvider, vscode.HoverPro
 
     provideCompletionItems(document: TextDocument, position: Position, token: CancellationToken, context: CompletionContext): Promise<vscode.CompletionItem[] | vscode.CompletionList> {
         return new Promise((resolve, _reject) => {
+            if (context.triggerCharacter == "#") {
+                let list = this.tags.map((value, index, array) => {
+                    return new vscode.CompletionItem(value, vscode.CompletionItemKind.Variable)
+                })
+                resolve(list)
+                return
+            } else if (context.triggerCharacter == "^") {
+                let list = this.links.map((value, index, array) => {
+                    return new vscode.CompletionItem(value, vscode.CompletionItemKind.Reference)
+                })
+                resolve(list)
+                return
+            }
             var list: vscode.CompletionItem[] = []
             if(document.lineAt(position.line).text[position.character-1] == '-') {
                 return
             }
             if (document.lineAt(position.line).text[0] == " ") {
                 for(let account in this.accounts) {
-                    const item = new vscode.CompletionItem(account, vscode.CompletionItemKind.Variable)
+                    const item = new vscode.CompletionItem(account, vscode.CompletionItemKind.EnumMember)
                     item.documentation = this.describeAccount(account)
                     list.push(item)
                 }
