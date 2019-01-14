@@ -1,5 +1,8 @@
 ## Change Log
 
+### 0.3.3 (2019-01-13)
+* Auto-completion of tags and links
+
 ### 0.3.2 (2019-01-05)
 * Recognize indented directives. [@zahanm](https://github.com/Lencerf/vscode-beancount/pull/15)
 * Fix the bug that only one commodity is shown in the hover.

@@ -59,6 +59,9 @@ see GitHub [issue page](https://github.com/Lencerf/vscode-beancount/issues)
 
 ## Release Notes
 
+### 0.3.3
+* Auto-completion of tags and links
+
 ### 0.3.2
 * Recognize indented directives. [@zahanm](https://github.com/Lencerf/vscode-beancount/pull/15)
 * Fix the bug that only one commodity is shown in the hover.
@@ -68,9 +71,4 @@ see GitHub [issue page](https://github.com/Lencerf/vscode-beancount/issues)
 * Add logs
 * other minor improvements
 
-### 0.3.0
-* Auto-completion lists now include accounts, payees, and narrations appeared in other files.
-* Hover over account names to check account balances.
-* Remove command `beancount.insertDate`, which is replaced by auto-completion.
-* Temporarily remove `beancount.alignCommodity`.
 
