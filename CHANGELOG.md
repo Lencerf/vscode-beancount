@@ -1,5 +1,8 @@
 ## Change Log
 
+### 0.3.4 (2019-02-18)
+* Fix a bug in auto-completion of links(^)
+
 ### 0.3.3 (2019-01-13)
 * Auto-completion of tags and links
 

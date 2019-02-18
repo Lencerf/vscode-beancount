@@ -1,4 +1,4 @@
-# Beancount
+# VSCode-Beancount
 
 Simple [Beancount](http://furius.ca/beancount/) support for VSCode
 
@@ -59,16 +59,13 @@ see GitHub [issue page](https://github.com/Lencerf/vscode-beancount/issues)
 
 ## Release Notes
 
+### 0.3.4
+* Fix a bug in auto-completion of links(^)
+
 ### 0.3.3
 * Auto-completion of tags and links
 
 ### 0.3.2
 * Recognize indented directives. [@zahanm](https://github.com/Lencerf/vscode-beancount/pull/15)
 * Fix the bug that only one commodity is shown in the hover.
-
-### 0.3.1
-* Fix path problem on Windows
-* Add logs
-* other minor improvements
-
 
