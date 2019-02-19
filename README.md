@@ -6,6 +6,7 @@ Simple [Beancount](http://furius.ca/beancount/) support for VSCode
 [![ratings](https://vsmarketplacebadge.apphb.com/rating-star/Lencerf.beancount.svg)](https://marketplace.visualstudio.com/items?itemName=Lencerf.beancount#review-details)
 [![installs](https://vsmarketplacebadge.apphb.com/installs-short/Lencerf.beancount.svg)](https://marketplace.visualstudio.com/items?itemName=Lencerf.beancount)
 [![license](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://raw.githubusercontent.com/Lencerf/vscode-beancount/master/LICENSE.txt)
+[![Build Status](https://travis-ci.org/Lencerf/vscode-beancount.svg?branch=master)](https://travis-ci.org/Lencerf/vscode-beancount)
 
 
 ## Features
@@ -59,13 +60,12 @@ see GitHub [issue page](https://github.com/Lencerf/vscode-beancount/issues)
 
 ## Release Notes
 
+### 0.3.5
+* auto-completion improvements
+
 ### 0.3.4
 * Fix a bug in auto-completion of links(^)
 
 ### 0.3.3
 * Auto-completion of tags and links
-
-### 0.3.2
-* Recognize indented directives. [@zahanm](https://github.com/Lencerf/vscode-beancount/pull/15)
-* Fix the bug that only one commodity is shown in the hover.
 

@@ -38,7 +38,7 @@ export class Completer implements vscode.CompletionItemProvider, vscode.HoverPro
         this.commodities = []
         this.tags = []
         this.links = []
-        this.wordPattern = new RegExp("[A-zÀ-ÿ:-]+|[\\d.]+|[\\d-/]|(\"[A-zÀ-ÿ- ]+\")")
+        this.wordPattern = new RegExp("[A-Za-zÀ-ÿ:-]+|\"([^\\\\\"]|\\\\\")*\"")
     }
 
     updateData(output:string) {
@@ -116,13 +116,17 @@ export class Completer implements vscode.CompletionItemProvider, vscode.HoverPro
                 return
             }
             if (document.lineAt(position.line).text[0] == " ") {
+                const wordRange = document.getWordRangeAtPosition(position, this.wordPattern)
                 for(let account in this.accounts) {
                     const item = new vscode.CompletionItem(account, vscode.CompletionItemKind.EnumMember)
                     item.documentation = this.describeAccount(account)
+                    item.range = wordRange
                     list.push(item)
                 }
                 this.commodities.forEach((v, i, a) => {
-                    list.push(new vscode.CompletionItem(v, vscode.CompletionItemKind.Unit))
+                    const item = new vscode.CompletionItem(v, vscode.CompletionItemKind.Unit)
+                    item.range = wordRange
+                    list.push(item)
                 })
             } else {
                 if(context.triggerCharacter == '2') {
@@ -139,15 +143,16 @@ export class Completer implements vscode.CompletionItemProvider, vscode.HoverPro
                     resolve(list)
                     return
                 } else {
-                    const lineparts = document.lineAt(position.line).text.split(' ').filter(part => part.length > 0)
-                    if (lineparts.length == 3) {
+                    const lineParts = document.lineAt(position.line).text.split(' ').filter(part => part.length > 0)
+                    if (lineParts.length == 3) {
                         this.payees.forEach((v, i, a) => {
-                            const payee = new vscode.CompletionItem(v, vscode.CompletionItemKind.Constant)
-                            list.push(payee)
+                            const payeeItem = new vscode.CompletionItem(v, vscode.CompletionItemKind.Constant)
+                            list.push(payeeItem)
                         })
                     }
                     this.narrations.forEach((v, i, a) => {
-                        list.push(new vscode.CompletionItem(v, vscode.CompletionItemKind.Text))
+                        const narrationItem = new vscode.CompletionItem(v, vscode.CompletionItemKind.Text)
+                        list.push(narrationItem)
                     })
                 }
             }
