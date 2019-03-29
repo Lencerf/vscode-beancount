@@ -2,12 +2,35 @@
 '''
 from sys import argv
 from beancount import loader
-from beancount.core import getters
+from beancount.core import flags
 from beancount.core.data import Transaction, Open, Close
 from beancount.core.display_context import Align 
 from beancount.core.realization import dump_balances, realize
 import io
 import json
+
+
+reverse_flag_map = {
+    flag_value: flag_name[5:]
+    for flag_name, flag_value
+        in flags.__dict__.items()
+            if flag_name.startswith('FLAG_')
+}
+
+
+def get_flag_metadata(thing):
+    return {
+        "file": thing.meta['filename'],
+        "line": thing.meta['lineno'],
+        "message": "{thing} has flag {flag} ({help})".format(
+            thing=thing.__class__.__name__,
+            flag=reverse_flag_map.get(thing.flag) or thing.flag,
+            help=getattr(thing, 'narration',
+                    getattr(thing, 'payee',
+                        getattr(thing, 'account', r'¯\_(ツ)_/¯')))),
+        "flag": thing.flag
+    }
+
 
 entries, errors, options = loader.load_file(argv[1])
 
@@ -20,8 +43,11 @@ payees = set()
 narrations = set()
 tags = set()
 links = set()
+flagged_entries = []
 
 for entry in entries:
+    if hasattr(entry, 'flag') and entry.flag is not None:
+        flagged_entries.append(get_flag_metadata(entry))
     if isinstance(entry, Transaction):
         payees.add(f'"{entry.payee}"')
         if not entry.narration.startswith("(Padding inserted"):
@@ -30,6 +56,8 @@ for entry in entries:
             links.update(entry.links)
         for posting in entry.postings:
             commodities.add(posting.units.currency)
+            if hasattr(posting, 'flag') and posting.flag is not None:
+                flagged_entries.append(get_flag_metadata(posting))
     elif isinstance(entry, Open):
         accounts[entry.account] = {
             'open': entry.date.__str__(),
@@ -69,4 +97,4 @@ output['links'] = list(links)
 
 print(json.dumps(error_list))
 print(json.dumps(output))
-
+print(json.dumps(flagged_entries))
