@@ -4,6 +4,7 @@ import * as vscode from 'vscode';
 import { existsSync } from 'fs';
 import { isAbsolute, join } from 'path';
 import { FavaManager } from './favaManager'
+import { ActionProvider } from './actionProvider'
 import { Completer } from './completer'
 import { Formatter } from './formatter'
 import { run_cmd } from './utils'
@@ -24,6 +25,7 @@ export function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push(vscode.languages.registerCompletionItemProvider({ scheme: 'file', language: 'beancount'}, extension.completer, '2', '#', '^'))
     context.subscriptions.push(vscode.languages.registerHoverProvider({ scheme: "file", language: "beancount"}, extension.completer))
+    context.subscriptions.push(vscode.languages.registerCodeActionsProvider({scheme: "file", language: "beancount"}, extension.actionProvider))
     context.subscriptions.push(vscode.workspace.onDidChangeTextDocument( (e:vscode.TextDocumentChangeEvent) => extension.formatter.instantFormat(e) ))
     context.subscriptions.push(vscode.workspace.onDidSaveTextDocument((e:vscode.TextDocument) => extension.refreshData(context)))
     context.subscriptions.push(vscode.workspace.onDidChangeConfiguration((e:vscode.ConfigurationChangeEvent) => extension.configurationUpdated(e, context)))
@@ -41,6 +43,7 @@ export function deactivate() {
 
 export class Extension {
     completer: Completer
+    actionProvider: ActionProvider
     favaManager: FavaManager
     diagnosticCollection: vscode.DiagnosticCollection
     formatter: Formatter
@@ -49,6 +52,7 @@ export class Extension {
 
     constructor() {
         this.completer = new Completer(this)
+        this.actionProvider = new ActionProvider()
         this.favaManager = new FavaManager(this)
         this.diagnosticCollection = vscode.languages.createDiagnosticCollection('Beancount')
         this.formatter = new Formatter()
@@ -111,6 +115,7 @@ export class Extension {
                 new vscode.Position(e.line, 0))
             const diag = new vscode.Diagnostic(range, e.message, vscode.DiagnosticSeverity.Error)
             diag.source = 'Beancount'
+            diag.code = DiagnosticCodes.error;
             if (diagsCollection[e.file] === undefined) {
                 diagsCollection[e.file] = []
             }
@@ -123,7 +128,7 @@ export class Extension {
             }
             const range = new vscode.Range(new vscode.Position(f.line-1,0),
                 new vscode.Position(f.line, 0))
-            const diag = new vscode.Diagnostic(range, f.message, warningType)
+            const diag = new FlagDiagnostic(f.flag, range, f.message, warningType)
             diag.source = 'Beancount'
             if (diagsCollection[f.file] === undefined) {
                 diagsCollection[f.file] = []
@@ -144,6 +149,21 @@ export class Extension {
             this.refreshData(context)
         }
     }
+}
+
+export class FlagDiagnostic extends vscode.Diagnostic {
+    readonly code: number = DiagnosticCodes.flag
+    flag: string
+
+    constructor(flag: string, range: vscode.Range, message: string, severity?: vscode.DiagnosticSeverity) {
+        super(range, message, severity);
+        this.flag = flag
+    }
+}
+
+const DiagnosticCodes = {
+    error: 1,
+    flag: 2,
 }
 
 interface BeancountError {
