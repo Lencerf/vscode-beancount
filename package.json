@@ -2,7 +2,7 @@
     "name": "beancount",
     "displayName": "Beancount",
     "description": "VSCode extension for Beancount",
-    "version": "0.3.5",
+    "version": "0.3.6",
     "publisher": "Lencerf",
     "engines": {
         "vscode": "^1.23.0"
@@ -55,6 +55,21 @@
                     "type": "string",
                     "default": "python3",
                     "description": "Specify the path of Python if beancount is not installed in the main Python installation."
+                },
+                "beancount.flagWarnings": {
+                    "type":"object",
+                    "default":{
+                        "*": null,
+                        "!": 1,
+                        "P": null,
+                        "S": null,
+                        "T": null,
+                        "C": null,
+                        "U": null,
+                        "R": null,
+                        "M": null
+                    },
+                    "description": "Provide a map from flag value (a string) to VS Code severity level, or null to not show a warning for this flag."
                 }
             }
         },

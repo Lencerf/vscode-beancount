@@ -26,6 +26,7 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(vscode.languages.registerHoverProvider({ scheme: "file", language: "beancount"}, extension.completer))
     context.subscriptions.push(vscode.workspace.onDidChangeTextDocument( (e:vscode.TextDocumentChangeEvent) => extension.formatter.instantFormat(e) ))
     context.subscriptions.push(vscode.workspace.onDidSaveTextDocument((e:vscode.TextDocument) => extension.refreshData(context)))
+    context.subscriptions.push(vscode.workspace.onDidChangeConfiguration((e:vscode.ConfigurationChangeEvent) => extension.configurationUpdated(e, context)))
     
     extension.refreshData(context);
     if (vscode.workspace.getConfiguration("beancount")["runFavaOnActivate"]) {
@@ -44,6 +45,7 @@ export class Extension {
     diagnosticCollection: vscode.DiagnosticCollection
     formatter: Formatter
     logger: vscode.OutputChannel
+    flagWarnings: FlagWarnings
 
     constructor() {
         this.completer = new Completer(this)
@@ -51,6 +53,7 @@ export class Extension {
         this.diagnosticCollection = vscode.languages.createDiagnosticCollection('Beancount')
         this.formatter = new Formatter()
         this.logger = vscode.window.createOutputChannel("Beancount")
+        this.flagWarnings = vscode.workspace.getConfiguration("beancount")["flagWarnings"]
     }
 
     public getMainBeanFile(): string {
@@ -92,15 +95,16 @@ export class Extension {
         }
         this.logger.appendLine(`running [${python3Path} ${checkpy} ${mainBeanFile}] to refresh data...`)
         run_cmd(python3Path, [checkpy, mainBeanFile], (text: string) => {
-            const errors_completions = text.split('\n', 2)
-            this.provideDiagnostics(errors_completions[0])
+            const errors_completions = text.split('\n', 3)
+            this.provideDiagnostics(errors_completions[0], errors_completions[2])
             this.completer.updateData(errors_completions[1])
             this.logger.appendLine("Data refreshed.")
         });
     }
 
-    provideDiagnostics(output: string) {
-        let errors:BeancountError[] = JSON.parse(output)
+    provideDiagnostics(errors_json: string, flags_json: string) {
+        let errors:BeancountError[] = JSON.parse(errors_json)
+        let flags:BeancountFlag[] = JSON.parse(flags_json)
         const diagsCollection: { [key: string]: vscode.Diagnostic[] } = {}
         errors.forEach(e => {
             const range = new vscode.Range(new vscode.Position(e.line-1,0),
@@ -112,9 +116,32 @@ export class Extension {
             }
             diagsCollection[e.file].push(diag)
         });
+        flags.forEach(f => {
+            const warningType = this.flagWarnings[f.flag];
+            if (warningType === null || warningType === undefined) {
+                return;
+            }
+            const range = new vscode.Range(new vscode.Position(f.line-1,0),
+                new vscode.Position(f.line, 0))
+            const diag = new vscode.Diagnostic(range, f.message, warningType)
+            diag.source = 'Beancount'
+            if (diagsCollection[f.file] === undefined) {
+                diagsCollection[f.file] = []
+            }
+            diagsCollection[f.file].push(diag)
+        })
         this.diagnosticCollection.clear()
         for (const file in diagsCollection) {
             this.diagnosticCollection.set(vscode.Uri.file(file), diagsCollection[file])
+        }
+    }
+
+    public configurationUpdated(e: vscode.ConfigurationChangeEvent, context: vscode.ExtensionContext) {
+        if (e.affectsConfiguration("beancount.flagWarnings")) {
+            this.flagWarnings = vscode.workspace.getConfiguration("beancount")["flagWarnings"]
+        }
+        if (e.affectsConfiguration("beancount.flagWarnings") || e.affectsConfiguration("beancount.python3Path") || e.affectsConfiguration("beancount.mainBeanFile")) {
+            this.refreshData(context)
         }
     }
 }
@@ -123,4 +150,24 @@ interface BeancountError {
     file: string,
     line: number,
     message: string
+}
+
+interface BeancountFlag {
+    file: string,
+    line: number,
+    message: string,
+    flag: string
+}
+
+interface FlagWarnings {
+    [index: string]: vscode.DiagnosticSeverity | null | undefined;
+    "*": vscode.DiagnosticSeverity | null,
+    "!": vscode.DiagnosticSeverity | null,
+    "P": vscode.DiagnosticSeverity | null,
+    "S": vscode.DiagnosticSeverity | null,
+    "T": vscode.DiagnosticSeverity | null,
+    "C": vscode.DiagnosticSeverity | null,
+    "U": vscode.DiagnosticSeverity | null,
+    "R": vscode.DiagnosticSeverity | null,
+    "M": vscode.DiagnosticSeverity | null,
 }
