@@ -38,7 +38,7 @@ export class Completer implements vscode.CompletionItemProvider, vscode.HoverPro
         this.commodities = []
         this.tags = []
         this.links = []
-        this.wordPattern = new RegExp("[A-Za-zÀ-ÿ:-]+|\"([^\\\\\"]|\\\\\")*\"")
+        this.wordPattern = new RegExp("[A-Za-zÀ-ÿ:]+[A-Za-zÀ-ÿ0-9:-]+|\"([^\\\\\"]|\\\\\")*\"")
     }
 
     updateData(output:string) {
