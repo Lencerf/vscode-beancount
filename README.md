@@ -60,12 +60,13 @@ see GitHub [issue page](https://github.com/Lencerf/vscode-beancount/issues)
 
 ## Release Notes
 
+### 0.4.0
+* Add support for non-ascii characters in account names [@lockjs](https://github.com/Lencerf/vscode-beancount/pull/19)
+* Add "flag as okay" quickfix for flag warnings [@mjec](https://github.com/Lencerf/vscode-beancount/pull/18)
+
 ### 0.3.5
 * auto-completion improvements
 
 ### 0.3.4
 * Fix a bug in auto-completion of links(^)
-
-### 0.3.3
-* Auto-completion of tags and links
 

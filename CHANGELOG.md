@@ -1,5 +1,9 @@
 ## Change Log
 
+### 0.4.0 (2019-07-17)
+* Add support for non-ascii characters in account names [@lockjs](https://github.com/Lencerf/vscode-beancount/pull/19)
+* Add "flag as okay" quickfix for flag warnings [@mjec](https://github.com/Lencerf/vscode-beancount/pull/18)
+
 ### 0.3.4, 0.3.5 (2019-02-18)
 * Fix a bug in auto-completion of links(^)
 * auto-completion improvements
