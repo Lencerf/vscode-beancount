@@ -654,7 +654,7 @@
 		<key>account</key>
 		<dict>
 			<key>begin</key>
-			<string>([A-Z][A-Za-z0-9\-]+)(:)</string>
+			<string>([A-Z][a-z]+)(:)</string>
 			<key>beginCaptures</key>
 			<dict>
 				<key>1</key>
@@ -676,7 +676,7 @@
 			<array>
 				<dict>
 					<key>begin</key>
-					<string>([A-Z][A-Za-z0-9\-]+)([:]?)</string>
+					<string>(\S+)([:]?)</string>
 					<key>beginCaptures</key>
 					<dict>
 						<key>1</key>
