@@ -26,7 +26,7 @@ export class Formatter {
             if ( transArray != null ) {
                 // the user inserted a new line under a transaction
                 let r = new Range(new Position(line + 1, 0), new Position(line + 1, 0));
-                let tabSize = vscode.workspace.getConfiguration("editor")["tabSize"];
+                let tabSize = <number> vscode.window.activeTextEditor.options.tabSize;
                 let edit = new vscode.TextEdit(r, ' '.repeat(tabSize));
                 let wEdit = new vscode.WorkspaceEdit();
                 wEdit.set(vscode.window.activeTextEditor.document.uri, [edit]);
