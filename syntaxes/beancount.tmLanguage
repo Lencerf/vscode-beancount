@@ -837,7 +837,7 @@
 		<key>flag</key>
 		<dict>
 			<key>match</key>
-			<string>(?&lt;=\s)([*!&amp;amp;#?%PSTCURM])</string>
+			<string>(?&lt;=\s)([*!&amp;amp;#?%PSTCURM])(?=\s+)</string>
 			<key>name</key>
 			<string>keyword.other.beancount</string>
 		</dict>
