@@ -97,8 +97,12 @@ export class Extension {
             this.logger.appendLine("find no valid bean files.")
             return
         }
-        this.logger.appendLine(`running [${python3Path} ${checkpy} ${mainBeanFile}] to refresh data...`)
-        run_cmd(python3Path, [checkpy, mainBeanFile], (text: string) => {
+        var pyArgs = [checkpy, mainBeanFile]
+        if (vscode.workspace.getConfiguration("beancount")["completePayeeNarration"]) {
+            pyArgs.push("--payeeNarration")
+        }
+        this.logger.appendLine(`running ${python3Path} ${pyArgs} to refresh data...`)
+        run_cmd(python3Path, pyArgs, (text: string) => {
             const errors_completions = text.split('\n', 3)
             this.provideDiagnostics(errors_completions[0], errors_completions[2])
             this.completer.updateData(errors_completions[1])

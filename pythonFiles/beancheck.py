@@ -33,6 +33,7 @@ def get_flag_metadata(thing):
 
 
 entries, errors, options = loader.load_file(argv[1])
+completePayeeNarration = "--payeeNarration" in argv
 
 error_list = [{"file": e.source['filename'], "line": e.source['lineno'], "message": e.message} for e in errors]
 
@@ -49,9 +50,11 @@ for entry in entries:
     if hasattr(entry, 'flag') and entry.flag is not None:
         flagged_entries.append(get_flag_metadata(entry))
     if isinstance(entry, Transaction):
-        payees.add(f'"{entry.payee}"')
+        if completePayeeNarration:
+            payees.add(f'"{entry.payee}"')
         if not entry.narration.startswith("(Padding inserted"):
-            narrations.add(f'"{entry.narration}"')
+            if completePayeeNarration:
+                narrations.add(f'"{entry.narration}"')
             tags.update(entry.tags)
             links.update(entry.links)
         for posting in entry.postings:

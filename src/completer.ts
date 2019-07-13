@@ -142,7 +142,7 @@ export class Completer implements vscode.CompletionItemProvider, vscode.HoverPro
                     }
                     resolve(list)
                     return
-                } else {
+                } else if (vscode.workspace.getConfiguration("beancount")["completePayeeNarration"]) {
                     const lineParts = document.lineAt(position.line).text.split(' ').filter(part => part.length > 0)
                     if (lineParts.length == 3) {
                         this.payees.forEach((v, i, a) => {

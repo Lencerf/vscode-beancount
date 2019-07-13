@@ -36,6 +36,11 @@
                     "default": true,
                     "description": "Set to true to align the amount (like 1.00 BTC) once a decimal point is inserted."
                 },
+                "beancount.completePayeeNarration": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Controls whether the auto completion list should include payee and narration fields."
+                },
                 "beancount.mainBeanFile": {
                     "type": "string",
                     "default": "",
