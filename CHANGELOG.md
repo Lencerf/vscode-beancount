@@ -1,6 +1,11 @@
 ## Change Log
 
-### 0.4.0 (2019-07-17)
+### 0.4.1 (2019-07-13)
+* Ensure accounts in transaction can start with all letters [@jumoel](https://github.com/Lencerf/vscode-beancount/pull/23).
+* Add an option to disable autocompletion of payee and narration fields.
+* Make formatter aware of language specific tabSize settings [@sevenkplus](https://github.com/Lencerf/vscode-beancount/pull/21).
+
+### 0.4.0 (2019-06-17)
 * Add support for non-ascii characters in account names [@lockjs](https://github.com/Lencerf/vscode-beancount/pull/19)
 * Add "flag as okay" quickfix for flag warnings [@mjec](https://github.com/Lencerf/vscode-beancount/pull/18)
 
