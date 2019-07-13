@@ -47,7 +47,7 @@ links = set()
 flagged_entries = []
 
 for entry in entries:
-    if hasattr(entry, 'flag') and entry.flag is not None:
+    if hasattr(entry, 'flag') and entry.flag == "!":
         flagged_entries.append(get_flag_metadata(entry))
     if isinstance(entry, Transaction):
         if completePayeeNarration:
@@ -59,7 +59,7 @@ for entry in entries:
             links.update(entry.links)
         for posting in entry.postings:
             commodities.add(posting.units.currency)
-            if hasattr(posting, 'flag') and posting.flag is not None:
+            if hasattr(posting, 'flag') and posting.flag == "!":
                 flagged_entries.append(get_flag_metadata(posting))
     elif isinstance(entry, Open):
         accounts[entry.account] = {
