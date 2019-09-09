@@ -102,12 +102,13 @@ export class Extension {
             pyArgs.push("--payeeNarration")
         }
         this.logger.appendLine(`running ${python3Path} ${pyArgs} to refresh data...`)
+        let cwd = vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders[0].uri.fsPath : undefined;
         run_cmd(python3Path, pyArgs, (text: string) => {
             const errors_completions = text.split('\n', 3)
             this.provideDiagnostics(errors_completions[0], errors_completions[2])
             this.completer.updateData(errors_completions[1])
             this.logger.appendLine("Data refreshed.")
-        });
+        }, cwd? {cwd} : undefined, str => this.logger.append(str));
     }
 
     provideDiagnostics(errors_json: string, flags_json: string) {
