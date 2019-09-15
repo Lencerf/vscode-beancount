@@ -176,7 +176,7 @@
 		</dict>
 		<dict>
 			<key>begin</key>
-			<string>([0-9]{4})([\-|/])([0-9]{2})([\-|/])([0-9]{2})\s+(open|close|pad|custom)</string>
+			<string>([0-9]{4})([\-|/])([0-9]{2})([\-|/])([0-9]{2})\s+(open|close|pad)\b</string>
 			<key>beginCaptures</key>
 			<dict>
 				<key>1</key>
@@ -239,6 +239,88 @@
 					<string>\,</string>
 					<key>name</key>
 					<string>punctuation.separator.beancount</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#illegal</string>
+				</dict>
+			</array>
+		</dict>
+		<dict>
+			<key>begin</key>
+			<string>([0-9]{4})([\-|/])([0-9]{2})([\-|/])([0-9]{2})\s+(custom)\b</string>
+			<key>beginCaptures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>constant.numeric.date.year.beancount</string>
+				</dict>
+				<key>2</key>
+				<dict>
+					<key>name</key>
+					<string>punctuation.separator.beancount</string>
+				</dict>
+				<key>3</key>
+				<dict>
+					<key>name</key>
+					<string>constant.numeric.date.month.beancount</string>
+				</dict>
+				<key>4</key>
+				<dict>
+					<key>name</key>
+					<string>punctuation.separator.beancount</string>
+				</dict>
+				<key>5</key>
+				<dict>
+					<key>name</key>
+					<string>constant.numeric.date.day.beancount</string>
+				</dict>
+				<key>6</key>
+				<dict>
+					<key>name</key>
+					<string>support.function.beancount</string>
+				</dict>
+			</dict>
+			<key>comment</key>
+			<string>Custom directive</string>
+			<key>end</key>
+			<string>(?=(^\s*$|^\S))</string>
+			<key>name</key>
+			<string>meta.directive.dated.beancount</string>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>#comments</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#meta</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#string</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#bool</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#amount</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#number</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#date</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#account</string>
 				</dict>
 				<dict>
 					<key>include</key>
