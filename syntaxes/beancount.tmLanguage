@@ -570,7 +570,7 @@
 		</dict>
 		<dict>
 			<key>begin</key>
-			<string>([0-9]{4})([\-|/])([0-9]{2})([\-|/])([0-9]{2})\s+(txn|[*!&amp;amp;#?%PSTCURM])(?:\s+(".*")(?=\s+"))?\s+(".*?")(?=((?:\s+#[a-zA-z\-]+(?=\s))*(?:\s+\^[a-zA-z\-\.]+(?=\s))*(?:\s+;\s*.*)?)\s)</string>
+			<string>([0-9]{4})([\-|/])([0-9]{2})([\-|/])([0-9]{2})\s*(txn|[*!&amp;#?%PSTCURM])\s*(".*?")?\s*(".*?")?</string>
 			<key>beginCaptures</key>
 			<dict>
 				<key>1</key>
@@ -837,7 +837,7 @@
 		<key>flag</key>
 		<dict>
 			<key>match</key>
-			<string>(?&lt;=\s)([*!&amp;amp;#?%PSTCURM])(?=\s+)</string>
+			<string>(?&lt;=\s)([*!&amp;#?%PSTCURM])(?=\s+)</string>
 			<key>name</key>
 			<string>keyword.other.beancount</string>
 		</dict>
