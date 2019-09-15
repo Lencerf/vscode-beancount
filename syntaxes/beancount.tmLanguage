@@ -744,7 +744,7 @@
 				</dict>
 			</dict>
 			<key>match</key>
-			<string>(?&lt;=\s)(;.*)(?=\n)</string>
+			<string>(;.*)$</string>
 		</dict>
 		<key>commodity</key>
 		<dict>
@@ -864,7 +864,7 @@
 				</dict>
 			</dict>
 			<key>match</key>
-			<string>(?&lt;=\s)(\^)([A-Za-z0-9\-_/.]+)(?=\s)</string>
+			<string>(\^)([A-Za-z0-9\-_/.]+)</string>
 		</dict>
 		<key>meta</key>
 		<dict>
@@ -1013,7 +1013,7 @@
 				</dict>
 			</dict>
 			<key>match</key>
-			<string>(?&lt;=\s)(#)([A-Za-z0-9\-_/.]+)(?=\s)</string>
+			<string>(#)([A-Za-z0-9\-_/.]+)</string>
 		</dict>
 	</dict>
 	<key>scopeName</key>
