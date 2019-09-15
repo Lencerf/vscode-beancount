@@ -708,6 +708,47 @@
 				</dict>
 			</array>
 		</dict>
+		<key>bool</key>
+		<dict>
+			<key>captures</key>
+			<dict>
+				<key>0</key>
+				<dict>
+					<key>name</key>
+					<string>constant.language.bool.beancount</string>
+				</dict>
+				<key>2</key>
+				<dict>
+					<key>name</key>
+					<string>constant.numeric.currency.beancount</string>
+				</dict>
+				<key>3</key>
+				<dict>
+					<key>name</key>
+					<string>entity.type.commodity.beancount</string>
+				</dict>
+			</dict>
+			<key>match</key>
+			<string>TRUE|FALSE</string>
+		</dict>
+		<key>number</key>
+		<dict>
+			<key>captures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>keyword.operator.modifier.beancount</string>
+				</dict>
+				<key>2</key>
+				<dict>
+					<key>name</key>
+					<string>constant.numeric.currency.beancount</string>
+				</dict>
+			</dict>
+			<key>match</key>
+			<string>([\-|\+]?)(\d+(?:,\d{3})*(?:\.\d*)?)</string>
+		</dict>
 		<key>amount</key>
 		<dict>
 			<key>captures</key>
@@ -729,7 +770,7 @@
 				</dict>
 			</dict>
 			<key>match</key>
-			<string>([\-|\+]?)((?:\d|\d[\d,]*\d)(?:\.\d*)?)\s*([A-Z][A-Z0-9\'\.\_\-]{0,22}[A-Z0-9])</string>
+			<string>([\-|\+]?)(\d+(?:,\d{3})*(?:\.\d*)?)\s*([A-Z][A-Z0-9\'\.\_\-]{0,22}[A-Z0-9])</string>
 			<key>name</key>
 			<string>meta.amount.beancount</string>
 		</dict>
@@ -869,7 +910,7 @@
 		<key>meta</key>
 		<dict>
 			<key>begin</key>
-			<string>^\s*([a-z][A-Za-z0-9\-]+)([:])\s</string>
+			<string>^\s*([a-z][A-Za-z0-9\-_]+)([:])</string>
 			<key>beginCaptures</key>
 			<dict>
 				<key>1</key>
@@ -892,6 +933,34 @@
 				<dict>
 					<key>include</key>
 					<string>#string</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#account</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#bool</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#commodity</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#date</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#tag</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#amount</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#number</string>
 				</dict>
 				<dict>
 					<key>include</key>
