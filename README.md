@@ -60,6 +60,10 @@ see GitHub [issue page](https://github.com/Lencerf/vscode-beancount/issues)
 
 ## Release Notes
 
+### 0.4.2
+* Support relative path to python (to allow wrapper scripts) [@vizanto](https://github.com/Lencerf/vscode-beancount/pull/27).
+* Syntax Highlight Enhancement [@SEIAROTg](https://github.com/Lencerf/vscode-beancount/pull/28).
+
 ### 0.4.1
 * Ensure accounts in transaction can start with all letters [@jumoel](https://github.com/Lencerf/vscode-beancount/pull/23).
 * Add an option to disable autocompletion of payee and narration fields.
@@ -68,7 +72,4 @@ see GitHub [issue page](https://github.com/Lencerf/vscode-beancount/issues)
 ### 0.4.0
 * Add support for non-ascii characters in account names [@lockjs](https://github.com/Lencerf/vscode-beancount/pull/19)
 * Add "flag as okay" quickfix for flag warnings [@mjec](https://github.com/Lencerf/vscode-beancount/pull/18)
-
-### 0.3.5
-* auto-completion improvements
 

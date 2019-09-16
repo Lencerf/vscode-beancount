@@ -1,5 +1,9 @@
 ## Change Log
 
+### 0.4.2 (2019-09-16)
+* Support relative path to python (to allow wrapper scripts) [@vizanto](https://github.com/Lencerf/vscode-beancount/pull/27).
+* Syntax Highlight Enhancement [@SEIAROTg](https://github.com/Lencerf/vscode-beancount/pull/28).
+
 ### 0.4.1 (2019-07-13)
 * Ensure accounts in transaction can start with all letters [@jumoel](https://github.com/Lencerf/vscode-beancount/pull/23).
 * Add an option to disable autocompletion of payee and narration fields.
