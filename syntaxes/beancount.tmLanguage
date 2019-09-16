@@ -132,7 +132,7 @@
 		</dict>
 		<dict>
 			<key>begin</key>
-			<string>^\s*(plugin)\s+(\"(.*)\")\s+(\".*\")</string>
+			<string>^\s*(plugin)\s*("(.*?)")\s*(".*?")?</string>
 			<key>beginCaptures</key>
 			<dict>
 				<key>1</key>
@@ -176,7 +176,7 @@
 		</dict>
 		<dict>
 			<key>begin</key>
-			<string>([0-9]{4})([\-|/])([0-9]{2})([\-|/])([0-9]{2})\s+(open|close|pad|custom)</string>
+			<string>([0-9]{4})([\-|/])([0-9]{2})([\-|/])([0-9]{2})\s+(open|close|pad)\b</string>
 			<key>beginCaptures</key>
 			<dict>
 				<key>1</key>
@@ -239,6 +239,88 @@
 					<string>\,</string>
 					<key>name</key>
 					<string>punctuation.separator.beancount</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#illegal</string>
+				</dict>
+			</array>
+		</dict>
+		<dict>
+			<key>begin</key>
+			<string>([0-9]{4})([\-|/])([0-9]{2})([\-|/])([0-9]{2})\s+(custom)\b</string>
+			<key>beginCaptures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>constant.numeric.date.year.beancount</string>
+				</dict>
+				<key>2</key>
+				<dict>
+					<key>name</key>
+					<string>punctuation.separator.beancount</string>
+				</dict>
+				<key>3</key>
+				<dict>
+					<key>name</key>
+					<string>constant.numeric.date.month.beancount</string>
+				</dict>
+				<key>4</key>
+				<dict>
+					<key>name</key>
+					<string>punctuation.separator.beancount</string>
+				</dict>
+				<key>5</key>
+				<dict>
+					<key>name</key>
+					<string>constant.numeric.date.day.beancount</string>
+				</dict>
+				<key>6</key>
+				<dict>
+					<key>name</key>
+					<string>support.function.beancount</string>
+				</dict>
+			</dict>
+			<key>comment</key>
+			<string>Custom directive</string>
+			<key>end</key>
+			<string>(?=(^\s*$|^\S))</string>
+			<key>name</key>
+			<string>meta.directive.dated.beancount</string>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>#comments</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#meta</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#string</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#bool</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#amount</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#number</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#date</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#account</string>
 				</dict>
 				<dict>
 					<key>include</key>
@@ -570,7 +652,7 @@
 		</dict>
 		<dict>
 			<key>begin</key>
-			<string>([0-9]{4})([\-|/])([0-9]{2})([\-|/])([0-9]{2})\s+(txn|[*!&amp;amp;#?%PSTCURM])(?:\s+(".*")(?=\s+"))?\s+(".*?")(?=((?:\s+#[a-zA-z\-]+(?=\s))*(?:\s+\^[a-zA-z\-\.]+(?=\s))*(?:\s+;\s*.*)?)\s)</string>
+			<string>([0-9]{4})([\-|/])([0-9]{2})([\-|/])([0-9]{2})\s*(txn|[*!&amp;#?%PSTCURM])\s*(".*?")?\s*(".*?")?</string>
 			<key>beginCaptures</key>
 			<dict>
 				<key>1</key>
@@ -708,6 +790,47 @@
 				</dict>
 			</array>
 		</dict>
+		<key>bool</key>
+		<dict>
+			<key>captures</key>
+			<dict>
+				<key>0</key>
+				<dict>
+					<key>name</key>
+					<string>constant.language.bool.beancount</string>
+				</dict>
+				<key>2</key>
+				<dict>
+					<key>name</key>
+					<string>constant.numeric.currency.beancount</string>
+				</dict>
+				<key>3</key>
+				<dict>
+					<key>name</key>
+					<string>entity.type.commodity.beancount</string>
+				</dict>
+			</dict>
+			<key>match</key>
+			<string>TRUE|FALSE</string>
+		</dict>
+		<key>number</key>
+		<dict>
+			<key>captures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>keyword.operator.modifier.beancount</string>
+				</dict>
+				<key>2</key>
+				<dict>
+					<key>name</key>
+					<string>constant.numeric.currency.beancount</string>
+				</dict>
+			</dict>
+			<key>match</key>
+			<string>([\-|\+]?)(\d+(?:,\d{3})*(?:\.\d*)?)</string>
+		</dict>
 		<key>amount</key>
 		<dict>
 			<key>captures</key>
@@ -729,7 +852,7 @@
 				</dict>
 			</dict>
 			<key>match</key>
-			<string>([\-|\+]?)((?:\d|\d[\d,]*\d)(?:\.\d*)?)\s*([A-Z][A-Z0-9\'\.\_\-]{0,22}[A-Z0-9])</string>
+			<string>([\-|\+]?)(\d+(?:,\d{3})*(?:\.\d*)?)\s*([A-Z][A-Z0-9\'\.\_\-]{0,22}[A-Z0-9])</string>
 			<key>name</key>
 			<string>meta.amount.beancount</string>
 		</dict>
@@ -744,7 +867,7 @@
 				</dict>
 			</dict>
 			<key>match</key>
-			<string>(?&lt;=\s)(;.*)(?=\n)</string>
+			<string>(;.*)$</string>
 		</dict>
 		<key>commodity</key>
 		<dict>
@@ -837,7 +960,7 @@
 		<key>flag</key>
 		<dict>
 			<key>match</key>
-			<string>(?&lt;=\s)([*!&amp;amp;#?%PSTCURM])(?=\s+)</string>
+			<string>(?&lt;=\s)([*!&amp;#?%PSTCURM])(?=\s+)</string>
 			<key>name</key>
 			<string>keyword.other.beancount</string>
 		</dict>
@@ -864,12 +987,12 @@
 				</dict>
 			</dict>
 			<key>match</key>
-			<string>(?&lt;=\s)(\^)([A-Za-z0-9\-_/.]+)(?=\s)</string>
+			<string>(\^)([A-Za-z0-9\-_/.]+)</string>
 		</dict>
 		<key>meta</key>
 		<dict>
 			<key>begin</key>
-			<string>^\s*([a-z][A-Za-z0-9\-]+)([:])\s</string>
+			<string>^\s*([a-z][A-Za-z0-9\-_]+)([:])</string>
 			<key>beginCaptures</key>
 			<dict>
 				<key>1</key>
@@ -892,6 +1015,34 @@
 				<dict>
 					<key>include</key>
 					<string>#string</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#account</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#bool</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#commodity</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#date</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#tag</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#amount</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#number</string>
 				</dict>
 				<dict>
 					<key>include</key>
@@ -1013,7 +1164,7 @@
 				</dict>
 			</dict>
 			<key>match</key>
-			<string>(?&lt;=\s)(#)([A-Za-z0-9\-_/.]+)(?=\s)</string>
+			<string>(#)([A-Za-z0-9\-_/.]+)</string>
 		</dict>
 	</dict>
 	<key>scopeName</key>
