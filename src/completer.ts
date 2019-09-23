@@ -53,7 +53,7 @@ export class Completer implements vscode.CompletionItemProvider, vscode.HoverPro
 
     describeAccount(name: string): string {
         if(name in this.accounts) {
-            var lines = [
+            const lines = [
                 name,
                 "balance: " + (this.accounts[name].balance.length > 0 ? this.accounts[name].balance : "0"),
                 "opened on " + this.accounts[name].open
@@ -78,16 +78,16 @@ export class Completer implements vscode.CompletionItemProvider, vscode.HoverPro
             const name = document.getText(wordRange)
             if (name in this.accounts) {
                 let description
-                let balance_array = this.accounts[name].balance.map( (balance, index, balances) => {
+                const balanceArray = this.accounts[name].balance.map( (balance, index, balances) => {
                     return "* " + balance
                 })
-                if (balance_array.length == 0) {
+                if (balanceArray.length === 0) {
                     description = new vscode.MarkdownString(name + "\n\nbalance: 0")
-                } else if (balance_array.length == 1) {
+                } else if (balanceArray.length === 1) {
                     description = new vscode.MarkdownString(name + "\n\nbalance: " + this.accounts[name].balance) 
                 } else {
-                    let balance_md = balance_array.join('\n')
-                    description = new vscode.MarkdownString(name + "\n\nbalance:\n" + balance_md) 
+                    const balanceMd = balanceArray.join('\n')
+                    description = new vscode.MarkdownString(name + "\n\nbalance:\n" + balanceMd) 
                 }   
                 resolve(new vscode.Hover(description, wordRange))
             } else {
@@ -98,26 +98,26 @@ export class Completer implements vscode.CompletionItemProvider, vscode.HoverPro
 
     provideCompletionItems(document: TextDocument, position: Position, token: CancellationToken, context: CompletionContext): Promise<vscode.CompletionItem[] | vscode.CompletionList> {
         return new Promise((resolve, _reject) => {
-            if (context.triggerCharacter == "#") {
-                let list = this.tags.map((value, index, array) => {
+            if (context.triggerCharacter === "#") {
+                const list = this.tags.map((value, index, array) => {
                     return new vscode.CompletionItem(value, vscode.CompletionItemKind.Variable)
                 })
                 resolve(list)
                 return
-            } else if (context.triggerCharacter == "^") {
-                let list = this.links.map((value, index, array) => {
+            } else if (context.triggerCharacter === "^") {
+                const list = this.links.map((value, index, array) => {
                     return new vscode.CompletionItem(value, vscode.CompletionItemKind.Reference)
                 })
                 resolve(list)
                 return
             }
-            var list: vscode.CompletionItem[] = []
-            if(document.lineAt(position.line).text[position.character-1] == '-') {
+            const list: vscode.CompletionItem[] = []
+            if(document.lineAt(position.line).text[position.character-1] === '-') {
                 return
             }
-            if (document.lineAt(position.line).text[0] == " ") {
+            if (document.lineAt(position.line).text[0] === " ") {
                 const wordRange = document.getWordRangeAtPosition(position, this.wordPattern)
-                for(let account in this.accounts) {
+                for(const account of Object.keys(this.accounts)) {
                     const item = new vscode.CompletionItem(account, vscode.CompletionItemKind.EnumMember)
                     item.documentation = this.describeAccount(account)
                     item.range = wordRange
@@ -129,22 +129,22 @@ export class Completer implements vscode.CompletionItemProvider, vscode.HoverPro
                     list.push(item)
                 })
             } else {
-                if(context.triggerCharacter == '2') {
-                    if(position.character == 1) {
-                        let today = new Date()
-                        let year = today.getFullYear().toString();
-                        let month = (today.getMonth() + 1 < 10 ? "0" : "") + (today.getMonth() + 1).toString();
-                        let date = (today.getDate() < 10 ? "0" : "") + today.getDate().toString();
-                        let dateString = year + '-' + month + '-' + date;
-                        let item_today = new vscode.CompletionItem(dateString, vscode.CompletionItemKind.Event)
-                        item_today.documentation = "today"
-                        list.push(item_today)
+                if(context.triggerCharacter === '2') {
+                    if(position.character === 1) {
+                        const today = new Date()
+                        const year = today.getFullYear().toString();
+                        const month = (today.getMonth() + 1 < 10 ? "0" : "") + (today.getMonth() + 1).toString();
+                        const date = (today.getDate() < 10 ? "0" : "") + today.getDate().toString();
+                        const dateString = year + '-' + month + '-' + date;
+                        const itemToday = new vscode.CompletionItem(dateString, vscode.CompletionItemKind.Event)
+                        itemToday.documentation = "today"
+                        list.push(itemToday)
                     }
                     resolve(list)
                     return
                 } else if (vscode.workspace.getConfiguration("beancount")["completePayeeNarration"]) {
                     const lineParts = document.lineAt(position.line).text.split(' ').filter(part => part.length > 0)
-                    if (lineParts.length == 3) {
+                    if (lineParts.length === 3) {
                         this.payees.forEach((v, i, a) => {
                             const payeeItem = new vscode.CompletionItem(v, vscode.CompletionItemKind.Constant)
                             list.push(payeeItem)

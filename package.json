@@ -1,129 +1,136 @@
 {
-    "name": "beancount",
-    "displayName": "Beancount",
-    "description": "VSCode extension for Beancount",
-    "version": "0.4.2",
-    "publisher": "Lencerf",
-    "engines": {
-        "vscode": "^1.23.0"
-    },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/Lencerf/vscode-beancount.git"
-    },
-    "bugs": {
-        "url": "https://github.com/Lencerf/vscode-beancount/issues"
-    },
-    "categories": [
-        "Linters",
-        "Formatters"
-    ],
-    "activationEvents": [
-        "onLanguage:beancount"
-    ],
-    "main": "./out/extension",
-    "contributes": {
-        "configuration": {
-            "title": "Beancount Configuration",
-            "properties": {
-                "beancount.separatorColumn": {
-                    "type": "integer",
-                    "default": 50,
-                    "description": "Specify the column of the decimal separator."
-                },
-                "beancount.instantAlignment": {
-                    "type": "boolean",
-                    "default": true,
-                    "description": "Set to true to align the amount (like 1.00 BTC) once a decimal point is inserted."
-                },
-                "beancount.completePayeeNarration": {
-                    "type": "boolean",
-                    "default": true,
-                    "description": "Controls whether the auto completion list should include payee and narration fields."
-                },
-                "beancount.mainBeanFile": {
-                    "type": "string",
-                    "default": "",
-                    "description": "If you are splitting beancount files into multiple files, set this value to either the full path or the relative path to your main bean file so that this extension can get all account information. If it is left blank, the extension will consider the file in the current window as the main file."
-                },
-                "beancount.runFavaOnActivate": {
-                    "type": "boolean",
-                    "default": false,
-                    "description": "If it is set to true, fava will run once this extension is activated."
-                },
-                "beancount.favaPath": {
-                    "type": "string",
-                    "default": "fava",
-                    "description": "Specify the path of Fava if Fava is not installed in the main Python installation."
-                },
-                "beancount.python3Path": {
-                    "type": "string",
-                    "default": "python3",
-                    "description": "Specify the path of Python if beancount is not installed in the main Python installation."
-                },
-                "beancount.flagWarnings": {
-                    "type":"object",
-                    "default":{
-                        "*": null,
-                        "!": 1,
-                        "P": null,
-                        "S": null,
-                        "T": null,
-                        "C": null,
-                        "U": null,
-                        "R": null,
-                        "M": null
-                    },
-                    "description": "Provide a map from flag value (a string) to VS Code severity level, or null to not show a warning for this flag."
-                }
-            }
+  "name": "beancount",
+  "displayName": "Beancount",
+  "description": "VSCode extension for Beancount",
+  "version": "0.4.2",
+  "publisher": "Lencerf",
+  "engines": {
+    "vscode": "^1.23.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Lencerf/vscode-beancount.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Lencerf/vscode-beancount/issues"
+  },
+  "categories": [
+    "Linters",
+    "Formatters"
+  ],
+  "activationEvents": [
+    "onLanguage:beancount"
+  ],
+  "main": "./out/extension",
+  "contributes": {
+    "configuration": {
+      "title": "Beancount Configuration",
+      "properties": {
+        "beancount.separatorColumn": {
+          "type": "integer",
+          "default": 50,
+          "description": "Specify the column of the decimal separator."
         },
-        "commands": [
-            {
-                "command": "beancount.runFava",
-                "title": "Run Fava"
-            }
-        ],
-        "languages": [
-            {
-                "id": "beancount",
-                "aliases": [
-                    "Beancount",
-                    "beancount"
-                ],
-                "extensions": [
-                    ".beancount",
-                    ".bean"
-                ],
-                "configuration": "./language-configuration.json"
-            }
-        ],
-        "grammars": [
-            {
-                "language": "beancount",
-                "scopeName": "text.beancount",
-                "path": "./syntaxes/beancount.tmLanguage"
-            }
-        ],
-        "snippets": [
-            {
-                "language": "beancount",
-                "path": "./snippets/beancount.json"
-            }
-        ]
+        "beancount.instantAlignment": {
+          "type": "boolean",
+          "default": true,
+          "description": "Set to true to align the amount (like 1.00 BTC) once a decimal point is inserted."
+        },
+        "beancount.completePayeeNarration": {
+          "type": "boolean",
+          "default": true,
+          "description": "Controls whether the auto completion list should include payee and narration fields."
+        },
+        "beancount.mainBeanFile": {
+          "type": "string",
+          "default": "",
+          "description": "If you are splitting beancount files into multiple files, set this value to either the full path or the relative path to your main bean file so that this extension can get all account information. If it is left blank, the extension will consider the file in the current window as the main file."
+        },
+        "beancount.runFavaOnActivate": {
+          "type": "boolean",
+          "default": false,
+          "description": "If it is set to true, fava will run once this extension is activated."
+        },
+        "beancount.favaPath": {
+          "type": "string",
+          "default": "fava",
+          "description": "Specify the path of Fava if Fava is not installed in the main Python installation."
+        },
+        "beancount.python3Path": {
+          "type": "string",
+          "default": "python3",
+          "description": "Specify the path of Python if beancount is not installed in the main Python installation."
+        },
+        "beancount.flagWarnings": {
+          "type": "object",
+          "default": {
+            "*": null,
+            "!": 1,
+            "P": null,
+            "S": null,
+            "T": null,
+            "C": null,
+            "U": null,
+            "R": null,
+            "M": null
+          },
+          "description": "Provide a map from flag value (a string) to VS Code severity level, or null to not show a warning for this flag."
+        }
+      }
     },
-    "scripts": {
-        "vscode:prepublish": "npm run compile",
-        "compile": "tsc -p ./",
-        "watch": "tsc -watch -p ./",
-        "postinstall": "node ./node_modules/vscode/bin/install",
-        "test": "npm run compile && node ./node_modules/vscode/bin/test"
-    },
-    "devDependencies": {
-        "@types/mocha": "^2.2.42",
-        "@types/node": "^7.10.2",
-        "tslint": "^5.11.0",
-        "typescript": "^2.9.2",
-        "vscode": "^1.1.26"
-    }
+    "commands": [
+      {
+        "command": "beancount.runFava",
+        "title": "Run Fava"
+      }
+    ],
+    "languages": [
+      {
+        "id": "beancount",
+        "aliases": [
+          "Beancount",
+          "beancount"
+        ],
+        "extensions": [
+          ".beancount",
+          ".bean"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "beancount",
+        "scopeName": "text.beancount",
+        "path": "./syntaxes/beancount.tmLanguage"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "beancount",
+        "path": "./snippets/beancount.json"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p .",
+    "watch": "tsc -watch -p ./",
+    "postinstall": "node ./node_modules/vscode/bin/install",
+    "test": "npm run compile && node ./node_modules/vscode/bin/test",
+    "check": "gts check",
+    "clean": "gts clean",
+    "fix": "gts fix",
+    "prepare": "npm run compile",
+    "pretest": "npm run compile",
+    "posttest": "npm run check"
+  },
+  "devDependencies": {
+    "@types/mocha": "^2.2.42",
+    "@types/node": "^10.0.3",
+    "tslint": "^5.11.0",
+    "typescript": "~3.5.0",
+    "vscode": "^1.1.26",
+    "gts": "^1.1.0"
+  }
 }

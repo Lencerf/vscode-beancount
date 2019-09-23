@@ -3,9 +3,9 @@ import { FlagDiagnostic } from './extension';
 
 export class ActionProvider implements vscode.CodeActionProvider {
 
-    public provideCodeActions(document: vscode.TextDocument, range: vscode.Range, context: vscode.CodeActionContext, token: vscode.CancellationToken) :
-    vscode.ProviderResult<(vscode.Command | vscode.CodeAction)[]> {
-        if (context.only !== undefined && context.only != vscode.CodeActionKind.QuickFix) {
+    provideCodeActions(document: vscode.TextDocument, range: vscode.Range, context: vscode.CodeActionContext, token: vscode.CancellationToken) :
+    vscode.ProviderResult<Array<vscode.Command | vscode.CodeAction>> {
+        if (context.only !== undefined && context.only !== vscode.CodeActionKind.QuickFix) {
             // We can only provide quick fixes
             return
         }
@@ -52,7 +52,7 @@ export class ActionProvider implements vscode.CodeActionProvider {
         }
 
         const flagCharacterIndex = line.text.search(new RegExp('\\s\\' + flag + '\\s')) + 1 // +1 to deal with the leading space in the regex
-        if (flagCharacterIndex == 0) { // regex didn't match (-1 + 1 == 0)
+        if (flagCharacterIndex === 0) { // regex didn't match (-1 + 1 == 0)
             return
         }
 

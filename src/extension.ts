@@ -16,8 +16,8 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand('beancount.runFava', () => extension.favaManager.openFava(true) )
 
     context.subscriptions.push(vscode.window.onDidCloseTerminal(
-        function(terminal:vscode.Terminal) { 
-            if (terminal.name == "Fava") {
+        (terminal:vscode.Terminal) => { 
+            if (terminal.name === "Fava") {
                 extension.favaManager.onDidCloseTerminal()
             }
         }
@@ -60,12 +60,12 @@ export class Extension {
         this.flagWarnings = vscode.workspace.getConfiguration("beancount")["flagWarnings"]
     }
 
-    public getMainBeanFile(): string {
+    getMainBeanFile(): string {
         this.logger.append("try finding a valid bean file...")
-        let mainBeanFile = vscode.workspace.getConfiguration("beancount").get("mainBeanFile")
-        if (mainBeanFile == undefined || mainBeanFile == "") {
+        const mainBeanFile = vscode.workspace.getConfiguration("beancount").get("mainBeanFile")
+        if (mainBeanFile === undefined || mainBeanFile === "") {
             this.logger.append("user did not specify a main bean file in settings...")
-            if (vscode.window.activeTextEditor != undefined && vscode.window.activeTextEditor.document.languageId == 'beancount') {
+            if (vscode.window.activeTextEditor !== undefined && vscode.window.activeTextEditor.document.languageId === 'beancount') {
                 this.logger.appendLine("use the bean file in current editor.")
                 return vscode.window.activeTextEditor.document.fileName
             } else {
@@ -90,37 +90,37 @@ export class Extension {
     }
 
     refreshData(context: vscode.ExtensionContext) {
-        let mainBeanFile = this.getMainBeanFile()
-        let checkpy = context.asAbsolutePath("/pythonFiles/beancheck.py")
-        let python3Path = vscode.workspace.getConfiguration("beancount")["python3Path"]
-        if (mainBeanFile.length == 0 || !existsSync(mainBeanFile)) {
+        const mainBeanFile = this.getMainBeanFile()
+        const checkpy = context.asAbsolutePath("/pythonFiles/beancheck.py")
+        const python3Path = vscode.workspace.getConfiguration("beancount")["python3Path"]
+        if (mainBeanFile.length === 0 || !existsSync(mainBeanFile)) {
             this.logger.appendLine("find no valid bean files.")
             return
         }
-        var pyArgs = [checkpy, mainBeanFile]
+        const pyArgs = [checkpy, mainBeanFile]
         if (vscode.workspace.getConfiguration("beancount")["completePayeeNarration"]) {
             pyArgs.push("--payeeNarration")
         }
         this.logger.appendLine(`running ${python3Path} ${pyArgs} to refresh data...`)
-        let cwd = vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders[0].uri.fsPath : undefined;
+        const cwd = vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders[0].uri.fsPath : undefined;
         run_cmd(python3Path, pyArgs, (text: string) => {
-            const errors_completions = text.split('\n', 3)
-            this.provideDiagnostics(errors_completions[0], errors_completions[2])
-            this.completer.updateData(errors_completions[1])
+            const errorsCompletions = text.split('\n', 3)
+            this.provideDiagnostics(errorsCompletions[0], errorsCompletions[2])
+            this.completer.updateData(errorsCompletions[1])
             this.logger.appendLine("Data refreshed.")
         }, cwd? {cwd} : undefined, str => this.logger.append(str));
     }
 
-    provideDiagnostics(errors_json: string, flags_json: string) {
-        let errors:BeancountError[] = JSON.parse(errors_json)
-        let flags:BeancountFlag[] = JSON.parse(flags_json)
+    provideDiagnostics(errorsJson: string, flagsJson: string) {
+        const errors:BeancountError[] = JSON.parse(errorsJson)
+        const flags:BeancountFlag[] = JSON.parse(flagsJson)
         const diagsCollection: { [key: string]: vscode.Diagnostic[] } = {}
         errors.forEach(e => {
             const range = new vscode.Range(new vscode.Position(e.line-1,0),
                 new vscode.Position(e.line, 0))
             const diag = new vscode.Diagnostic(range, e.message, vscode.DiagnosticSeverity.Error)
             diag.source = 'Beancount'
-            diag.code = DiagnosticCodes.error;
+            diag.code = DIAGNOSTIC_CODES.error;
             if (diagsCollection[e.file] === undefined) {
                 diagsCollection[e.file] = []
             }
@@ -141,12 +141,12 @@ export class Extension {
             diagsCollection[f.file].push(diag)
         })
         this.diagnosticCollection.clear()
-        for (const file in diagsCollection) {
+        for (const file of Object.keys(diagsCollection)) {
             this.diagnosticCollection.set(vscode.Uri.file(file), diagsCollection[file])
         }
     }
 
-    public configurationUpdated(e: vscode.ConfigurationChangeEvent, context: vscode.ExtensionContext) {
+    configurationUpdated(e: vscode.ConfigurationChangeEvent, context: vscode.ExtensionContext) {
         if (e.affectsConfiguration("beancount.flagWarnings")) {
             this.flagWarnings = vscode.workspace.getConfiguration("beancount")["flagWarnings"]
         }
@@ -157,7 +157,7 @@ export class Extension {
 }
 
 export class FlagDiagnostic extends vscode.Diagnostic {
-    readonly code: number = DiagnosticCodes.flag
+    readonly code: number = DIAGNOSTIC_CODES.flag
     flag: string
 
     constructor(flag: string, range: vscode.Range, message: string, severity?: vscode.DiagnosticSeverity) {
@@ -166,7 +166,7 @@ export class FlagDiagnostic extends vscode.Diagnostic {
     }
 }
 
-const DiagnosticCodes = {
+const DIAGNOSTIC_CODES = {
     error: 1,
     flag: 2,
 }

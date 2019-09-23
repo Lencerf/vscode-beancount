@@ -12,11 +12,11 @@ import * as assert from 'assert';
 import { run_cmd } from '../utils'
 
 // Defines a Mocha test suite to group tests of similar kind together
-suite("Extension Tests", function () {
+suite("Extension Tests", () => {
    
-    test("test run_cmd", function() {
-        run_cmd("echo", ["test"], function(text:string) {
-            assert.equal("test", text)
+    test("test run_cmd", () => {
+        run_cmd("echo", ["test"], (text:string) => {
+            assert.strictEqual("test", text)
         })
     });
 });
