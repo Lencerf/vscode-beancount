@@ -2,7 +2,7 @@
   "name": "beancount",
   "displayName": "Beancount",
   "description": "VSCode extension for Beancount",
-  "version": "0.4.2",
+  "version": "0.5.0",
   "publisher": "Lencerf",
   "engines": {
     "vscode": "^1.23.0"
@@ -64,7 +64,7 @@
         "beancount.inputMethods": {
           "type": "array",
           "default": [],
-          "description": "List the input methods for auto-completion of payees and narrations with CJK characters. Currently only `pinyin' is supported."
+          "description": "List the input methods for auto-completion of payees and narrations with CJK characters. Currently only `pinyin' is supported. See details: https://github.com/Lencerf/vscode-beancount/blob/master/InputMethods.md"
         },
         "beancount.flagWarnings": {
           "type": "object",

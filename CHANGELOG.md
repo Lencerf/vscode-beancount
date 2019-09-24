@@ -1,5 +1,9 @@
 ## Change Log
 
+### 0.5.0 (2019-09-23)
+* Use Pinyin initial letters to input existing Chinese narrations and payees quickly.
+* auto completion of narrations and payees now is triggered by `"`.
+
 ### 0.4.2 (2019-09-16)
 * Support relative path to python (to allow wrapper scripts) [@vizanto](https://github.com/Lencerf/vscode-beancount/pull/27).
 * Syntax Highlight Enhancement [@SEIAROTg](https://github.com/Lencerf/vscode-beancount/pull/28).
