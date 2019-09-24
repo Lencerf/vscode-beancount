@@ -10,7 +10,7 @@ import { Formatter } from './formatter';
 import { run_cmd } from './utils';
 
 export function activate(context: vscode.ExtensionContext) {
-  const extension = new Extension();
+  const extension = new Extension(context);
 
   vscode.commands.registerCommand('beancount.runFava', () =>
     extension.favaManager.openFava(true)
@@ -30,7 +30,8 @@ export function activate(context: vscode.ExtensionContext) {
       extension.completer,
       '2',
       '#',
-      '^'
+      '^',
+      '"'
     )
   );
   context.subscriptions.push(
@@ -79,8 +80,10 @@ export class Extension {
   formatter: Formatter;
   logger: vscode.OutputChannel;
   flagWarnings: FlagWarnings;
+  context: vscode.ExtensionContext;
 
-  constructor() {
+  constructor(context: vscode.ExtensionContext) {
+    this.context = context;
     this.completer = new Completer(this);
     this.actionProvider = new ActionProvider();
     this.favaManager = new FavaManager(this);

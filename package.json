@@ -61,6 +61,11 @@
           "default": "python3",
           "description": "Specify the path of Python if beancount is not installed in the main Python installation."
         },
+        "beancount.inputMethods": {
+          "type": "array",
+          "default": [],
+          "description": "List the input methods for auto-completion of payees and narrations with CJK characters. Currently only `pinyin' is supported."
+        },
         "beancount.flagWarnings": {
           "type": "object",
           "default": {

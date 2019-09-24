@@ -4,9 +4,14 @@ import {
   TextDocument,
   CancellationToken,
   CompletionContext,
+  CompletionItem,
+  CompletionItemKind,
 } from 'vscode';
 import { Extension } from './extension';
 import { EOL } from 'os';
+import { countOccurrences } from './utils';
+import { InputMethod } from './inputMethods/inputMethod';
+import { Pinyin } from './inputMethods/pinyin';
 
 interface Account {
   open: string;
@@ -34,6 +39,7 @@ export class Completer
   tags: string[];
   links: string[];
   wordPattern: RegExp;
+  inputMethods: InputMethod[];
 
   constructor(extension: Extension) {
     this.extension = extension;
@@ -44,6 +50,17 @@ export class Completer
     this.tags = [];
     this.links = [];
     this.wordPattern = new RegExp('[A-Za-z:]+\\S+|"([^\\\\"]|\\\\")*"');
+    const inputMethodList = vscode.workspace.getConfiguration('beancount')[
+      'inputMethods'
+    ] as string[];
+    this.inputMethods = [];
+    if (inputMethodList.includes('pinyin')) {
+      this.inputMethods.push(
+        new Pinyin(
+          extension.context.asAbsolutePath('/data/pinyin_initial.json')
+        )
+      );
+    }
   }
 
   updateData(output: string) {
@@ -120,101 +137,143 @@ export class Completer
     position: Position,
     token: CancellationToken,
     context: CompletionContext
-  ): Promise<vscode.CompletionItem[] | vscode.CompletionList> {
+  ): Promise<CompletionItem[] | vscode.CompletionList> {
+    const textBefore = document
+      .lineAt(position.line)
+      .text.substring(0, position.character);
+    const reg = /[0-9]{4,}[\-/][0-9]+[\-/][0-9]+\s*([\*!]|txn)/g;
+    const triggerCharacter = context.triggerCharacter;
     return new Promise((resolve, _reject) => {
-      if (context.triggerCharacter === '#') {
-        const list = this.tags.map((value, index, array) => {
-          return new vscode.CompletionItem(
-            value,
-            vscode.CompletionItemKind.Variable
-          );
-        });
-        resolve(list);
-        return;
-      } else if (context.triggerCharacter === '^') {
-        const list = this.links.map((value, index, array) => {
-          return new vscode.CompletionItem(
-            value,
-            vscode.CompletionItemKind.Reference
-          );
-        });
-        resolve(list);
-        return;
-      }
-      const list: vscode.CompletionItem[] = [];
-      if (document.lineAt(position.line).text[position.character - 1] === '-') {
-        return;
-      }
-      if (document.lineAt(position.line).text[0] === ' ') {
-        const wordRange = document.getWordRangeAtPosition(
-          position,
-          this.wordPattern
-        );
-        for (const account of Object.keys(this.accounts)) {
-          const item = new vscode.CompletionItem(
-            account,
-            vscode.CompletionItemKind.EnumMember
-          );
-          item.documentation = this.describeAccount(account);
-          item.range = wordRange;
-          list.push(item);
+      if (countOccurrences(textBefore, /;/g) > 0) {
+        if (triggerCharacter === '#') {
+          const list: CompletionItem[] = [];
+          list.push(new CompletionItem('region', CompletionItemKind.Text));
+          list.push(new CompletionItem('endregion', CompletionItemKind.Text));
+          resolve(list);
+          return;
+        } else {
+          resolve([]);
+          return;
         }
-        this.commodities.forEach((v, i, a) => {
-          const item = new vscode.CompletionItem(
-            v,
-            vscode.CompletionItemKind.Unit
-          );
-          item.range = wordRange;
-          list.push(item);
+      }
+      if (triggerCharacter === '#') {
+        const list = this.tags.map((value, index, array) => {
+          return new CompletionItem(value, CompletionItemKind.Variable);
         });
-      } else {
-        if (context.triggerCharacter === '2') {
-          if (position.character === 1) {
-            const today = new Date();
-            const year = today.getFullYear().toString();
-            const month =
-              (today.getMonth() + 1 < 10 ? '0' : '') +
-              (today.getMonth() + 1).toString();
-            const date =
-              (today.getDate() < 10 ? '0' : '') + today.getDate().toString();
-            const dateString = year + '-' + month + '-' + date;
-            const itemToday = new vscode.CompletionItem(
-              dateString,
-              vscode.CompletionItemKind.Event
-            );
-            itemToday.documentation = 'today';
-            list.push(itemToday);
+        resolve(list);
+        return;
+      } else if (triggerCharacter === '^') {
+        const list = this.links.map((value, index, array) => {
+          return new CompletionItem(value, CompletionItemKind.Reference);
+        });
+        resolve(list);
+        return;
+      } else if (triggerCharacter === '2' && textBefore.trim() === '2') {
+        const today = new Date();
+        const year = today.getFullYear().toString();
+        const month =
+          (today.getMonth() + 1 < 10 ? '0' : '') +
+          (today.getMonth() + 1).toString();
+        const date =
+          (today.getDate() < 10 ? '0' : '') + today.getDate().toString();
+        const dateString = year + '-' + month + '-' + date;
+        const itemToday = new CompletionItem(
+          dateString,
+          CompletionItemKind.Event
+        );
+        itemToday.documentation = 'today';
+        resolve([itemToday]);
+        return;
+      } else if (
+        triggerCharacter === '"' &&
+        vscode.workspace.getConfiguration('beancount')['completePayeeNarration']
+      ) {
+        const r = reg.exec(textBefore);
+        const numQuotes =
+          countOccurrences(textBefore, /\"/g) -
+          countOccurrences(textBefore, /\\"/g);
+        if (r != null && numQuotes % 2 === 1) {
+          const insertItemWithLetters = (
+            list: CompletionItem[],
+            text: string,
+            kind: CompletionItemKind
+          ) => {
+            let findOne = false;
+            for (const inputMethod of this.inputMethods) {
+              const letters = inputMethod.getLetterRepresentation(text);
+              if (letters.length > 0) {
+                findOne = true;
+                const item = new CompletionItem(
+                  letters + '(' + text + ')',
+                  kind
+                );
+                item.insertText = text;
+                list.push(item);
+              }
+            }
+            if (!findOne) {
+              list.push(new CompletionItem(text, kind));
+            }
+          };
+          const list: CompletionItem[] = [];
+          if (numQuotes === 1) {
+            this.payees.forEach((payee, i, a) => {
+              insertItemWithLetters(list, payee, CompletionItemKind.Variable);
+            });
+          }
+          if (numQuotes <= 3) {
+            this.narrations.forEach((narration, i, a) => {
+              insertItemWithLetters(list, narration, CompletionItemKind.Text);
+            });
           }
           resolve(list);
           return;
-        } else if (
-          vscode.workspace.getConfiguration('beancount')[
-            'completePayeeNarration'
-          ]
+        }
+      } else {
+        // close/pad/balance
+        const reg2 = /[0-9]{4,}[\-/][0-9]+[\-/][0-9]+\s*(close|pad|balance)/g;
+        let isClosePadBalancePosting = reg2.exec(textBefore) != null;
+        if (
+          !isClosePadBalancePosting &&
+          document.lineAt(position.line).text[0] === ' '
         ) {
-          const lineParts = document
-            .lineAt(position.line)
-            .text.split(' ')
-            .filter(part => part.length > 0);
-          if (lineParts.length === 3) {
-            this.payees.forEach((v, i, a) => {
-              const payeeItem = new vscode.CompletionItem(
-                v,
-                vscode.CompletionItemKind.Constant
-              );
-              list.push(payeeItem);
-            });
+          let lineNumber = position.line - 1;
+          while (
+            lineNumber > 0 &&
+            document.lineAt(lineNumber).text.trim().length > 0
+          ) {
+            if (reg.exec(document.lineAt(lineNumber).text) != null) {
+              isClosePadBalancePosting = true;
+              break;
+            }
+            lineNumber -= 1;
           }
-          this.narrations.forEach((v, i, a) => {
-            const narrationItem = new vscode.CompletionItem(
-              v,
-              vscode.CompletionItemKind.Text
+        }
+        if (isClosePadBalancePosting) {
+          const list: CompletionItem[] = [];
+          const wordRange = document.getWordRangeAtPosition(
+            position,
+            this.wordPattern
+          );
+          for (const account of Object.keys(this.accounts)) {
+            const item = new CompletionItem(
+              account,
+              CompletionItemKind.EnumMember
             );
-            list.push(narrationItem);
+            item.documentation = this.describeAccount(account);
+            item.range = wordRange;
+            list.push(item);
+          }
+          this.commodities.forEach((v, i, a) => {
+            const item = new CompletionItem(v, CompletionItemKind.Unit);
+            item.range = wordRange;
+            list.push(item);
           });
+          resolve(list);
+          return;
         }
       }
-      resolve(list);
+      resolve([]);
     });
   }
 }

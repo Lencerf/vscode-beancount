@@ -20,3 +20,7 @@ export function run_cmd(
     callBack(resp);
   });
 }
+
+export function countOccurrences(s: string, c: RegExp) {
+  return (s.match(c) || []).length;
+}

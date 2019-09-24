@@ -51,10 +51,10 @@ for entry in entries:
         flagged_entries.append(get_flag_metadata(entry))
     if isinstance(entry, Transaction):
         if completePayeeNarration:
-            payees.add(f'"{entry.payee}"')
+            payees.add(f'{entry.payee}')
         if not entry.narration.startswith("(Padding inserted"):
             if completePayeeNarration:
-                narrations.add(f'"{entry.narration}"')
+                narrations.add(f'{entry.narration}')
             tags.update(entry.tags)
             links.update(entry.links)
         for posting in entry.postings:
@@ -88,8 +88,8 @@ for line in f.getvalue().split('\n'):
                 except:
                     continue
 
-payees.discard(None)
-narrations.discard(None)
+payees.discard("")
+narrations.discard("")
 
 output['accounts'] = accounts
 output['commodities'] = list(commodities)

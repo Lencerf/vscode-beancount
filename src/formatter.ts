@@ -65,7 +65,6 @@ export class Formatter {
     if (amountArray === null) {
       return;
     }
-    //console.log(amountArray)
     const contentBefore = ('s' + originalText.substring(0, amountArray.index))
       .trim()
       .substring(1);
