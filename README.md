@@ -1,6 +1,6 @@
 # VSCode-Beancount
 
-VSCode extension for the test-based double-entry accounting tool [Beancount](http://furius.ca/beancount/)
+VSCode extension for the text-based double-entry accounting tool [Beancount](http://furius.ca/beancount/)
 
 [![version](https://vsmarketplacebadge.apphb.com/version-short/Lencerf.beancount.svg)](https://marketplace.visualstudio.com/items?itemName=Lencerf.beancount)
 [![ratings](https://vsmarketplacebadge.apphb.com/rating-star/Lencerf.beancount.svg)](https://marketplace.visualstudio.com/items?itemName=Lencerf.beancount#review-details)

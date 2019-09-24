@@ -89,7 +89,9 @@ for line in f.getvalue().split('\n'):
                     continue
 
 payees.discard("")
+payees.discard("None")
 narrations.discard("")
+narrations.discard("None")
 
 output['accounts'] = accounts
 output['commodities'] = list(commodities)
