@@ -10,6 +10,7 @@ from beancount.core.realization import dump_balances, realize
 import io
 import json
 import os
+import re
 
 reverse_flag_map = {
     flag_value: flag_name[5:]
@@ -33,10 +34,53 @@ def get_flag_metadata(thing):
     }
 
 
+# Maximum number of transaction templates sent to the editor.
+MAX_TRANSACTION_TEMPLATES = 500
+
+# Header line of a transaction as written in the source file:
+# date, flag (`txn` or a single flag character), then the rest of the line.
+TRANSACTION_HEADER = re.compile(
+    r'^(\d{4})[-/](\d{1,2})[-/](\d{1,2})\s+(?:txn|[*!&#?%A-Z])(?=[\s"]|$)\s*(.*)$')
+
+source_cache = {}
+
+
+def read_source_lines(filename):
+    if filename not in source_cache:
+        try:
+            with open(filename, encoding='utf-8') as f:
+                source_cache[filename] = f.read().splitlines()
+        except (OSError, UnicodeDecodeError):
+            source_cache[filename] = None
+    return source_cache[filename]
+
+
+def extract_transaction_source(lines, lineno, entry_date):
+    '''Return the transaction written at 1-based line `lineno` as
+    {'header': <text after the flag>, 'body': [<indented lines>]}, or None if
+    the source does not look like a transaction dated `entry_date` (e.g. the
+    entry was generated or modified by a plugin).'''
+    if lines is None or lineno < 1 or lineno > len(lines):
+        return None
+    m = TRANSACTION_HEADER.match(lines[lineno - 1])
+    if m is None:
+        return None
+    year, month, day = (int(g) for g in m.group(1, 2, 3))
+    if (year, month, day) != (entry_date.year, entry_date.month, entry_date.day):
+        return None
+    body = []
+    for line in lines[lineno:]:
+        if not line.strip() or not line[0].isspace():
+            break
+        body.append(line.rstrip())
+    return {'header': m.group(4).rstrip(), 'body': body}
+
+
 stdout = open(os.devnull, 'w')
 entries, errors, options = loader.load_file(argv[1])
 stdout = __stdout__
 completePayeeNarration = "--payeeNarration" in argv
+completeTransaction = "--transaction" in argv
 
 error_list = [{"file": e.source['filename'], "line": e.source['lineno'], "message": e.message} for e in errors]
 
@@ -46,6 +90,7 @@ automatics = defaultdict(dict)
 commodities = set()
 payees = set()
 narrations = set()
+transactions = {}
 tags = set()
 links = set()
 flagged_entries = []
@@ -72,6 +117,13 @@ for entry in entries:
                     amounts = automatics[posting.meta['filename']].setdefault(posting.meta['lineno'], [])
                     amounts.append(posting.units.to_string())
         commodities.update(txn_commodities)
+        if completeTransaction and entry.flag != flags.FLAG_PADDING \
+                and (entry.payee or entry.narration):
+            # Entries are sorted by date: re-insert so that the dict keeps the
+            # most recent transaction for each (payee, narration), ordered by recency.
+            transaction_key = (entry.payee or '', entry.narration or '')
+            transactions.pop(transaction_key, None)
+            transactions[transaction_key] = entry
     elif isinstance(entry, Open):
         accounts[entry.account] = {
             'open': entry.date.__str__(),
@@ -108,6 +160,21 @@ output['accounts'] = accounts
 output['commodities'] = list(commodities)
 output['payees'] = list(payees)
 output['narrations'] = list(narrations)
+transaction_templates = []
+for (payee, narration), entry in reversed(transactions.items()):
+    if len(transaction_templates) >= MAX_TRANSACTION_TEMPLATES:
+        break
+    filename = entry.meta.get('filename', '') if entry.meta else ''
+    if not filename or filename.startswith('<'):
+        continue
+    source = extract_transaction_source(
+        read_source_lines(filename), entry.meta.get('lineno', 0), entry.date)
+    if source is None:
+        continue
+    source.update(payee=payee, narration=narration, date=entry.date.isoformat())
+    transaction_templates.append(source)
+
+output['transactions'] = transaction_templates
 output['tags'] = list(tags)
 output['links'] = list(links)
 
