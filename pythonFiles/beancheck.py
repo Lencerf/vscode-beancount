@@ -6,6 +6,7 @@ from beancount.core import flags
 from beancount.core.data import Transaction, Open, Close
 from beancount.core.display_context import Align 
 from beancount.core.realization import dump_balances, realize
+from beancount.parser.printer import format_entry
 import io
 import json
 
@@ -34,6 +35,7 @@ def get_flag_metadata(thing):
 
 entries, errors, options = loader.load_file(argv[1])
 completePayeeNarration = "--payeeNarration" in argv
+completeTransaction = "--transaction" in argv
 
 error_list = [{"file": e.source['filename'], "line": e.source['lineno'], "message": e.message} for e in errors]
 
@@ -42,6 +44,7 @@ accounts = {}
 commodities = set()
 payees = set()
 narrations = set()
+transactions = {}
 tags = set()
 links = set()
 flagged_entries = []
@@ -51,16 +54,25 @@ for entry in entries:
         flagged_entries.append(get_flag_metadata(entry))
     if isinstance(entry, Transaction):
         if completePayeeNarration:
-            payees.add(f'{entry.payee}')
+            payees.add(str(entry.payee))
         if not entry.narration.startswith("(Padding inserted"):
             if completePayeeNarration:
-                narrations.add(f'{entry.narration}')
+                narrations.add(str(entry.narration))
             tags.update(entry.tags)
             links.update(entry.links)
         for posting in entry.postings:
             commodities.add(posting.units.currency)
             if hasattr(posting, 'flag') and posting.flag == "!":
                 flagged_entries.append(get_flag_metadata(posting))
+        if completeTransaction:
+            # Add transaction to dict (replace if already exists, i.e. newest transaction wins)
+            if entry.payee:
+                transaction_key = ' '.join([entry.flag, entry.payee, entry.narration])
+            else:
+                transaction_key = ' '.join([entry.flag, entry.narration])
+            transaction_value = format_entry(entry)
+            transaction_value = transaction_value.lstrip(entry.date.__str__()).lstrip()
+            transactions[transaction_key] = transaction_value
     elif isinstance(entry, Open):
         accounts[entry.account] = {
             'open': entry.date.__str__(),
@@ -97,6 +109,7 @@ output['accounts'] = accounts
 output['commodities'] = list(commodities)
 output['payees'] = list(payees)
 output['narrations'] = list(narrations)
+output['transactions'] = transactions
 output['tags'] = list(tags)
 output['links'] = list(links)
 

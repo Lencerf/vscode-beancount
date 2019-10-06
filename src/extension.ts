@@ -150,11 +150,13 @@ export class Extension {
       this.logger.appendLine('find no valid bean files.');
       return;
     }
+    const extConfig = vscode.workspace.getConfiguration('beancount');
     const pyArgs = [checkpy, mainBeanFile];
-    if (
-      vscode.workspace.getConfiguration('beancount')['completePayeeNarration']
-    ) {
+    if (extConfig['completePayeeNarration']) {
       pyArgs.push('--payeeNarration');
+    }
+    if (extConfig['completeTransaction']) {
+      pyArgs.push('--transaction');
     }
     this.logger.appendLine(
       `running ${python3Path} ${pyArgs} to refresh data...`
