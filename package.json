@@ -40,6 +40,11 @@
           "default": true,
           "description": "Controls whether the auto completion list should include payee and narration fields."
         },
+        "beancount.completeTransaction": {
+          "type": "boolean",
+          "default": false,
+          "description": "After typing a date and a flag (e.g. `2024-01-31 * `), offer to complete the rest of the transaction from the most recent transaction with the same payee and narration."
+        },
         "beancount.mainBeanFile": {
           "type": "string",
           "default": "",

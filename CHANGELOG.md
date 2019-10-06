@@ -1,5 +1,12 @@
 ## Change Log
 
+### Unreleased
+
+- Complete whole transactions from previous ones with the same payee and
+  narration (opt-in via `beancount.completeTransaction`), based on
+  [PR #31](https://github.com/Lencerf/vscode-beancount/pull/31) by Mathieu
+  Schopfer
+
 ### 0.15.0 (2026-10-26)
 
 - feat(syntax): add query directive syntax highlighting

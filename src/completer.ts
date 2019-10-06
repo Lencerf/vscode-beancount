@@ -13,6 +13,12 @@ import { EOL } from "os";
 import { countOccurrences, pushIfEmpty } from "./utils";
 import { InputMethod, InputMethodConfig } from "./inputMethods/inputMethod";
 import { Pinyin } from "./inputMethods/pinyin";
+import {
+  TransactionTemplate,
+  TRANSACTION_HEADER_PREFIX,
+  templateSegments,
+  templateText,
+} from "./transactionTemplate";
 
 interface Account {
   open: string;
@@ -26,6 +32,7 @@ interface CompletionData {
   commodities: string[];
   payees: string[];
   narrations: string[];
+  transactions: TransactionTemplate[];
   tags: string[];
   links: string[];
 }
@@ -38,6 +45,7 @@ export class Completer
   payees: string[];
   narrations: string[];
   commodities: string[];
+  transactions: TransactionTemplate[];
   tags: string[];
   links: string[];
   wordPattern: RegExp;
@@ -49,6 +57,7 @@ export class Completer
     this.payees = [];
     this.narrations = [];
     this.commodities = [];
+    this.transactions = [];
     this.tags = [];
     this.links = [];
     this.wordPattern = new RegExp('[A-Za-z:]+\\S+|"([^\\\\"]|\\\\")*"');
@@ -71,6 +80,7 @@ export class Completer
     this.commodities = data.commodities;
     this.payees = data.payees;
     this.narrations = data.narrations;
+    this.transactions = data.transactions ?? [];
     this.tags = data.tags;
     this.links = data.links;
   }
@@ -251,6 +261,14 @@ export class Completer
           return;
         }
       } else {
+        const txnHeader = TRANSACTION_HEADER_PREFIX.exec(textBefore);
+        if (
+          txnHeader !== null &&
+          vscode.workspace.getConfiguration("beancount")["completeTransaction"]
+        ) {
+          resolve(this.transactionItems(position, txnHeader[1]));
+          return;
+        }
         // close/pad/balance
         const reg2 = /[0-9]{4,}[\-/][0-9]+[\-/][0-9]+\s*(close|pad|balance)/g;
         let isClosePadBalancePosting = reg2.exec(textBefore) !== null;
@@ -323,6 +341,54 @@ export class Completer
         }
       }
       resolve([]);
+    });
+  }
+
+  /**
+   * Completion items that fill in the rest of a transaction header (payee,
+   * narration, tags/links) and its postings from the most recent transaction
+   * with the same payee and narration. Amounts become snippet placeholders.
+   */
+  transactionItems(position: Position, partialWord: string): CompletionItem[] {
+    const range = new Range(
+      new Position(position.line, position.character - partialWord.length),
+      position
+    );
+    return this.transactions.flatMap((template, index) => {
+      const snippet = new vscode.SnippetString();
+      for (const segment of templateSegments(template)) {
+        if ("placeholder" in segment) {
+          snippet.appendPlaceholder(segment.placeholder);
+        } else {
+          snippet.appendText(segment.text);
+        }
+      }
+      const documentation = new vscode.MarkdownString();
+      documentation.appendCodeblock(templateText(template), "beancount");
+      const searchText = [template.payee, template.narration]
+        .filter((s) => s.length > 0)
+        .join(" ");
+      const makeItem = (letters?: string): CompletionItem => {
+        const item = new CompletionItem(
+          letters ? `${letters}(${template.header})` : template.header,
+          CompletionItemKind.Snippet
+        );
+        item.insertText = snippet;
+        item.range = range;
+        item.filterText = letters ? `${letters} ${searchText}` : searchText;
+        // Keep the most recently used transactions first.
+        item.sortText = index.toString().padStart(6, "0");
+        item.detail = `last used on ${template.date}`;
+        item.documentation = documentation;
+        item.keepWhitespace = true;
+        return item;
+      };
+      return pushIfEmpty(
+        this.findLetterExpression(searchText).map((letters) =>
+          makeItem(letters)
+        ),
+        makeItem()
+      );
     });
   }
 }

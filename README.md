@@ -43,6 +43,12 @@ This extension contributes the following settings:
   BTC) once a decimal point is inserted.
 - `beancount.completePayeeNarration`: Controls whether the auto completion list
   should include payee and narration fields.
+- `beancount.completeTransaction`: Set to `true` to complete whole
+  transactions. After typing a date and a flag (e.g. `2024-01-31 * `), type the
+  first letters of a payee or narration (or press `Ctrl+Space`) to insert the
+  rest of the most recent transaction with that payee and narration, copied
+  verbatim from your ledger. Amounts become placeholders that you can tab
+  through. Disabled by default.
 - `beancount.mainBeanFile`: If you are splitting beancount files into multiple
   files, set this value to either the full path or the relative path to your
   main bean file so that this extension can get all account information. If it
