@@ -1,5 +1,6 @@
 ''' load beancount file and print errors
 '''
+from datetime import date
 from sys import argv
 from beancount import loader
 from beancount.core import flags
@@ -45,6 +46,7 @@ commodities = set()
 payees = set()
 narrations = set()
 transactions = {}
+lastTransactionDate = date.fromtimestamp(0)
 tags = set()
 links = set()
 flagged_entries = []
@@ -53,6 +55,7 @@ for entry in entries:
     if hasattr(entry, 'flag') and entry.flag == "!":
         flagged_entries.append(get_flag_metadata(entry))
     if isinstance(entry, Transaction):
+        lastTransactionDate = entry.date if entry.date > lastTransactionDate else lastTransactionDate
         if completePayeeNarration:
             payees.add(str(entry.payee))
         if not entry.narration.startswith("(Padding inserted"):
@@ -110,6 +113,7 @@ output['commodities'] = list(commodities)
 output['payees'] = list(payees)
 output['narrations'] = list(narrations)
 output['transactions'] = transactions
+output['lastTransactionDate'] = lastTransactionDate.isoformat()
 output['tags'] = list(tags)
 output['links'] = list(links)
 

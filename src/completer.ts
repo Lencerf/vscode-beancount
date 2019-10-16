@@ -26,6 +26,7 @@ interface CompletionData {
   payees: string[];
   narrations: string[];
   transactions: { [key: string]: string };
+  lastTransactionDate: string;
   tags: string[];
   links: string[];
 }
@@ -38,6 +39,7 @@ export class Completer
   narrations: string[];
   commodities: string[];
   transactions: { [key: string]: string };
+  lastTransactionDate: string;
   tags: string[];
   links: string[];
   wordPattern: RegExp;
@@ -50,6 +52,7 @@ export class Completer
     this.narrations = [];
     this.commodities = [];
     this.transactions = {};
+    this.lastTransactionDate = '';
     this.tags = [];
     this.links = [];
     this.wordPattern = new RegExp('[A-Za-z:]+\\S+|"([^\\\\"]|\\\\")*"');
@@ -73,6 +76,7 @@ export class Completer
     this.payees = data.payees;
     this.narrations = data.narrations;
     this.transactions = data.transactions;
+    this.lastTransactionDate = data.lastTransactionDate;
     this.tags = data.tags;
     this.links = data.links;
   }
@@ -180,13 +184,35 @@ export class Completer
           (today.getMonth() + 1).toString();
         const date =
           (today.getDate() < 10 ? '0' : '') + today.getDate().toString();
-        const dateString = year + '-' + month + '-' + date;
+
+        const dateStringToday = year + '-' + month + '-' + date;
         const itemToday = new CompletionItem(
-          dateString,
+          dateStringToday,
           CompletionItemKind.Event
         );
-        itemToday.documentation = 'today';
-        resolve([itemToday]);
+        itemToday.documentation = 'Today';
+
+        const dateStringYear = year + '-';
+        const itemYear = new CompletionItem(
+          dateStringYear,
+          CompletionItemKind.Event
+        );
+        itemYear.documentation = 'This year';
+
+        const dateStringLastTransactionDate = this.lastTransactionDate;
+        const itemLastTransactionDate = new CompletionItem(
+          dateStringLastTransactionDate,
+          CompletionItemKind.Event
+        );
+        itemLastTransactionDate.documentation = 'Last transaction';
+
+        const dateStringLastTransactionMonth = this.lastTransactionDate.slice(0, -2);
+        const itemLastTransactionMonth = new CompletionItem(
+          dateStringLastTransactionMonth,
+          CompletionItemKind.Event
+        );
+
+        resolve([itemToday, itemYear, itemLastTransactionDate, itemLastTransactionMonth]);
         return;
       } else if (
         triggerCharacter === '"' &&
