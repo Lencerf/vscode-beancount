@@ -91,6 +91,7 @@ commodities = set()
 payees = set()
 narrations = set()
 transactions = {}
+lastTransactionDate = None
 tags = set()
 links = set()
 flagged_entries = []
@@ -99,6 +100,8 @@ for entry in entries:
     if hasattr(entry, 'flag') and entry.flag == "!":
         flagged_entries.append(get_flag_metadata(entry))
     if isinstance(entry, Transaction):
+        if lastTransactionDate is None or entry.date > lastTransactionDate:
+            lastTransactionDate = entry.date
         if completePayeeNarration:
             payees.add(f'{entry.payee}')
         if not entry.narration.startswith("(Padding inserted"):
@@ -175,6 +178,7 @@ for (payee, narration), entry in reversed(transactions.items()):
     transaction_templates.append(source)
 
 output['transactions'] = transaction_templates
+output['lastTransactionDate'] = lastTransactionDate.isoformat() if lastTransactionDate else ""
 output['tags'] = list(tags)
 output['links'] = list(links)
 

@@ -33,6 +33,7 @@ interface CompletionData {
   payees: string[];
   narrations: string[];
   transactions: TransactionTemplate[];
+  lastTransactionDate: string;
   tags: string[];
   links: string[];
 }
@@ -46,6 +47,7 @@ export class Completer
   narrations: string[];
   commodities: string[];
   transactions: TransactionTemplate[];
+  lastTransactionDate: string;
   tags: string[];
   links: string[];
   wordPattern: RegExp;
@@ -58,6 +60,7 @@ export class Completer
     this.narrations = [];
     this.commodities = [];
     this.transactions = [];
+    this.lastTransactionDate = "";
     this.tags = [];
     this.links = [];
     this.wordPattern = new RegExp('[A-Za-z:]+\\S+|"([^\\\\"]|\\\\")*"');
@@ -81,6 +84,7 @@ export class Completer
     this.payees = data.payees;
     this.narrations = data.narrations;
     this.transactions = data.transactions ?? [];
+    this.lastTransactionDate = data.lastTransactionDate ?? "";
     this.tags = data.tags;
     this.links = data.links;
   }
@@ -194,17 +198,31 @@ export class Completer
           (today.getMonth() + 1).toString();
         const date =
           (today.getDate() < 10 ? "0" : "") + today.getDate().toString();
-        const dateString = year + "-" + month + "-" + date;
-        const itemToday = new CompletionItem(
-          dateString,
-          CompletionItemKind.Event
-        );
-        itemToday.detail = "today";
-        itemToday.range = new Range(
+        const dateStringToday = year + "-" + month + "-" + date;
+        const replaceRange = new Range(
           new Position(position.line, position.character - 1),
           position
         );
-        resolve([itemToday]);
+        const makeDateItem = (label: string, detail: string) => {
+          const item = new CompletionItem(label, CompletionItemKind.Event);
+          item.detail = detail;
+          item.range = replaceRange;
+          return item;
+        };
+        const items = [
+          makeDateItem(dateStringToday, "today"),
+          makeDateItem(year + "-", "this year"),
+        ];
+        if (this.lastTransactionDate.length > 0) {
+          items.push(
+            makeDateItem(this.lastTransactionDate, "last transaction"),
+            makeDateItem(
+              this.lastTransactionDate.slice(0, -2),
+              "month of last transaction"
+            )
+          );
+        }
+        resolve(items);
         return;
       } else if (
         triggerCharacter === '"' &&
