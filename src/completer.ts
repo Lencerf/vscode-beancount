@@ -239,7 +239,7 @@ export class Completer
         ) {
           let lineNumber = position.line - 1;
           while (
-            lineNumber > 0 &&
+            lineNumber >= 0 &&
             document.lineAt(lineNumber).text.trim().length > 0
           ) {
             if (reg.exec(document.lineAt(lineNumber).text) != null) {
