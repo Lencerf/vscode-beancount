@@ -65,6 +65,9 @@ see GitHub [issue page](https://github.com/Lencerf/vscode-beancount/issues)
 
 ## Release Notes
 
+### 0.5.2
+* Fixed a bug related to completing the first transaction
+
 ### 0.5.0
 * Use Pinyin initial letters to input existing Chinese narrations and payees quickly.
 * auto completion of narrations and payees now is triggered by `"`.
@@ -72,9 +75,3 @@ see GitHub [issue page](https://github.com/Lencerf/vscode-beancount/issues)
 ### 0.4.2
 * Support relative path to python (to allow wrapper scripts) [@vizanto](https://github.com/Lencerf/vscode-beancount/pull/27).
 * Syntax Highlight Enhancement [@SEIAROTg](https://github.com/Lencerf/vscode-beancount/pull/28).
-
-### 0.4.1
-* Ensure accounts in transaction can start with all letters [@jumoel](https://github.com/Lencerf/vscode-beancount/pull/23).
-* Add an option to disable autocompletion of payee and narration fields.
-* Make formatter aware of language specific tabSize settings [@sevenkplus](https://github.com/Lencerf/vscode-beancount/pull/21).
-

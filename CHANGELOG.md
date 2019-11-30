@@ -1,5 +1,8 @@
 ## Change Log
 
+### 0.5.2 (2019-11-30)
+* Fixed a bug related to completing the first transaction
+
 ### 0.5.0 (2019-09-23)
 * Use Pinyin initial letters to input existing Chinese narrations and payees quickly.
 * auto completion of narrations and payees now is triggered by `"`.
