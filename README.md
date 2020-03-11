@@ -26,14 +26,18 @@ This extension contributes the following settings:
 
 * `beancount.separatorColumn`: specify the column of the decimal separator.
 * `beancount.instantAlignment`: Set it to `true` to align the amount (like 1.00 BTC) once a decimal point is inserted.
+* `beancount.completePayeeNarration`: Controls whether the auto completion list should include payee and narration fields.
 * `beancount.mainBeanFile`: If you are splitting beancount files into multiple files, set this value to either the full path or the relative path to your main bean file so that
 this extension can get all account information. If it is left blank, the extension will consider the file in the current
 window as the main file.
 * `beancount.runFavaOnActivate`: If it is set to `true`, [fava](https://github.com/beancount/fava) will run once this extension is activated.
+* `beancount.favaPath`: Specify the path of Fava if Fava is not installed in the main Python installation.
+* `beancount.python3Path`: Specify the path of Python if beancount is not installed in the main Python installation.
 * `beancount.inputMethods`: List the input methods for auto-completion of payees and narrations with CJK characters. Currently only `pinyin` is supported. [See details](https://github.com/Lencerf/vscode-beancount/blob/master/InputMethods.md).
 
 ## Recommended practices
 
+0. **Make sure you installed Python3 and [beancount](https://pypi.org/project/beancount/). Set `beancount.python3Path` to the current path.**
 1. Split your ledger into several `.bean` files according to time and 
 put all your `open`/`close` in a main file. 
 2. Include all other files in the 
@@ -65,13 +69,12 @@ see GitHub [issue page](https://github.com/Lencerf/vscode-beancount/issues)
 
 ## Release Notes
 
+### 0.5.3
+* feat(syntax): add support for beancount_oneliner [@Akuukis](https://github.com/Lencerf/vscode-beancount/pull/36)
+
 ### 0.5.2
 * Fixed a bug related to completing the first transaction
 
 ### 0.5.0
 * Use Pinyin initial letters to input existing Chinese narrations and payees quickly.
 * auto completion of narrations and payees now is triggered by `"`.
-
-### 0.4.2
-* Support relative path to python (to allow wrapper scripts) [@vizanto](https://github.com/Lencerf/vscode-beancount/pull/27).
-* Syntax Highlight Enhancement [@SEIAROTg](https://github.com/Lencerf/vscode-beancount/pull/28).

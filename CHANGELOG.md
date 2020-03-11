@@ -1,5 +1,8 @@
 ## Change Log
 
+### 0.5.3 (2020-03-11)
+* feat(syntax): add support for beancount_oneliner [@Akuukis](https://github.com/Lencerf/vscode-beancount/pull/36)
+
 ### 0.5.2 (2019-11-30)
 * Fixed a bug related to completing the first transaction
 
