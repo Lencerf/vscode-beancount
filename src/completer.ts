@@ -25,6 +25,8 @@ interface CompletionData {
   commodities: string[];
   payees: string[];
   narrations: string[];
+  transactions: { [key: string]: string };
+  lastTransactionDate: string;
   tags: string[];
   links: string[];
 }
@@ -36,6 +38,8 @@ export class Completer
   payees: string[];
   narrations: string[];
   commodities: string[];
+  transactions: { [key: string]: string };
+  lastTransactionDate: string;
   tags: string[];
   links: string[];
   wordPattern: RegExp;
@@ -47,6 +51,8 @@ export class Completer
     this.payees = [];
     this.narrations = [];
     this.commodities = [];
+    this.transactions = {};
+    this.lastTransactionDate = '';
     this.tags = [];
     this.links = [];
     this.wordPattern = new RegExp('[A-Za-z:]+\\S+|"([^\\\\"]|\\\\")*"');
@@ -69,6 +75,8 @@ export class Completer
     this.commodities = data.commodities;
     this.payees = data.payees;
     this.narrations = data.narrations;
+    this.transactions = data.transactions;
+    this.lastTransactionDate = data.lastTransactionDate;
     this.tags = data.tags;
     this.links = data.links;
   }
@@ -176,13 +184,35 @@ export class Completer
           (today.getMonth() + 1).toString();
         const date =
           (today.getDate() < 10 ? '0' : '') + today.getDate().toString();
-        const dateString = year + '-' + month + '-' + date;
+
+        const dateStringToday = year + '-' + month + '-' + date;
         const itemToday = new CompletionItem(
-          dateString,
+          dateStringToday,
           CompletionItemKind.Event
         );
-        itemToday.documentation = 'today';
-        resolve([itemToday]);
+        itemToday.documentation = 'Today';
+
+        const dateStringYear = year + '-';
+        const itemYear = new CompletionItem(
+          dateStringYear,
+          CompletionItemKind.Event
+        );
+        itemYear.documentation = 'This year';
+
+        const dateStringLastTransactionDate = this.lastTransactionDate;
+        const itemLastTransactionDate = new CompletionItem(
+          dateStringLastTransactionDate,
+          CompletionItemKind.Event
+        );
+        itemLastTransactionDate.documentation = 'Last transaction';
+
+        const dateStringLastTransactionMonth = this.lastTransactionDate.slice(0, -2);
+        const itemLastTransactionMonth = new CompletionItem(
+          dateStringLastTransactionMonth,
+          CompletionItemKind.Event
+        );
+
+        resolve([itemToday, itemYear, itemLastTransactionDate, itemLastTransactionMonth]);
         return;
       } else if (
         triggerCharacter === '"' &&
@@ -193,6 +223,7 @@ export class Completer
           countOccurrences(textBefore, /\"/g) -
           countOccurrences(textBefore, /\\"/g);
         if (r != null && numQuotes % 2 === 1) {
+
           const insertItemWithLetters = (
             list: CompletionItem[],
             text: string,
@@ -215,6 +246,7 @@ export class Completer
               list.push(new CompletionItem(text, kind));
             }
           };
+
           const list: CompletionItem[] = [];
           if (numQuotes === 1) {
             this.payees.forEach((payee, i, a) => {
@@ -271,9 +303,41 @@ export class Completer
           });
           resolve(list);
           return;
+        } else if (
+          vscode.workspace.getConfiguration('beancount')['completeTransaction'] &&
+          textBefore.match(/([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))/)
+        ) {  // Match a date at the string beginning
+
+          const instertTransactionItem = (list: CompletionItem[], key: string, transactionText: string) => {
+            let findOne = false;
+            const completionItemKind = CompletionItemKind.Value;
+            
+            for (const inputMethod of this.inputMethods) {
+              const letters = inputMethod.getLetterRepresentation(key);
+              if (letters.length > 0) {
+                findOne = true;
+                const item = new CompletionItem(
+                  letters + '(' + key + ')',
+                  completionItemKind
+                );
+                item.insertText = transactionText;
+                list.push(item);
+              }
+            }
+            if (!findOne) {
+              const item = new CompletionItem(key, completionItemKind);
+              item.insertText = transactionText;
+              list.push(item);
+            }
+          };
+  
+          const list: CompletionItem[] = [];
+          for (const key in this.transactions) {
+            instertTransactionItem(list, key, this.transactions[key]);
+          }
+          resolve(list);
         }
       }
-      resolve([]);
     });
   }
 }
