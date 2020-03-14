@@ -69,12 +69,11 @@ see GitHub [issue page](https://github.com/Lencerf/vscode-beancount/issues)
 
 ## Release Notes
 
+### 0.5.4 (2020-03-14)
+* workaround for completing narrations and payees
+
 ### 0.5.3
 * feat(syntax): add support for beancount_oneliner [@Akuukis](https://github.com/Lencerf/vscode-beancount/pull/36)
 
 ### 0.5.2
 * Fixed a bug related to completing the first transaction
-
-### 0.5.0
-* Use Pinyin initial letters to input existing Chinese narrations and payees quickly.
-* auto completion of narrations and payees now is triggered by `"`.

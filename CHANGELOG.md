@@ -1,5 +1,8 @@
 ## Change Log
 
+### 0.5.4 (2020-03-14)
+* workaround for completing narrations and payees
+
 ### 0.5.3 (2020-03-11)
 * feat(syntax): add support for beancount_oneliner [@Akuukis](https://github.com/Lencerf/vscode-beancount/pull/36)
 
