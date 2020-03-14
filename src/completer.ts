@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import {
+  Range,
   Position,
   TextDocument,
   CancellationToken,
@@ -181,7 +182,11 @@ export class Completer
           dateString,
           CompletionItemKind.Event
         );
-        itemToday.documentation = 'today';
+        itemToday.detail = 'today';
+        itemToday.range = new Range(
+          new Position(position.line, position.character - 1),
+          position
+        );
         resolve([itemToday]);
         return;
       } else if (
@@ -196,7 +201,8 @@ export class Completer
           const insertItemWithLetters = (
             list: CompletionItem[],
             text: string,
-            kind: CompletionItemKind
+            kind: CompletionItemKind,
+            suffix: string
           ) => {
             let findOne = false;
             for (const inputMethod of this.inputMethods) {
@@ -207,23 +213,35 @@ export class Completer
                   letters + '(' + text + ')',
                   kind
                 );
-                item.insertText = text;
+                item.insertText = text + suffix;
                 list.push(item);
               }
             }
             if (!findOne) {
-              list.push(new CompletionItem(text, kind));
+              const item = new CompletionItem(text, kind);
+              item.insertText = text + suffix;
+              list.push(item);
             }
           };
           const list: CompletionItem[] = [];
           if (numQuotes === 1) {
             this.payees.forEach((payee, i, a) => {
-              insertItemWithLetters(list, payee, CompletionItemKind.Variable);
+              insertItemWithLetters(
+                list,
+                payee,
+                CompletionItemKind.Variable,
+                '" '
+              );
             });
           }
           if (numQuotes <= 3) {
             this.narrations.forEach((narration, i, a) => {
-              insertItemWithLetters(list, narration, CompletionItemKind.Text);
+              insertItemWithLetters(
+                list,
+                narration,
+                CompletionItemKind.Text,
+                '" '
+              );
             });
           }
           resolve(list);
