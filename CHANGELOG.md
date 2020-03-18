@@ -1,5 +1,8 @@
 ## Change Log
 
+### 0.5.5 (2020-03-18)
+* fix [#38](https://github.com/Lencerf/vscode-beancount/issues/38): account autocompletion fails due to commodity price error
+
 ### 0.5.4 (2020-03-14)
 * workaround for completing narrations and payees
 
