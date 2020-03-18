@@ -182,8 +182,8 @@ export class Extension {
     const diagsCollection: { [key: string]: vscode.Diagnostic[] } = {};
     errors.forEach(e => {
       const range = new vscode.Range(
-        new vscode.Position(e.line - 1, 0),
-        new vscode.Position(e.line, 0)
+        new vscode.Position(Math.max(e.line - 1, 0), 0),
+        new vscode.Position(Math.max(e.line, 1), 0)
       );
       const diag = new vscode.Diagnostic(
         range,
@@ -203,8 +203,8 @@ export class Extension {
         return;
       }
       const range = new vscode.Range(
-        new vscode.Position(f.line - 1, 0),
-        new vscode.Position(f.line, 0)
+        new vscode.Position(Math.max(f.line - 1, 0), 0),
+        new vscode.Position(Math.min(f.line, 1), 0)
       );
       const diag = new FlagDiagnostic(f.flag, range, f.message, warningType);
       diag.source = 'Beancount';
@@ -214,9 +214,10 @@ export class Extension {
       diagsCollection[f.file].push(diag);
     });
     this.diagnosticCollection.clear();
+    const mainBeanFile = this.getMainBeanFile();
     for (const file of Object.keys(diagsCollection)) {
       this.diagnosticCollection.set(
-        vscode.Uri.file(file),
+        vscode.Uri.file(existsSync(file) ? file : mainBeanFile),
         diagsCollection[file]
       );
     }
