@@ -1,5 +1,8 @@
 ## Change Log
 
+### 0.5.6 (2020-03-18)
+* fix [#40](https://github.com/Lencerf/vscode-beancount/issues/40)
+
 ### 0.5.5 (2020-03-18)
 * fix [#38](https://github.com/Lencerf/vscode-beancount/issues/38): account autocompletion fails due to commodity price error
 

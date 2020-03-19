@@ -69,12 +69,11 @@ see GitHub [issue page](https://github.com/Lencerf/vscode-beancount/issues)
 
 ## Release Notes
 
+### 0.5.6
+* fix [#40](https://github.com/Lencerf/vscode-beancount/issues/40)
+
 ### 0.5.5 
 * fix [#38](https://github.com/Lencerf/vscode-beancount/issues/38): account autocompletion fails due to commodity price error
 
 ### 0.5.4
 * workaround for completing narrations and payees
-
-### 0.5.3
-* feat(syntax): add support for beancount_oneliner [@Akuukis](https://github.com/Lencerf/vscode-beancount/pull/36)
-
