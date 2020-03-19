@@ -204,7 +204,7 @@ export class Extension {
       }
       const range = new vscode.Range(
         new vscode.Position(Math.max(f.line - 1, 0), 0),
-        new vscode.Position(Math.min(f.line, 1), 0)
+        new vscode.Position(Math.max(f.line, 1), 0)
       );
       const diag = new FlagDiagnostic(f.flag, range, f.message, warningType);
       diag.source = 'Beancount';
