@@ -37,7 +37,7 @@ window as the main file.
 
 ## Recommended practices
 
-0. **Make sure you installed Python3 and [beancount](https://pypi.org/project/beancount/). Set `beancount.python3Path` to the current path.**
+0. **Make sure you installed Python3 and [beancount](https://pypi.org/project/beancount/). Set `beancount.python3Path` to the correct path.**
 1. Split your ledger into several `.bean` files according to time and 
 put all your `open`/`close` in a main file. 
 2. Include all other files in the 
