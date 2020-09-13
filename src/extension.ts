@@ -28,7 +28,6 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.languages.registerCompletionItemProvider(
       { scheme: 'file', language: 'beancount' },
       extension.completer,
-      '2',
       '#',
       '^',
       '"'

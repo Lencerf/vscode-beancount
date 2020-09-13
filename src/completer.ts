@@ -169,26 +169,6 @@ export class Completer
         });
         resolve(list);
         return;
-      } else if (triggerCharacter === '2' && textBefore.trim() === '2') {
-        const today = new Date();
-        const year = today.getFullYear().toString();
-        const month =
-          (today.getMonth() + 1 < 10 ? '0' : '') +
-          (today.getMonth() + 1).toString();
-        const date =
-          (today.getDate() < 10 ? '0' : '') + today.getDate().toString();
-        const dateString = year + '-' + month + '-' + date;
-        const itemToday = new CompletionItem(
-          dateString,
-          CompletionItemKind.Event
-        );
-        itemToday.detail = 'today';
-        itemToday.range = new Range(
-          new Position(position.line, position.character - 1),
-          position
-        );
-        resolve([itemToday]);
-        return;
       } else if (
         triggerCharacter === '"' &&
         vscode.workspace.getConfiguration('beancount')['completePayeeNarration']
