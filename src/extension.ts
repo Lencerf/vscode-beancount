@@ -108,9 +108,15 @@ export class Extension {
     ];
   }
 
+  resolveToAbsolutePath(path: string) {
+    return path.replace(/%([^%]+)%/g, (_, key) => {
+      return process.env[key] ?? '';
+    });
+  }
+
   getMainBeanFile(): string {
     this.logger.append('try finding a valid bean file...');
-    const mainBeanFile = vscode.workspace
+    const mainBeanFile: undefined | string = vscode.workspace
         .getConfiguration('beancount')
         .get('mainBeanFile');
     if (mainBeanFile === undefined || mainBeanFile === '') {
@@ -127,6 +133,10 @@ export class Extension {
         this.logger.appendLine('');
         return '';
       }
+    } else if (mainBeanFile.startsWith('%')) {
+      this.logger.appendLine(
+          'user specified a main bean file using windows % variables.');
+      return this.resolveToAbsolutePath(mainBeanFile);
     } else {
       if (isAbsolute(String(mainBeanFile))) {
         this.logger.appendLine(
@@ -155,11 +165,19 @@ export class Extension {
     const mainBeanFile = mainFile ?? this.getMainBeanFile();
     const checkpy = context.asAbsolutePath('/pythonFiles/beancheck.py');
     const python3PathConfig =
-      vscode.workspace.getConfiguration("beancount")["python3Path"];
-    const python3Path =
-      python3PathConfig[0] === "~"
-        ? `${process.env.HOME}${python3PathConfig.substring(1)}`
-        : python3PathConfig;
+      vscode.workspace.getConfiguration('beancount')['python3Path'];
+    let python3Path =
+      python3PathConfig[0] === '~' ?
+        `${process.env.HOME}${python3PathConfig.substring(1)}` :
+        python3PathConfig;
+
+    if (python3Path.startsWith('%')) {
+      this.logger.appendLine(
+          'user specified python3Path using windows % variables.');
+      python3Path = this.resolveToAbsolutePath(python3Path);
+    }
+
+
     if (mainBeanFile.length === 0 || !existsSync(mainBeanFile)) {
       this.logger.appendLine('find no valid bean files.');
       return;
