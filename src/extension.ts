@@ -96,6 +96,12 @@ export class Extension {
     ];
   }
 
+  resolveToAbsolutePath(path: string) {
+    return path.replace(/%([^%]+)%/g, function(_, key) {
+        return process.env[key];
+    });
+  }
+
   getMainBeanFile(): string {
     this.logger.append('try finding a valid bean file...');
     const mainBeanFile = vscode.workspace
@@ -115,6 +121,9 @@ export class Extension {
         this.logger.appendLine('');
         return '';
       }
+    } else if (mainBeanFile.startsWith("%")) {
+        this.logger.appendLine('user specified a main bean file using windows % variables.');
+        return this.resolveToAbsolutePath(mainBeanFile);
     } else {
       if (isAbsolute(String(mainBeanFile))) {
         this.logger.appendLine(
@@ -142,9 +151,13 @@ export class Extension {
   refreshData(context: vscode.ExtensionContext) {
     const mainBeanFile = this.getMainBeanFile();
     const checkpy = context.asAbsolutePath('/pythonFiles/beancheck.py');
-    const python3Path = vscode.workspace.getConfiguration('beancount')[
+    let python3Path = vscode.workspace.getConfiguration('beancount')[
       'python3Path'
     ];
+    if (python3Path.startsWith("%")) {
+      this.logger.appendLine('user specified python3Path using windows % variables.');
+      python3Path = this.resolveToAbsolutePath(python3Path);
+    }
     if (mainBeanFile.length === 0 || !existsSync(mainBeanFile)) {
       this.logger.appendLine('find no valid bean files.');
       return;
