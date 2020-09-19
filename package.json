@@ -41,6 +41,11 @@
           "default": true,
           "description": "Controls whether the auto completion list should include payee and narration fields."
         },
+        "beancount.completeTransaction": {
+          "type": "boolean",
+          "default": true,
+          "description": "Controls whether the auto completion list should include whole transactions."
+        },        
         "beancount.mainBeanFile": {
           "type": "string",
           "default": "",
