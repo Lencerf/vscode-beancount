@@ -1,5 +1,10 @@
 ## Change Log
 
+### 0.5.7 (2020-09-19)
+* 小幅优化
+* 对于.bean和python.exe路径允许Win式 % 环境变量
+* 扩展自动补全，可以通过 Payee+Narration 完整补全 Txn
+
 ### 0.5.6 (2020-03-18)
 * fix [#40](https://github.com/Lencerf/vscode-beancount/issues/40)
 

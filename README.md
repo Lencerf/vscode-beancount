@@ -69,11 +69,13 @@ see GitHub [issue page](https://github.com/Lencerf/vscode-beancount/issues)
 
 ## Release Notes
 
+### 0.5.7
+* 小幅优化
+* 对于.bean和python.exe路径允许Win式 % 环境变量
+* 扩展自动补全，可以通过 Payee+Narration 完整补全 Txn
+
 ### 0.5.6
 * fix [#40](https://github.com/Lencerf/vscode-beancount/issues/40)
 
-### 0.5.5 
+### 0.5.5
 * fix [#38](https://github.com/Lencerf/vscode-beancount/issues/38): account autocompletion fails due to commodity price error
-
-### 0.5.4
-* workaround for completing narrations and payees
