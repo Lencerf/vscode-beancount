@@ -98,15 +98,21 @@ export class Extension {
 
   resolveToAbsolutePath(path: string) {
     return path.replace(/%([^%]+)%/g, function(_, key) {
-        return process.env[key];
-    });
+        const resolvedEnvPath = process.env[key]
+        if (resolvedEnvPath) {
+          return resolvedEnvPath;
+        } else {
+          return key;
+        }
+      }
+    );
   }
 
   getMainBeanFile(): string {
     this.logger.append('try finding a valid bean file...');
     const mainBeanFile = vscode.workspace
       .getConfiguration('beancount')
-      .get('mainBeanFile');
+      .get<string>('mainBeanFile');
     if (mainBeanFile === undefined || mainBeanFile === '') {
       this.logger.append(
         'user did not specify a main bean file in settings...'
@@ -125,11 +131,11 @@ export class Extension {
         this.logger.appendLine('user specified a main bean file using windows % variables.');
         return this.resolveToAbsolutePath(mainBeanFile);
     } else {
-      if (isAbsolute(String(mainBeanFile))) {
+      if (isAbsolute(mainBeanFile)) {
         this.logger.appendLine(
           'user specified a main bean file with an absolute path.'
         );
-        return String(mainBeanFile);
+        return mainBeanFile;
       } else {
         this.logger.append(
           'user specified a main bean file with a relative path...'
@@ -138,7 +144,7 @@ export class Extension {
           this.logger.appendLine('');
           return join(
             vscode.workspace.workspaceFolders[0].uri.fsPath,
-            String(mainBeanFile)
+            mainBeanFile
           );
         } else {
           this.logger.appendLine('but there are no workspace folders.');

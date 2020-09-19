@@ -1,6 +1,7 @@
 ''' load beancount file and print errors
 '''
 from sys import argv
+from typing import Dict, Union, List
 from beancount import loader
 from beancount.core import flags
 from beancount.core.data import Transaction, Open, Close
@@ -9,7 +10,6 @@ from beancount.core.realization import dump_balances, realize
 from beancount.parser.printer import format_entry
 import io
 import json
-
 
 reverse_flag_map = {
     flag_value: flag_name[5:]
@@ -39,7 +39,7 @@ completeTransaction = "--transaction" in argv
 
 error_list = [{"file": e.source['filename'], "line": e.source['lineno'], "message": e.message} for e in errors]
 
-output = {}
+output: Dict[str, Union[Dict, List]] = {}
 accounts = {}
 commodities = set()
 payees = set()
