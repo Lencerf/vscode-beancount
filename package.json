@@ -45,7 +45,12 @@
           "type": "boolean",
           "default": true,
           "description": "Controls whether the auto completion list should include whole transactions."
-        },        
+        },
+        "beancount.completeMetadata": {
+          "type": "boolean",
+          "default": true,
+          "description": "Controls whether the auto completion list should include metadatas."
+        },
         "beancount.mainBeanFile": {
           "type": "string",
           "default": "",

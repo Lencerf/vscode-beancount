@@ -176,6 +176,9 @@ export class Extension {
     if (extConfig['completeTransaction']) {
       pyArgs.push('--transaction');
     }
+    if (extConfig['completeMetadata']) {
+      pyArgs.push('--metadata')
+    }
     this.logger.appendLine(
       `running ${python3Path} ${pyArgs} to refresh data...`
     );

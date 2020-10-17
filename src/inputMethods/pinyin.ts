@@ -17,11 +17,11 @@ export class Pinyin implements InputMethod {
   getLetterRepresentation(w: string): string {
     const reg = /[a-zA-Z]/i;
     const result = new Array<string>();
-    for (let str of w) {
+    for (const str of w) {
       if (str.match(reg)) {
         result.push(str)
       } else {
-        let r = this._pyData.get(str);
+        const r = this._pyData.get(str);
         if (typeof(r) != "undefined") {
           result.push(r)
         }

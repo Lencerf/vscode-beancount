@@ -26,6 +26,7 @@ interface CompletionData {
   payees: string[];
   narrations: string[];
   transactions: { [key: string]: string };
+  metadatas: { [key: string]: string };
   tags: string[];
   links: string[];
 }
@@ -38,6 +39,7 @@ export class Completer
   narrations: string[];
   commodities: string[];
   transactions: { [key: string]: string };
+  metadatas: { [key: string]: string };
   tags: string[];
   links: string[];
   wordPattern: RegExp;
@@ -50,6 +52,7 @@ export class Completer
     this.narrations = [];
     this.commodities = [];
     this.transactions = {};
+    this.metadatas = {};
     this.tags = [];
     this.links = [];
     this.wordPattern = new RegExp('[A-Za-z:]+\\S+|"([^\\\\"]|\\\\")*"');
@@ -73,6 +76,7 @@ export class Completer
     this.payees = data.payees;
     this.narrations = data.narrations;
     this.transactions = data.transactions;
+    this.metadatas = data.metadatas;
     this.tags = data.tags;
     this.links = data.links;
   }
@@ -305,6 +309,35 @@ export class Completer
             instertTransactionItem(list, key, this.transactions[key]);
           }
           resolve(list);
+        } else if (vscode.workspace.getConfiguration('beancount')['completeMetadata']) {
+          const instertMetadataItem = (list: CompletionItem[], key: string, insertText: string) => {
+            let findOne = false;
+            const completionItemKind = CompletionItemKind.Value;
+
+            for (const inputMethod of this.inputMethods) {
+              const letters = inputMethod.getLetterRepresentation(key);
+              if (letters.length > 0) {
+                findOne = true;
+                const item = new CompletionItem(
+                  letters + '(' + key + ')',
+                  completionItemKind
+                );
+                item.insertText = insertText;
+                list.push(item);
+              }
+            }
+            if (!findOne) {
+              const item = new CompletionItem(key, completionItemKind);
+              item.insertText = insertText;
+              list.push(item);
+            }
+          };
+
+          const list: CompletionItem[] = [];
+          for (const key in this.metadatas) {
+            instertMetadataItem(list, key, this.metadatas[key]);
+          }
+          resolve(list);          
         }
       }
       resolve([]);

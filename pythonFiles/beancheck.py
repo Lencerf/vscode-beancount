@@ -17,7 +17,7 @@ reverse_flag_map = {
         in flags.__dict__.items()
             if flag_name.startswith('FLAG_')
 }
-
+excluded_metakeys = ['filename', 'lineno', 'time', 'memo', '__tolerances__']
 
 def get_flag_metadata(thing):
     return {
@@ -36,6 +36,7 @@ def get_flag_metadata(thing):
 entries, errors, options = loader.load_file(argv[1])
 completePayeeNarration = "--payeeNarration" in argv
 completeTransaction = "--transaction" in argv
+completeMetadata = "--metadata" in argv
 
 error_list = [{"file": e.source['filename'], "line": e.source['lineno'], "message": e.message} for e in errors]
 
@@ -45,6 +46,7 @@ commodities = set()
 payees = set()
 narrations = set()
 transactions = {}
+metadatas = {}
 tags = set()
 links = set()
 flagged_entries = []
@@ -60,16 +62,22 @@ for entry in entries:
                 narrations.add(str(entry.narration))
             tags.update(entry.tags)
             links.update(entry.links)
+        if completeMetadata:
+            md = {f'{key} {value}': f'{key}: \"{value}\"' for key,value in entry.meta.items() if key not in excluded_metakeys}
+            metadatas.update(md)
         for posting in entry.postings:
             commodities.add(posting.units.currency)
             if hasattr(posting, 'flag') and posting.flag == "!":
                 flagged_entries.append(get_flag_metadata(posting))
+            pmd = {f'{key} {value}': f'{key}: \"{value}\"' for key,value in posting.meta.items() if key not in excluded_metakeys}
+            metadatas.update(pmd)
         if completeTransaction:
             # Add transaction to dict (replace if already exists, i.e. newest transaction wins)
             if entry.payee:
                 transaction_key = ' '.join([entry.flag, entry.payee, entry.narration])
             else:
                 transaction_key = ' '.join([entry.flag, entry.narration])
+            # todo::去掉Txn里面的meta信息
             transaction_value = format_entry(entry)
             transaction_value = transaction_value.lstrip(entry.date.__str__()).lstrip()
             transactions[transaction_key] = transaction_value
@@ -110,6 +118,7 @@ output['commodities'] = list(commodities)
 output['payees'] = list(payees)
 output['narrations'] = list(narrations)
 output['transactions'] = transactions
+output['metadatas'] = metadatas
 output['tags'] = list(tags)
 output['links'] = list(links)
 
