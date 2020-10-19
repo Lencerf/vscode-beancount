@@ -69,8 +69,9 @@ for entry in entries:
             commodities.add(posting.units.currency)
             if hasattr(posting, 'flag') and posting.flag == "!":
                 flagged_entries.append(get_flag_metadata(posting))
-            pmd = {f'{key} {value}': f'{key}: \"{value}\"' for key,value in posting.meta.items() if key not in excluded_metakeys}
-            metadatas.update(pmd)
+            if posting.meta:
+                pmd = {f'{key} {value}': f'{key}: \"{value}\"' for key,value in posting.meta.items() if key not in excluded_metakeys}
+                metadatas.update(pmd)
         if completeTransaction:
             # Add transaction to dict (replace if already exists, i.e. newest transaction wins)
             if entry.payee:

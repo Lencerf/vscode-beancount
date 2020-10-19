@@ -69,6 +69,10 @@ see GitHub [issue page](https://github.com/Lencerf/vscode-beancount/issues)
 
 ## Release Notes
 
+### 0.5.8 (2020-10-17)
+* 小幅优化 InputMethod 特性，存在中英文混合情况时英文单词也是有效的了
+* 扩展自动补全，MetaData 也可以了（排除time、memo这些不规律的）
+
 ### 0.5.7
 * 小幅优化
 * 对于.bean和python.exe路径允许Win式 % 环境变量
@@ -76,6 +80,3 @@ see GitHub [issue page](https://github.com/Lencerf/vscode-beancount/issues)
 
 ### 0.5.6
 * fix [#40](https://github.com/Lencerf/vscode-beancount/issues/40)
-
-### 0.5.5
-* fix [#38](https://github.com/Lencerf/vscode-beancount/issues/38): account autocompletion fails due to commodity price error

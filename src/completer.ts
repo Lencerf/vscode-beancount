@@ -269,6 +269,36 @@ export class Completer
             item.range = wordRange;
             list.push(item);
           }
+          if (vscode.workspace.getConfiguration('beancount')['completeMetadata']) {
+            const instertMetadataItem = (list: CompletionItem[], key: string, insertText: string) => {
+              let findOne = false;
+              const completionItemKind = CompletionItemKind.Value;
+  
+              for (const inputMethod of this.inputMethods) {
+                const letters = inputMethod.getLetterRepresentation(key);
+                if (letters.length > 0) {
+                  findOne = true;
+                  const item = new CompletionItem(
+                    letters + '(' + key + ')',
+                    completionItemKind
+                  );
+                  item.insertText = insertText;
+                  list.push(item);
+                }
+              }
+              if (!findOne) {
+                const item = new CompletionItem(key, completionItemKind);
+                item.insertText = insertText;
+                list.push(item);
+              }
+            };
+  
+            const list: CompletionItem[] = [];
+            for (const key in this.metadatas) {
+              instertMetadataItem(list, key, this.metadatas[key]);
+            }
+            resolve(list);          
+          }
           this.commodities.forEach((v, i, a) => {
             const item = new CompletionItem(v, CompletionItemKind.Unit);
             item.range = wordRange;
@@ -309,35 +339,6 @@ export class Completer
             instertTransactionItem(list, key, this.transactions[key]);
           }
           resolve(list);
-        } else if (vscode.workspace.getConfiguration('beancount')['completeMetadata']) {
-          const instertMetadataItem = (list: CompletionItem[], key: string, insertText: string) => {
-            let findOne = false;
-            const completionItemKind = CompletionItemKind.Value;
-
-            for (const inputMethod of this.inputMethods) {
-              const letters = inputMethod.getLetterRepresentation(key);
-              if (letters.length > 0) {
-                findOne = true;
-                const item = new CompletionItem(
-                  letters + '(' + key + ')',
-                  completionItemKind
-                );
-                item.insertText = insertText;
-                list.push(item);
-              }
-            }
-            if (!findOne) {
-              const item = new CompletionItem(key, completionItemKind);
-              item.insertText = insertText;
-              list.push(item);
-            }
-          };
-
-          const list: CompletionItem[] = [];
-          for (const key in this.metadatas) {
-            instertMetadataItem(list, key, this.metadatas[key]);
-          }
-          resolve(list);          
         }
       }
       resolve([]);
