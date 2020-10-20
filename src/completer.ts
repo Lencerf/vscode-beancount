@@ -293,11 +293,11 @@ export class Completer
               }
             };
   
-            const list: CompletionItem[] = [];
+            // const list: CompletionItem[] = [];
             for (const key in this.metadatas) {
               instertMetadataItem(list, key, this.metadatas[key]);
             }
-            resolve(list);          
+            resolve(list);
           }
           this.commodities.forEach((v, i, a) => {
             const item = new CompletionItem(v, CompletionItemKind.Unit);
