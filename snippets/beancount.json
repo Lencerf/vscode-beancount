@@ -58,7 +58,7 @@
     "balance assertion": {
         "prefix": "balance",
         "body": [
-			"${1:$CURRENT_YEAR}-${2:$CURRENT_MONTH}-${3:$CURRENT_DATE} balance ${4|Assets:,Liabilities:,Equity:,Income:,Expenses:|} ${5:Ammount}",
+			"${1:$CURRENT_YEAR}-${2:$CURRENT_MONTH}-${3:$CURRENT_DATE} balance ${4|Assets:,Liabilities:,Equity:,Income:,Expenses:|} ${5:Amount}",
             "$0"
 		],
 		"description": "Assert balance on given day."
