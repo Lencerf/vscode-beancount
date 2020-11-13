@@ -152,6 +152,39 @@ export class Completer
     const reg = /[0-9]{4,}[\-/][0-9]+[\-/][0-9]+\s*([\*!]|txn)/g;
     const triggerCharacter = context.triggerCharacter;
     return new Promise((resolve, _reject) => {
+      const insertItemWithSuffixLetters = (
+        list: CompletionItem[],
+        key: string,
+        kind: CompletionItemKind,
+        suffix: string,
+        insertText?: string
+      ) => {
+        // let findOne = false;
+        let newKey = key;
+        for (const inputMethod of this.inputMethods) {
+          const letters = inputMethod.getLetterRepresentation(key);
+          if (letters.length > 0) {
+            // findOne = true;
+            newKey = letters + '(' + key + ')';
+            break;
+            // const item = new CompletionItem(
+            //   letters + '(' + text + ')',
+            //   kind
+            // );
+            // item.insertText = text + suffix;
+            // list.push(item);
+          }
+        }
+        // if (!findOne) {
+        const item = new CompletionItem(newKey, kind);
+        if (typeof(insertText) != 'undefined') {
+          item.insertText = insertText + suffix
+        } else {
+          item.insertText = key + suffix;
+        }
+        list.push(item);
+        // }
+      };
       if (countOccurrences(textBefore, /;/g) > 0) {
         if (triggerCharacter === '#') {
           const list: CompletionItem[] = [];
@@ -185,35 +218,10 @@ export class Completer
           countOccurrences(textBefore, /\"/g) -
           countOccurrences(textBefore, /\\"/g);
         if (r != null && numQuotes % 2 === 1) {
-          const insertItemWithLetters = (
-            list: CompletionItem[],
-            text: string,
-            kind: CompletionItemKind,
-            suffix: string
-          ) => {
-            let findOne = false;
-            for (const inputMethod of this.inputMethods) {
-              const letters = inputMethod.getLetterRepresentation(text);
-              if (letters.length > 0) {
-                findOne = true;
-                const item = new CompletionItem(
-                  letters + '(' + text + ')',
-                  kind
-                );
-                item.insertText = text + suffix;
-                list.push(item);
-              }
-            }
-            if (!findOne) {
-              const item = new CompletionItem(text, kind);
-              item.insertText = text + suffix;
-              list.push(item);
-            }
-          };
           const list: CompletionItem[] = [];
           if (numQuotes === 1) {
             this.payees.forEach((payee, i, a) => {
-              insertItemWithLetters(
+              insertItemWithSuffixLetters(
                 list,
                 payee,
                 CompletionItemKind.Variable,
@@ -223,7 +231,7 @@ export class Completer
           }
           if (numQuotes <= 3) {
             this.narrations.forEach((narration, i, a) => {
-              insertItemWithLetters(
+              insertItemWithSuffixLetters(
                 list,
                 narration,
                 CompletionItemKind.Text,
@@ -270,32 +278,32 @@ export class Completer
             list.push(item);
           }
           if (vscode.workspace.getConfiguration('beancount')['completeMetadata']) {
-            const instertMetadataItem = (list: CompletionItem[], key: string, insertText: string) => {
-              let findOne = false;
-              const completionItemKind = CompletionItemKind.Value;
+            // const instertMetadataItem = (list: CompletionItem[], key: string, insertText: string) => {
+            //   let findOne = false;
+            //   const completionItemKind = CompletionItemKind.Value;
   
-              for (const inputMethod of this.inputMethods) {
-                const letters = inputMethod.getLetterRepresentation(key);
-                if (letters.length > 0) {
-                  findOne = true;
-                  const item = new CompletionItem(
-                    letters + '(' + key + ')',
-                    completionItemKind
-                  );
-                  item.insertText = insertText;
-                  list.push(item);
-                }
-              }
-              if (!findOne) {
-                const item = new CompletionItem(key, completionItemKind);
-                item.insertText = insertText;
-                list.push(item);
-              }
-            };
+            //   for (const inputMethod of this.inputMethods) {
+            //     const letters = inputMethod.getLetterRepresentation(key);
+            //     if (letters.length > 0) {
+            //       findOne = true;
+            //       const item = new CompletionItem(
+            //         letters + '(' + key + ')',
+            //         completionItemKind
+            //       );
+            //       item.insertText = insertText;
+            //       list.push(item);
+            //     }
+            //   }
+            //   if (!findOne) {
+            //     const item = new CompletionItem(key, completionItemKind);
+            //     item.insertText = insertText;
+            //     list.push(item);
+            //   }
+            // };
   
             // const list: CompletionItem[] = [];
             for (const key in this.metadatas) {
-              instertMetadataItem(list, key, this.metadatas[key]);
+              insertItemWithSuffixLetters(list, key, CompletionItemKind.Field, '', this.metadatas[key]);
             }
             resolve(list);
           }
@@ -311,32 +319,32 @@ export class Completer
           textBefore.match(/([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))/)
         ) {  // Match a date at the string beginning
           
-          const instertTransactionItem = (list: CompletionItem[], key: string, transactionText: string) => {
-            let findOne = false;
-            const completionItemKind = CompletionItemKind.Value;
+          // const instertTransactionItem = (list: CompletionItem[], key: string, transactionText: string) => {
+          //   let findOne = false;
+          //   const completionItemKind = CompletionItemKind.Value;
 
-            for (const inputMethod of this.inputMethods) {
-              const letters = inputMethod.getLetterRepresentation(key);
-              if (letters.length > 0) {
-                findOne = true;
-                const item = new CompletionItem(
-                  letters + '(' + key + ')',
-                  completionItemKind
-                );
-                item.insertText = transactionText;
-                list.push(item);
-              }
-            }
-            if (!findOne) {
-              const item = new CompletionItem(key, completionItemKind);
-              item.insertText = transactionText;
-              list.push(item);
-            }
-          };
+          //   for (const inputMethod of this.inputMethods) {
+          //     const letters = inputMethod.getLetterRepresentation(key);
+          //     if (letters.length > 0) {
+          //       findOne = true;
+          //       const item = new CompletionItem(
+          //         letters + '(' + key + ')',
+          //         completionItemKind
+          //       );
+          //       item.insertText = transactionText;
+          //       list.push(item);
+          //     }
+          //   }
+          //   if (!findOne) {
+          //     const item = new CompletionItem(key, completionItemKind);
+          //     item.insertText = transactionText;
+          //     list.push(item);
+          //   }
+          // };
 
           const list: CompletionItem[] = [];
           for (const key in this.transactions) {
-            instertTransactionItem(list, key, this.transactions[key]);
+            insertItemWithSuffixLetters(list, key, CompletionItemKind.Module, '', this.transactions[key]);
           }
           resolve(list);
         }

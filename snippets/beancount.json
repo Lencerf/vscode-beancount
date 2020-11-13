@@ -57,10 +57,7 @@
 
     "balance assertion": {
         "prefix": "balance",
-        "body": [
-			"${1:$CURRENT_YEAR}-${2:$CURRENT_MONTH}-${3:$CURRENT_DATE} balance ${4|Assets:,Liabilities:,Equity:,Income:,Expenses:|} ${5:Ammount}",
-            "$0"
-		],
+        "body": "$CURRENT_YEAR-${1:$CURRENT_MONTH}-${2:$CURRENT_DATE} balance ${3:Account} ${4:Amount} ${5:CNY}\n$0",
 		"description": "Assert balance on given day."
     },
 
@@ -170,5 +167,23 @@
             "$0"
 		],
 		"description": "Add a Fava compatible budget directive."
+	},
+
+	"date today":{
+		"prefix": "dtoday",
+		"body": "$CURRENT_YEAR-${1:$CURRENT_MONTH}-${2:$CURRENT_DATE} $0",
+		"description": "insert date default is today"
+	},
+
+	"metadata time":{
+		"prefix": "mtm metadata time",
+		"body": "time: \"$1:$2\"$0",
+		"description": "insert MetaData Time"
+	},
+
+	"metadata memo":{
+		"prefix": "mm metadata memo",
+		"body": "memo: \"$1\"$0",
+		"description": "insert MetaData Memo"
 	}
 }
