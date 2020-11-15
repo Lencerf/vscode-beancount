@@ -5,7 +5,7 @@ from typing import Dict, Union, List
 from beancount import loader
 from beancount.core import flags
 from beancount.core.data import Transaction, Open, Close
-from beancount.core.display_context import Align 
+from beancount.core.display_context import Align
 from beancount.core.realization import dump_balances, realize
 from beancount.parser.printer import format_entry
 import io
@@ -63,14 +63,14 @@ for entry in entries:
             tags.update(entry.tags)
             links.update(entry.links)
         if completeMetadata:
-            md = {f'{key} {value}': f'{key}: \"{value}\"' for key,value in entry.meta.items() if key not in excluded_metakeys}
+            md = {f'{key}:{value}': f'{key}: \"{value}\"' for key,value in entry.meta.items() if key not in excluded_metakeys}
             metadatas.update(md)
         for posting in entry.postings:
             commodities.add(posting.units.currency)
             if hasattr(posting, 'flag') and posting.flag == "!":
                 flagged_entries.append(get_flag_metadata(posting))
             if posting.meta:
-                pmd = {f'{key} {value}': f'{key}: \"{value}\"' for key,value in posting.meta.items() if key not in excluded_metakeys}
+                pmd = {f'{key}:{value}': f'{key}: \"{value}\"' for key,value in posting.meta.items() if key not in excluded_metakeys}
                 metadatas.update(pmd)
         if completeTransaction:
             # Add transaction to dict (replace if already exists, i.e. newest transaction wins)

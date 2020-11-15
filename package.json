@@ -2,7 +2,7 @@
   "name": "beancount",
   "displayName": "Beancount",
   "description": "VSCode extension for Beancount",
-  "version": "0.5.8",
+  "version": "0.5.9",
   "publisher": "Lencerf",
   "engines": {
     "vscode": "^1.23.0"
@@ -26,6 +26,11 @@
     "configuration": {
       "title": "Beancount Configuration",
       "properties": {
+        "beancount.indentationSize": {
+          "type": "integer",
+          "default": 2,
+          "description": "Specify the default indentation size of bean file."
+        },
         "beancount.separatorColumn": {
           "type": "integer",
           "default": 50,

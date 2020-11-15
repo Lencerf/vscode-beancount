@@ -152,6 +152,10 @@ export class Completer
     const reg = /[0-9]{4,}[\-/][0-9]+[\-/][0-9]+\s*([\*!]|txn)/g;
     const triggerCharacter = context.triggerCharacter;
     return new Promise((resolve, _reject) => {
+      const dateReg = /([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))\s+/
+      const optionIndentSize = vscode.workspace.getConfiguration('beancount')['indentationSize'];
+      const currentLineIndentSize = textBefore.search(/\S|$/)
+      // this.extension.logger.appendLine(`${currentLineIndentSize}`)
       const insertItemWithSuffixLetters = (
         list: CompletionItem[],
         key: string,
@@ -197,72 +201,114 @@ export class Completer
           return;
         }
       }
-      if (triggerCharacter === '#') {
-        const list = this.tags.map((value, index, array) => {
-          return new CompletionItem(value, CompletionItemKind.Variable);
-        });
-        resolve(list);
-        return;
-      } else if (triggerCharacter === '^') {
-        const list = this.links.map((value, index, array) => {
-          return new CompletionItem(value, CompletionItemKind.Reference);
-        });
-        resolve(list);
-        return;
-      } else if (
-        triggerCharacter === '"' &&
-        vscode.workspace.getConfiguration('beancount')['completePayeeNarration']
-      ) {
-        const r = reg.exec(textBefore);
-        const numQuotes =
-          countOccurrences(textBefore, /\"/g) -
-          countOccurrences(textBefore, /\\"/g);
-        if (r != null && numQuotes % 2 === 1) {
-          const list: CompletionItem[] = [];
-          if (numQuotes === 1) {
-            this.payees.forEach((payee, i, a) => {
-              insertItemWithSuffixLetters(
-                list,
-                payee,
-                CompletionItemKind.Variable,
-                '" '
-              );
-            });
-          }
-          if (numQuotes <= 3) {
-            this.narrations.forEach((narration, i, a) => {
-              insertItemWithSuffixLetters(
-                list,
-                narration,
-                CompletionItemKind.Text,
-                '" '
-              );
-            });
-          }
+      if (currentLineIndentSize === 0) {
+        if (triggerCharacter === '#') {
+          const list = this.tags.map((value, index, array) => {
+            return new CompletionItem(value, CompletionItemKind.Variable);
+          });
           resolve(list);
-          return;        
+          return;
+        } else if (triggerCharacter === '^') {
+          const list = this.links.map((value, index, array) => {
+            return new CompletionItem(value, CompletionItemKind.Reference);
+          });
+          resolve(list);
+          return;
+        } else if (
+          triggerCharacter === '"' &&
+          vscode.workspace.getConfiguration('beancount')['completePayeeNarration']
+        ) {
+          const r = reg.exec(textBefore);
+          const numQuotes =
+            countOccurrences(textBefore, /\"/g) -
+            countOccurrences(textBefore, /\\"/g);
+          if (r != null && numQuotes % 2 === 1) {
+            const list: CompletionItem[] = [];
+            if (numQuotes === 1) {
+              this.payees.forEach((payee, i, a) => {
+                insertItemWithSuffixLetters(
+                  list,
+                  payee,
+                  CompletionItemKind.Variable,
+                  '" '
+                );
+              });
+            }
+            if (numQuotes <= 3) {
+              this.narrations.forEach((narration, i, a) => {
+                insertItemWithSuffixLetters(
+                  list,
+                  narration,
+                  CompletionItemKind.Text,
+                  '" '
+                );
+              });
+            }
+            resolve(list);
+            return;
+          }
+        } else {
+          if (textBefore.match(/([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))\s+\b(open|close|balance|pad)\b/)) {
+            const list: CompletionItem[] = [];
+            const wordRange = document.getWordRangeAtPosition(
+              position,
+              this.wordPattern
+            );
+            for (const account of Object.keys(this.accounts)) {
+              const item = new CompletionItem(
+                account,
+                CompletionItemKind.EnumMember
+              );
+              item.documentation = this.describeAccount(account);
+              item.range = wordRange;
+              list.push(item);
+            }
+            this.commodities.forEach((v, i, a) => {
+              const item = new CompletionItem(v, CompletionItemKind.Unit);
+              item.range = wordRange;
+              list.push(item);
+            });
+            resolve(list);
+            return;
+          } else if (
+            textBefore.match(dateReg) &&
+            vscode.workspace.getConfiguration('beancount')['completeTransaction']
+          ) {
+            const list: CompletionItem[] = [];
+            for (const key in this.transactions) {
+              insertItemWithSuffixLetters(list, key, CompletionItemKind.Module, '', this.transactions[key]);
+            }
+            resolve(list);
+          }
+          resolve([]);
+          return
         }
       } else {
-        // close/pad/balance
-        const reg2 = /[0-9]{4,}[\-/][0-9]+[\-/][0-9]+\s*(close|pad|balance)/g;
-        let isClosePadBalancePosting = reg2.exec(textBefore) != null;
-        if (
-          !isClosePadBalancePosting &&
-          document.lineAt(position.line).text[0] === ' '
-        ) {
-          let lineNumber = position.line - 1;
-          while (
-            lineNumber >= 0 &&
-            document.lineAt(lineNumber).text.trim().length > 0
-          ) {
-            if (reg.exec(document.lineAt(lineNumber).text) != null) {
-              isClosePadBalancePosting = true;
-              break;
-            }
-            lineNumber -= 1;
+        const previousLineIndentSize = document.lineAt(position.line - 1).text.search(/\S|$/)
+        const optionCompleteMetadata = vscode.workspace.getConfiguration('beancount')['completeMetadata']
+        let metadataCondition = false
+        if (triggerCharacter === ':' && optionCompleteMetadata) {
+          const list: CompletionItem[] = [];
+          for (const key in this.metadatas) {
+            insertItemWithSuffixLetters(list, key, CompletionItemKind.Field, '', this.metadatas[key]);
+          }
+          resolve(list);
+          return
+        }
+        if (previousLineIndentSize != 0) {
+          if ((currentLineIndentSize > previousLineIndentSize) ||
+          (currentLineIndentSize > optionIndentSize)) {
+            metadataCondition = true
           }
         }
-        if (isClosePadBalancePosting) {
+        if (metadataCondition == true && optionCompleteMetadata) {
+          const list: CompletionItem[] = [];
+          for (const key in this.metadatas) {
+            insertItemWithSuffixLetters(list, key, CompletionItemKind.Field, '', this.metadatas[key]);
+          }
+          resolve(list);
+          return
+        } else {
           const list: CompletionItem[] = [];
           const wordRange = document.getWordRangeAtPosition(
             position,
@@ -277,36 +323,6 @@ export class Completer
             item.range = wordRange;
             list.push(item);
           }
-          if (vscode.workspace.getConfiguration('beancount')['completeMetadata']) {
-            // const instertMetadataItem = (list: CompletionItem[], key: string, insertText: string) => {
-            //   let findOne = false;
-            //   const completionItemKind = CompletionItemKind.Value;
-  
-            //   for (const inputMethod of this.inputMethods) {
-            //     const letters = inputMethod.getLetterRepresentation(key);
-            //     if (letters.length > 0) {
-            //       findOne = true;
-            //       const item = new CompletionItem(
-            //         letters + '(' + key + ')',
-            //         completionItemKind
-            //       );
-            //       item.insertText = insertText;
-            //       list.push(item);
-            //     }
-            //   }
-            //   if (!findOne) {
-            //     const item = new CompletionItem(key, completionItemKind);
-            //     item.insertText = insertText;
-            //     list.push(item);
-            //   }
-            // };
-  
-            // const list: CompletionItem[] = [];
-            for (const key in this.metadatas) {
-              insertItemWithSuffixLetters(list, key, CompletionItemKind.Field, '', this.metadatas[key]);
-            }
-            resolve(list);
-          }
           this.commodities.forEach((v, i, a) => {
             const item = new CompletionItem(v, CompletionItemKind.Unit);
             item.range = wordRange;
@@ -314,39 +330,6 @@ export class Completer
           });
           resolve(list);
           return;
-        } else if (
-          vscode.workspace.getConfiguration('beancount')['completeTransaction'] &&
-          textBefore.match(/([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))/)
-        ) {  // Match a date at the string beginning
-          
-          // const instertTransactionItem = (list: CompletionItem[], key: string, transactionText: string) => {
-          //   let findOne = false;
-          //   const completionItemKind = CompletionItemKind.Value;
-
-          //   for (const inputMethod of this.inputMethods) {
-          //     const letters = inputMethod.getLetterRepresentation(key);
-          //     if (letters.length > 0) {
-          //       findOne = true;
-          //       const item = new CompletionItem(
-          //         letters + '(' + key + ')',
-          //         completionItemKind
-          //       );
-          //       item.insertText = transactionText;
-          //       list.push(item);
-          //     }
-          //   }
-          //   if (!findOne) {
-          //     const item = new CompletionItem(key, completionItemKind);
-          //     item.insertText = transactionText;
-          //     list.push(item);
-          //   }
-          // };
-
-          const list: CompletionItem[] = [];
-          for (const key in this.transactions) {
-            insertItemWithSuffixLetters(list, key, CompletionItemKind.Module, '', this.transactions[key]);
-          }
-          resolve(list);
         }
       }
       resolve([]);

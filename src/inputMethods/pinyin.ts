@@ -15,7 +15,7 @@ export class Pinyin implements InputMethod {
   }
 
   getLetterRepresentation(w: string): string {
-    const reg = /[a-zA-Z]/i;
+    const reg = /[a-zA-Z:]/i;
     const result = new Array<string>();
     for (let str of w) {
       if (!str.match(reg)) {

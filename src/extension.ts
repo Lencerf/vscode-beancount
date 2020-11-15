@@ -30,7 +30,8 @@ export function activate(context: vscode.ExtensionContext) {
       extension.completer,
       '#',
       '^',
-      '"'
+      '"',
+      ':'
     )
   );
   context.subscriptions.push(
