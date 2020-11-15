@@ -1,5 +1,11 @@
 ## Change Log
 
+### 0.5.9 (2020-11-15)
+* 小幅优化
+* 增加触发字符 “:”，以激活 MetaData 的补全提示
+* 增加设置项：indentationSize，默认为 2 空格，以区分 Posting 和 MetaData
+* 重写自动补全智能提示的逻辑，Accounts 和 MetaData 的提示不会再混在一起
+
 ### 0.5.8 (2020-10-17)
 * 小幅优化 InputMethod 特性，存在中英文混合情况时英文单词也是有效的了
 * 扩展自动补全，MetaData 也可以了（排除time、memo这些不规律的）
@@ -93,7 +99,7 @@
 ### 0.2.0 (2018-04-26)
 
 - Code snippets ([@vlamacko](https://github.com/Lencerf/vscode-beancount/pull/7))
-- Run Fava to view balances 
+- Run Fava to view balances
 
 ### 0.1.1 (2018-04-22)
 - The extension now will not check unrelated files. [#8](https://github.com/Lencerf/vscode-beancount/issues/8)

@@ -24,9 +24,12 @@ VSCode extension for the text-based double-entry accounting tool [Beancount](htt
 
 This extension contributes the following settings:
 
+* `beancount.indentationSize`:Specify the default indentation size of bean file.
 * `beancount.separatorColumn`: specify the column of the decimal separator.
 * `beancount.instantAlignment`: Set it to `true` to align the amount (like 1.00 BTC) once a decimal point is inserted.
 * `beancount.completePayeeNarration`: Controls whether the auto completion list should include payee and narration fields.
+* `beancount.completeMetadata`: Controls whether the auto completion list should include metadatas.
+* `beancount.completeTransaction`: Controls whether the auto completion list should include whole transactions.
 * `beancount.mainBeanFile`: If you are splitting beancount files into multiple files, set this value to either the full path or the relative path to your main bean file so that
 this extension can get all account information. If it is left blank, the extension will consider the file in the current
 window as the main file.
@@ -38,9 +41,9 @@ window as the main file.
 ## Recommended practices
 
 0. **Make sure you installed Python3 and [beancount](https://pypi.org/project/beancount/). Set `beancount.python3Path` to the correct path.**
-1. Split your ledger into several `.bean` files according to time and 
-put all your `open`/`close` in a main file. 
-2. Include all other files in the 
+1. Split your ledger into several `.bean` files according to time and
+put all your `open`/`close` in a main file.
+2. Include all other files in the
 main file by the `include` command in the main bean file.
 3. Open `BeanFolder` with VSCode and set `beancount.mainBeanFile` to the full path of `main.bean` in the current [Workspace Settings](https://code.visualstudio.com/docs/getstarted/settings).
 
@@ -59,7 +62,7 @@ If you open `.vscode/settings.json`, you should see something like this:
 {
     "beancount.mainBeanFile": "main.bean"
 }
-``` 
+```
 
 Now once `BeanFolder` is opened as a workspace in VSCode, this extension will be able to invoke beancount to check errors and calculate balances.
 
@@ -69,6 +72,12 @@ see GitHub [issue page](https://github.com/Lencerf/vscode-beancount/issues)
 
 ## Release Notes
 
+### 0.5.9 (2020-11-15)
+* 小幅优化
+* 增加触发字符 “:”，以激活 MetaData 的补全提示
+* 增加设置项：indentationSize，以区分 Posting 和 MetaData
+* 重写自动补全智能提示的逻辑，Accounts 和 MetaData 的提示不会再混在一起
+
 ### 0.5.8 (2020-10-17)
 * 小幅优化 InputMethod 特性，存在中英文混合情况时英文单词也是有效的了
 * 扩展自动补全，MetaData 也可以了（排除time、memo这些不规律的）
@@ -77,6 +86,3 @@ see GitHub [issue page](https://github.com/Lencerf/vscode-beancount/issues)
 * 小幅优化
 * 对于.bean和python.exe路径允许Win式 % 环境变量
 * 扩展自动补全，可以通过 Payee+Narration 完整补全 Txn
-
-### 0.5.6
-* fix [#40](https://github.com/Lencerf/vscode-beancount/issues/40)
