@@ -135,7 +135,7 @@ export class Completer
         }
         resolve(new vscode.Hover(description, wordRange));
       } else {
-        resolve();
+        resolve([]);
       }
     });
   }
@@ -188,6 +188,33 @@ export class Completer
         }
         list.push(item);
         // }
+      };
+      const insertItemWithSurroundLetters = (
+        list: CompletionItem[],
+        key: string,
+        kind: CompletionItemKind,
+        suffix: string,
+        prefix: string,
+        insertText?: string
+      ) => {
+        let newKey = key;
+        for (const inputMethod of this.inputMethods) {
+          const letters = inputMethod.getLetterRepresentation(key);
+          if (letters.length > 0) {
+            newKey = letters + '(' + key + ')';
+            break;
+          }
+        }
+        const wordRange = document.getWordRangeAtPosition(position, /'\w*/);
+        const item = new CompletionItem(newKey, kind);
+        item.range = wordRange;
+        item.filterText = '\'' + newKey
+        if (typeof(insertText) != 'undefined') {
+          item.insertText = prefix + insertText + suffix;
+        } else {
+          item.insertText = prefix + key + suffix;
+        }
+        list.push(item);
       };
       if (countOccurrences(textBefore, /;/g) > 0) {
         if (triggerCharacter === '#') {
@@ -247,6 +274,22 @@ export class Completer
             resolve(list);
             return;
           }
+        } else if (triggerCharacter === '\'' &&
+        vscode.workspace.getConfiguration('beancount')['completePayeeNarration']) {
+          const numQuotes =
+            countOccurrences(textBefore, /\"/g) -
+            countOccurrences(textBefore, /\\"/g);
+          const list: CompletionItem[] = [];
+          if (numQuotes === 2) {
+            this.narrations.forEach((narration, i, a) => {
+              insertItemWithSurroundLetters(list, narration, CompletionItemKind.Text, '" ', '"');
+            });
+          } else {
+            this.payees.forEach((payee, i, a) => {
+              insertItemWithSurroundLetters(list, payee, CompletionItemKind.Variable, '" ', '"');
+          });}
+          resolve(list);
+          return;
         } else {
           if (textBefore.match(/([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))\s+\b(open|close|balance|pad)\b/)) {
             const list: CompletionItem[] = [];

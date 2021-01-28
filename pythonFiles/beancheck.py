@@ -7,7 +7,7 @@ from beancount.core import flags
 from beancount.core.data import Transaction, Open, Close
 from beancount.core.display_context import Align
 from beancount.core.realization import dump_balances, realize
-from beancount.parser.printer import format_entry
+from beancount.parser.printer import EntryPrinter
 import io
 import json
 
@@ -18,6 +18,9 @@ reverse_flag_map = {
             if flag_name.startswith('FLAG_')
 }
 excluded_metakeys = ['filename', 'lineno', 'time', 'memo', '__tolerances__']
+
+entry_formatter = EntryPrinter()
+entry_formatter.META_IGNORE.update(excluded_metakeys)
 
 def get_flag_metadata(thing):
     return {
@@ -78,8 +81,7 @@ for entry in entries:
                 transaction_key = ' '.join([entry.flag, entry.payee, entry.narration])
             else:
                 transaction_key = ' '.join([entry.flag, entry.narration])
-            # todo::去掉Txn里面的meta信息
-            transaction_value = format_entry(entry)
+            transaction_value = entry_formatter(entry)
             transaction_value = transaction_value.lstrip(entry.date.__str__()).lstrip()
             transactions[transaction_key] = transaction_value
     elif isinstance(entry, Open):
