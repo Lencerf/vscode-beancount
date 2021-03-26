@@ -7,7 +7,7 @@ import {FavaManager} from './favaManager';
 import {ActionProvider} from './actionProvider';
 import {Completer} from './completer';
 import {Formatter} from './formatter';
-import {run_cmd} from './utils';
+import {runCmd} from './utils';
 
 export function activate(context: vscode.ExtensionContext) {
   const extension = new Extension(context);
@@ -162,7 +162,7 @@ export class Extension {
     const cwd = vscode.workspace.workspaceFolders ?
       vscode.workspace.workspaceFolders[0].uri.fsPath :
       undefined;
-    run_cmd(
+    runCmd(
         python3Path,
         pyArgs,
         (text: string) => {

@@ -1,6 +1,6 @@
 import {spawn, SpawnOptions} from 'child_process';
 
-export function run_cmd(
+export function runCmd(
     cmd: string,
     args: string[],
     callBack: (stdout: string) => void,
