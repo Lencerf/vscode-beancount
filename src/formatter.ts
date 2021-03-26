@@ -1,6 +1,6 @@
 'use strict';
 import * as vscode from 'vscode';
-import { Range, Position } from 'vscode';
+import {Range, Position} from 'vscode';
 
 export class Formatter {
   instantFormat(e: vscode.TextDocumentChangeEvent) {
@@ -8,7 +8,7 @@ export class Formatter {
       return;
     }
     if (e.contentChanges.length === 0) {
-      //protect against empty contentChanges arrays...
+      // protect against empty contentChanges arrays...
       return;
     }
     const text = e.contentChanges[0].text;
@@ -25,17 +25,17 @@ export class Formatter {
     if (text === '\n' && rangeLength === 0) {
       // the user just inserted a new line
       const lineText = vscode.window.activeTextEditor.document.lineAt(line)
-        .text;
+          .text;
       const transRegex = /([0-9]{4})([\-|/])([0-9]{2})([\-|/])([0-9]{2}) (\*|\!)/;
       const transArray = transRegex.exec(lineText);
       if (transArray != null) {
         // the user inserted a new line under a transaction
         const r = new Range(
-          new Position(line + 1, 0),
-          new Position(line + 1, 0)
+            new Position(line + 1, 0),
+            new Position(line + 1, 0),
         );
         const tabSize = vscode.window.activeTextEditor.options
-          .tabSize as number;
+            .tabSize as number;
         const edit = new vscode.TextEdit(r, ' '.repeat(tabSize));
         const wEdit = new vscode.WorkspaceEdit();
         wEdit.set(vscode.window.activeTextEditor.document.uri, [edit]);
@@ -66,13 +66,13 @@ export class Formatter {
       return;
     }
     const contentBefore = ('s' + originalText.substring(0, amountArray.index))
-      .trim()
-      .substring(1);
+        .trim()
+        .substring(1);
     let contentAfterAmount = '';
     if (amountArray.index + amountArray[0].length < originalText.length) {
       // get all the contents after the decimal point
       contentAfterAmount = originalText.substring(
-        amountArray.index + amountArray[0].length
+          amountArray.index + amountArray[0].length,
       );
     }
     const targetDotPosition =
@@ -86,13 +86,13 @@ export class Formatter {
         amountArray[0] +
         contentAfterAmount;
       const r = new vscode.Range(
-        new vscode.Position(line, 0),
-        new vscode.Position(line, originalText.length)
+          new vscode.Position(line, 0),
+          new vscode.Position(line, originalText.length),
       );
       const edit = new vscode.TextEdit(r, newText);
       const wEdit = new vscode.WorkspaceEdit();
       wEdit.set(activeEditor.document.uri, [edit]);
-      vscode.workspace.applyEdit(wEdit).then(value => {
+      vscode.workspace.applyEdit(wEdit).then((value) => {
         if (value && line === originalCursorPosition.line) {
           const newPositionChar =
             1 +
@@ -100,10 +100,10 @@ export class Formatter {
             newText.length -
             originalLength;
           activeEditor.selection = new vscode.Selection(
-            line,
-            newPositionChar,
-            line,
-            newPositionChar
+              line,
+              newPositionChar,
+              line,
+              newPositionChar,
           );
         }
       });

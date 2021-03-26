@@ -1,5 +1,5 @@
-import { InputMethod } from './inputMethod';
-import { readFileSync } from 'fs';
+import {InputMethod} from './inputMethod';
+import {readFileSync} from 'fs';
 
 export class Pinyin implements InputMethod {
   private _pyData: Map<string, string>;
