@@ -100,7 +100,7 @@ export class Completer
     document: vscode.TextDocument,
     position: vscode.Position,
     _token: vscode.CancellationToken
-  ): Thenable<vscode.Hover> {
+  ): vscode.ProviderResult<vscode.Hover> {
     return new Promise((resolve, _reject) => {
       const wordRange = document.getWordRangeAtPosition(
         position,
@@ -128,7 +128,7 @@ export class Completer
         }
         resolve(new vscode.Hover(description, wordRange));
       } else {
-        resolve();
+        resolve(null);
       }
     });
   }
