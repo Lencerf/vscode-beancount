@@ -159,9 +159,6 @@ export class Extension {
     this.logger.appendLine(
         `running ${python3Path} ${pyArgs} to refresh data...`,
     );
-    const cwd = vscode.workspace.workspaceFolders ?
-      vscode.workspace.workspaceFolders[0].uri.fsPath :
-      undefined;
     runCmd(
         python3Path,
         pyArgs,
@@ -171,8 +168,7 @@ export class Extension {
           this.completer.updateData(errorsCompletions[1]);
           this.logger.appendLine('Data refreshed.');
         },
-      cwd ? {cwd} : undefined,
-      (str) => this.logger.append(str),
+        (str) => this.logger.append(str),
     );
   }
 

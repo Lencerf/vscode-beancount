@@ -1,10 +1,9 @@
-import {spawn, SpawnOptions} from 'child_process';
+import {spawn} from 'child_process';
 
 export function runCmd(
     cmd: string,
     args: string[],
     callBack: (stdout: string) => void,
-    options?: SpawnOptions,
     logger?: (str: string) => void,
 ) {
   const child = spawn(cmd, args);
