@@ -69,11 +69,12 @@ see GitHub [issue page](https://github.com/Lencerf/vscode-beancount/issues)
 
 ## Release Notes
 
+### 0.6.0
+* Add/remove diagnostic information when standalone files are opened/closed
+* Let formatter ignore non-beancount files
+
 ### 0.5.6
 * fix [#40](https://github.com/Lencerf/vscode-beancount/issues/40)
 
 ### 0.5.5 
 * fix [#38](https://github.com/Lencerf/vscode-beancount/issues/38): account autocompletion fails due to commodity price error
-
-### 0.5.4
-* workaround for completing narrations and payees

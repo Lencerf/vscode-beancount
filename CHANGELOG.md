@@ -1,5 +1,9 @@
 ## Change Log
 
+### 0.6.0 (2021-03-26)
+* Add/remove diagnostic information when standalone files are opened/closed
+* Let formatter ignore non-beancount files
+
 ### 0.5.6 (2020-03-18)
 * fix [#40](https://github.com/Lencerf/vscode-beancount/issues/40)
 
