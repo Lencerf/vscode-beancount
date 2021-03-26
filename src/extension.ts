@@ -57,6 +57,17 @@ export function activate(context: vscode.ExtensionContext) {
         extension.refreshData(context),
       ),
   );
+
+  context.subscriptions.push(
+      vscode.workspace.onDidCloseTextDocument((e: vscode.TextDocument) =>
+        extension.textDocumentClosed(e)),
+  );
+
+  context.subscriptions.push(
+      vscode.workspace.onDidOpenTextDocument((e: vscode.TextDocument) =>
+        extension.textDocumentOpened(e, context)),
+  );
+
   context.subscriptions.push(
       vscode.workspace.onDidChangeConfiguration(
           (e: vscode.ConfigurationChangeEvent) =>
@@ -70,7 +81,7 @@ export function activate(context: vscode.ExtensionContext) {
   }
 }
 
-export function deactivate() {}
+export function deactivate() { }
 
 export class Extension {
   completer: Completer;
@@ -140,8 +151,8 @@ export class Extension {
     }
   }
 
-  refreshData(context: vscode.ExtensionContext) {
-    const mainBeanFile = this.getMainBeanFile();
+  refreshData(context: vscode.ExtensionContext, mainFile?: string) {
+    const mainBeanFile = mainFile ?? this.getMainBeanFile();
     const checkpy = context.asAbsolutePath('/pythonFiles/beancheck.py');
     const python3Path = vscode.workspace.getConfiguration('beancount')[
         'python3Path'
@@ -170,6 +181,33 @@ export class Extension {
         },
         (str) => this.logger.append(str),
     );
+  }
+
+  textDocumentOpened(
+      e: vscode.TextDocument,
+      context: vscode.ExtensionContext,
+  ) {
+    if (e.languageId !== 'beancount') {
+      return;
+    }
+    const mainBeanFile = vscode.workspace
+        .getConfiguration('beancount')
+        .get('mainBeanFile');
+    if (mainBeanFile === undefined || mainBeanFile === '') {
+      this.refreshData(context, e.fileName);
+    }
+  }
+
+  textDocumentClosed(e: vscode.TextDocument) {
+    if (e.languageId !== 'beancount') {
+      return;
+    }
+    const mainBeanFile = vscode.workspace
+        .getConfiguration('beancount')
+        .get('mainBeanFile');
+    if (mainBeanFile === undefined || mainBeanFile === '') {
+      this.diagnosticCollection.set(e.uri, undefined);
+    }
   }
 
   provideDiagnostics(errorsJson: string, flagsJson: string) {
