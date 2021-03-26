@@ -4,7 +4,8 @@ import {Range, Position} from 'vscode';
 
 export class Formatter {
   instantFormat(e: vscode.TextDocumentChangeEvent) {
-    if (vscode.window.activeTextEditor === undefined) {
+    if (vscode.window.activeTextEditor === undefined ||
+      e.document.languageId != 'beancount') {
       return;
     }
     if (e.contentChanges.length === 0) {
