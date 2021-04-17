@@ -134,9 +134,10 @@ export class Completer
           );
         }
         resolve(new vscode.Hover(description, wordRange));
-      } else {
-        resolve([]);
       }
+      // } else {
+      //   resolve();
+      // }
     });
   }
 
@@ -193,8 +194,8 @@ export class Completer
         list: CompletionItem[],
         key: string,
         kind: CompletionItemKind,
-        suffix: string,
         prefix: string,
+        suffix: string,
         insertText?: string
       ) => {
         let newKey = key;
@@ -279,16 +280,23 @@ export class Completer
           const numQuotes =
             countOccurrences(textBefore, /\"/g) -
             countOccurrences(textBefore, /\\"/g);
-          const list: CompletionItem[] = [];
+          const CmplnItems: CompletionItem[] = [];
           if (numQuotes === 2) {
-            this.narrations.forEach((narration, i, a) => {
-              insertItemWithSurroundLetters(list, narration, CompletionItemKind.Text, '" ', '"');
-            });
+            for(const na of this.narrations) {
+              insertItemWithSurroundLetters(CmplnItems, na, CompletionItemKind.Text, '"', '" ');
+            }
+            // this.narrations.forEach((narration, i, a) => {
+            //   insertItemWithSurroundLetters(CmplnItems, narration, CompletionItemKind.Text, '"', '" ');
+            // });
           } else {
-            this.payees.forEach((payee, i, a) => {
-              insertItemWithSurroundLetters(list, payee, CompletionItemKind.Variable, '" ', '"');
-          });}
-          resolve(list);
+            for(const payee of this.payees) {
+              insertItemWithSurroundLetters(CmplnItems, payee, CompletionItemKind.Text, '"', '" ');
+            }
+          //   this.payees.forEach((payee, i, a) => {
+          //     insertItemWithSurroundLetters(CmplnItems, payee, CompletionItemKind.Variable, '"', '" ');
+          //   });
+          }
+          resolve(CmplnItems);
           return;
         } else {
           if (textBefore.match(/([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))\s+\b(open|close|balance|pad)\b/)) {
@@ -298,10 +306,7 @@ export class Completer
               this.wordPattern
             );
             for (const account of Object.keys(this.accounts)) {
-              const item = new CompletionItem(
-                account,
-                CompletionItemKind.EnumMember
-              );
+              const item = new CompletionItem(account, CompletionItemKind.EnumMember);
               item.documentation = this.describeAccount(account);
               item.range = wordRange;
               list.push(item);

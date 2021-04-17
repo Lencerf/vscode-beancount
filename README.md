@@ -72,6 +72,10 @@ see GitHub [issue page](https://github.com/Lencerf/vscode-beancount/issues)
 
 ## Release Notes
 
+### 0.6.1 (2021-04-17)
+* 小幅优化
+* 修复小错误
+
 ### 0.5.9 (2020-11-15)
 * 小幅优化
 * 增加触发字符 “:”，以激活 MetaData 的补全提示
