@@ -153,7 +153,7 @@ export class Completer
     const reg = /[0-9]{4,}[\-/][0-9]+[\-/][0-9]+\s*([\*!]|txn)/g;
     const triggerCharacter = context.triggerCharacter;
     return new Promise((resolve, _reject) => {
-      const dateReg = /([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))\s+/
+      const dateReg = /([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))\s+[^"]+$/
       const optionIndentSize = vscode.workspace.getConfiguration('beancount')['indentationSize'];
       const currentLineIndentSize = textBefore.search(/\S|$/)
       // this.extension.logger.appendLine(`${currentLineIndentSize}`)
