@@ -31,7 +31,7 @@
 		"body": [
 			"${1:$CURRENT_YEAR}-${2:$CURRENT_MONTH}-${3:$CURRENT_DATE} commodity ${4:ISO/Ticker}",
             "  name: \"${5:FullName}\"",
-            "  assets-class: \"${6|cash,stock|}\"",
+            "  asset-class: \"${6|cash,stock|}\"",
             "$0"
 		],
 		"description": "Add a commodity metadata (optional)."
