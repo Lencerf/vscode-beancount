@@ -70,12 +70,13 @@ see GitHub [issue page](https://github.com/Lencerf/vscode-beancount/issues)
 
 ## Release Notes
 
+### 0.7.0
+* Change `assets-class` to `asset-class` in snippets [@chylli-binary](https://github.com/Lencerf/vscode-beancount/pull/54).
+* Treat CJK aka East Asian characters as two letters width [@yukixz](https://github.com/Lencerf/vscode-beancount/pull/55).
+
 ### 0.6.0
 * Add/remove diagnostic information when standalone files are opened/closed
 * Let formatter ignore non-beancount files
 
 ### 0.5.6
 * fix [#40](https://github.com/Lencerf/vscode-beancount/issues/40)
-
-### 0.5.5 
-* fix [#38](https://github.com/Lencerf/vscode-beancount/issues/38): account autocompletion fails due to commodity price error

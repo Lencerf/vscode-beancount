@@ -1,5 +1,9 @@
 ## Change Log
 
+### 0.7.0 (2021-01-27)
+* Change `assets-class` to `asset-class` in snippets [@chylli-binary](https://github.com/Lencerf/vscode-beancount/pull/54).
+* Treat CJK aka East Asian characters as two letters width [@yukixz](https://github.com/Lencerf/vscode-beancount/pull/55).
+
 ### 0.6.0 (2021-03-26)
 * Add/remove diagnostic information when standalone files are opened/closed
 * Let formatter ignore non-beancount files
