@@ -78,8 +78,11 @@ export class Formatter {
     }
     const targetDotPosition =
       vscode.workspace.getConfiguration('beancount')['separatorColumn'] - 1;
+    const contentBeforeLength =
+      vscode.workspace.getConfiguration('beancount')['fixedCJKWidth'] ?
+      this.getFixedDisplayWidth(contentBefore) : contentBefore.length;
     const whiteLength =
-      targetDotPosition - contentBefore.length - (amountArray[0].length - 1);
+      targetDotPosition - contentBeforeLength - (amountArray[0].length - 1);
     if (whiteLength > 0) {
       const newText =
         contentBefore +
@@ -109,5 +112,39 @@ export class Formatter {
         }
       });
     }
+  }
+
+  getFixedDisplayWidth(string: String) {
+    // The ranges of CJK aka East Asian characters
+    // which take up one "Em" of space in fixed pitched fonts.
+    // http://www.unicode.org/reports/tr11-2/
+    const WideChars = [
+      // Classifications: W - Wide
+      '\u1100-\u11F9',
+      '\u3000-\u303F',
+      '\u3041-\u3094',
+      '\u3099-\u309E',
+      '\u30A1-\u30FE',
+      '\u3131-\u318E',
+      '\u3190-\u319F',
+      '\u3200-\u321C',
+      '\u3220-\u3243',
+      '\u3260-\u32B0',
+      '\u32C0-\u3376',
+      '\u337B-\u33DD',
+      '\u33E0-\u33FE',
+      '\u4E00-\u9FA5',
+      '\uAC00-\uD7A3',
+      '\uE000-\uE757',
+      '\uF900-\uFA2D',
+      // Classifications: F - FullWidth
+      '\uFE30-\uFE44',
+      '\uFE49-\uFE52',
+      '\uFE54-\uFE6B',
+      '\uFF01-\uFF5E',
+      '\uFFE0-\uFFE6',
+    ];
+    const charsRegex = new RegExp(`[${WideChars.join('')}]`, 'g');
+    return string.replace(charsRegex, '..').length;
   }
 }

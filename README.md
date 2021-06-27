@@ -33,6 +33,7 @@ window as the main file.
 * `beancount.runFavaOnActivate`: If it is set to `true`, [fava](https://github.com/beancount/fava) will run once this extension is activated.
 * `beancount.favaPath`: Specify the path of Fava if Fava is not installed in the main Python installation.
 * `beancount.python3Path`: Specify the path of Python if beancount is not installed in the main Python installation.
+* `beancount.fixedCJKWidth`: Set to true to treat CJK aka East Asian characters as two letters width on alignment.
 * `beancount.inputMethods`: List the input methods for auto-completion of payees and narrations with CJK characters. Currently only `pinyin` is supported. [See details](https://github.com/Lencerf/vscode-beancount/blob/master/InputMethods.md).
 
 ## Recommended practices
