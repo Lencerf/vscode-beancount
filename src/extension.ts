@@ -154,9 +154,12 @@ export class Extension {
   refreshData(context: vscode.ExtensionContext, mainFile?: string) {
     const mainBeanFile = mainFile ?? this.getMainBeanFile();
     const checkpy = context.asAbsolutePath('/pythonFiles/beancheck.py');
-    const python3Path = vscode.workspace.getConfiguration('beancount')[
-        'python3Path'
-    ];
+    const python3PathConfig =
+      vscode.workspace.getConfiguration("beancount")["python3Path"];
+    const python3Path =
+      python3PathConfig[0] === "~"
+        ? `${process.env.HOME}${python3PathConfig.substring(1)}`
+        : python3PathConfig;
     if (mainBeanFile.length === 0 || !existsSync(mainBeanFile)) {
       this.logger.appendLine('find no valid bean files.');
       return;
