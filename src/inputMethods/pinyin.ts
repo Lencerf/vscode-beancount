@@ -15,13 +15,13 @@ export class Pinyin implements InputMethod {
   }
 
   getLetterRepresentation(w: string): string {
+    const reg = /[0-9a-zA-Z]/i;
     const result = [];
-    for (let i = 0; i < w.length; i += 1) {
-      const r = this._pyData.get(w[i]) || '';
-      if (r.length === 0) {
-        continue;
+    for (let str of w) {
+      if (!str.match(reg)) {
+        str = this._pyData.get(str) || '';
       }
-      result.push(r);
+      result.push(str)
     }
     return result.join('');
   }
