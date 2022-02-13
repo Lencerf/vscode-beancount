@@ -1,5 +1,6 @@
 ''' load beancount file and print errors
 '''
+from collections import defaultdict
 from sys import argv
 from beancount import loader
 from beancount.core import flags
@@ -39,6 +40,7 @@ error_list = [{"file": e.source['filename'], "line": e.source['lineno'], "messag
 
 output = {}
 accounts = {}
+automatics = defaultdict(dict)
 commodities = set()
 payees = set()
 narrations = set()
@@ -61,6 +63,8 @@ for entry in entries:
             commodities.add(posting.units.currency)
             if hasattr(posting, 'flag') and posting.flag == "!":
                 flagged_entries.append(get_flag_metadata(posting))
+            if posting.meta and posting.meta.get('__automatic__', False) is True:
+                automatics[posting.meta['filename']][int(posting.meta['lineno'])] = posting.units.to_string()
     elif isinstance(entry, Open):
         accounts[entry.account] = {
             'open': entry.date.__str__(),
@@ -99,6 +103,7 @@ output['payees'] = list(payees)
 output['narrations'] = list(narrations)
 output['tags'] = list(tags)
 output['links'] = list(links)
+output['automatics'] = automatics
 
 print(json.dumps(error_list))
 print(json.dumps(output))
