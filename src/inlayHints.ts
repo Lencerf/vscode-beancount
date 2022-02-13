@@ -7,11 +7,13 @@ interface InlayHintStyle {
 };
 type Automatics = { [file: string]: { [line: string]: string } };
 
-export class HintsUpdater implements vscode.Disposable {
+export class HintsUpdater {
     automatics: Automatics = {};
     extension: Extension;
     constructor(extension: Extension) {
         this.extension = extension;
+        vscode.workspace.onDidChangeTextDocument(this.onDidChangeTextDocument, this);
+        vscode.window.onDidChangeVisibleTextEditors(this.renderDecorations, this);
     }
 
     updateData(data: string) {
@@ -21,7 +23,6 @@ export class HintsUpdater implements vscode.Disposable {
     }
 
     private getCurrencyCol(linetext: string) {
-        this.extension.logger.appendLine(linetext);
         let res = linetext.match(/\s*(\S+)\s+(?<amount>[0-9.\-]+)(?<whitespace>\s*)(?<currency>\S+)/);
         let amt = res?.groups?.amount;
         if (!amt)
@@ -39,13 +40,18 @@ export class HintsUpdater implements vscode.Disposable {
         return units.padStart(endpos - curLine.length + units.split(" ")[1].length, SPACE);
     }
 
-    renderDecorations() {
-        let file = vscode.window.activeTextEditor?.document.fileName;
-        if (!file)
+    onDidChangeTextDocument({ contentChanges, document }: vscode.TextDocumentChangeEvent) {
+        if (contentChanges.length === 0 || !Object.keys(this.automatics).includes(document.fileName))
             return;
+        this.renderDecorations();
+    }
+
+    renderDecorations() {
         let doc = vscode.window.activeTextEditor?.document;
         if (!doc)
             return;
+        let file = doc.fileName;
+        this.extension.logger.appendLine(`Rendering hints for ${file}`);
 
         for (const [lineno, units] of Object.entries(this.automatics[file])) {
             let line = doc.lineAt((+lineno) - 1);
@@ -60,8 +66,5 @@ export class HintsUpdater implements vscode.Disposable {
             });
             vscode.window.activeTextEditor?.setDecorations(dt, [line.range]);
         }
-    }
-    dispose() {
-
     }
 }
