@@ -30,7 +30,7 @@ export class HintsUpdater {
 
     updateData(data: string) {
         this.extension.logger.appendLine("Got data");
-        this.automatics = JSON.parse(data).automatics;
+        this.automatics = JSON.parse(data);
         vscode.window.visibleTextEditors.filter(this.isTrackedEditor, this).forEach(this.renderDecorations, this);
     }
 

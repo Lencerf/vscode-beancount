@@ -107,8 +107,8 @@ output['payees'] = list(payees)
 output['narrations'] = list(narrations)
 output['tags'] = list(tags)
 output['links'] = list(links)
-output['automatics'] = automatics
 
 print(json.dumps(error_list))
 print(json.dumps(output))
 print(json.dumps(flagged_entries))
+print(json.dumps(automatics))
