@@ -8,6 +8,7 @@ import { Formatter } from "./formatter";
 import { runCmd } from "./utils";
 import { SymbolProvider } from "./symbolProvider";
 import DocumentLinkProvider from "./documentLinkProvider";
+import { HintsUpdater } from "./inlayHints";
 
 export function activate(context: vscode.ExtensionContext) {
   const extension = new Extension(context);
@@ -104,6 +105,7 @@ export class Extension {
   diagnosticCollection: vscode.DiagnosticCollection;
   formatter: Formatter;
   logger: vscode.OutputChannel;
+  hintUpdater: HintsUpdater;
   flagWarnings: FlagWarnings;
   context: vscode.ExtensionContext;
   symbolProvider: SymbolProvider;
@@ -112,6 +114,7 @@ export class Extension {
   constructor(context: vscode.ExtensionContext) {
     this.context = context;
     this.completer = new Completer(this);
+    this.hintUpdater = new HintsUpdater(this);
     this.actionProvider = new ActionProvider();
     this.favaManager = new FavaManager(this);
     this.diagnosticCollection =
