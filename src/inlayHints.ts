@@ -1,3 +1,4 @@
+import assert = require('assert');
 import * as vscode from 'vscode';
 import { Extension } from './extension';
 
@@ -6,6 +7,13 @@ interface InlayHintStyle {
     decorationOptions: vscode.DecorationOptions;
 };
 type Automatics = { [file: string]: { [line: string]: string } };
+
+const HINT_DECO = vscode.window.createTextEditorDecorationType({
+    ["after"]: {
+        color: "#aaa",
+        fontStyle: "normal",
+    }
+});
 
 export class HintsUpdater {
     automatics: Automatics = {};
@@ -47,24 +55,23 @@ export class HintsUpdater {
     }
 
     renderDecorations() {
-        let doc = vscode.window.activeTextEditor?.document;
-        if (!doc)
+        const editor = vscode.window.activeTextEditor;
+        if (!editor)
             return;
-        let file = doc.fileName;
+        const file = editor.document.fileName;
         this.extension.logger.appendLine(`Rendering hints for ${file}`);
 
-        for (const [lineno, units] of Object.entries(this.automatics[file])) {
-            let line = doc.lineAt((+lineno) - 1);
-            let prevLine = doc.lineAt((+lineno) - 2);
-            let text = this.padAmount(prevLine.text, line.text, units);
-            let dt = vscode.window.createTextEditorDecorationType({
-                ["after"]: {
-                    color: "#aaa",
-                    fontStyle: "normal",
-                    contentText: text,
-                }
-            });
-            vscode.window.activeTextEditor?.setDecorations(dt, [line.range]);
-        }
+        const hints = Object.entries(this.automatics[file]).map(([lineno, units]) => {
+            assert(editor);
+            const line = editor.document.lineAt((+lineno) - 1);
+            const prevLine = editor.document.lineAt((+lineno) - 2);
+            const contentText = this.padAmount(prevLine.text, line.text, units);
+
+            return {
+                range: line.range,
+                renderOptions: { ["after"]: { contentText } }
+            };
+        });
+        editor.setDecorations(HINT_DECO, hints);
     }
 }
