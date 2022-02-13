@@ -18,16 +18,20 @@ const HINT_DECO = vscode.window.createTextEditorDecorationType({
 export class HintsUpdater {
     automatics: Automatics = {};
     extension: Extension;
+
     constructor(extension: Extension) {
         this.extension = extension;
-        vscode.workspace.onDidChangeTextDocument(this.onDidChangeTextDocument, this);
-        vscode.window.onDidChangeVisibleTextEditors(this.renderDecorations, this);
+        vscode.window.onDidChangeVisibleTextEditors(this.onDidChangeVisibleTextEditors, this);
+    }
+
+    private isTrackedEditor(e: vscode.TextEditor) {
+        return Object.keys(this.automatics).includes(e.document.fileName);
     }
 
     updateData(data: string) {
         this.extension.logger.appendLine("Got data");
         this.automatics = JSON.parse(data).automatics;
-        this.renderDecorations();
+        vscode.window.visibleTextEditors.filter(this.isTrackedEditor, this).forEach(this.renderDecorations, this);
     }
 
     private getCurrencyCol(linetext: string) {
@@ -48,16 +52,13 @@ export class HintsUpdater {
         return units.padStart(endpos - curLine.length + units.split(" ")[1].length, SPACE);
     }
 
-    onDidChangeTextDocument({ contentChanges, document }: vscode.TextDocumentChangeEvent) {
-        if (contentChanges.length === 0 || !Object.keys(this.automatics).includes(document.fileName))
-            return;
-        this.renderDecorations();
+    private onDidChangeVisibleTextEditors(e: vscode.TextEditor[]) {
+        this.extension.logger.appendLine(`Changed visible text editors`);
+        // if there is any tracked beancount file open
+        e.filter(this.isTrackedEditor, this).forEach(this.renderDecorations, this);
     }
 
-    renderDecorations() {
-        const editor = vscode.window.activeTextEditor;
-        if (!editor)
-            return;
+    private renderDecorations(editor: vscode.TextEditor) {
         const file = editor.document.fileName;
         this.extension.logger.appendLine(`Rendering hints for ${file}`);
 
