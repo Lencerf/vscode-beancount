@@ -64,7 +64,7 @@ for entry in entries:
             if hasattr(posting, 'flag') and posting.flag == "!":
                 flagged_entries.append(get_flag_metadata(posting))
             if posting.meta and posting.meta.get('__automatic__', False) is True:
-                automatics[posting.meta['filename']][int(posting.meta['lineno'])] = posting.units.to_string()
+                automatics[posting.meta['filename']][posting.meta['lineno']] = posting.units.to_string()
     elif isinstance(entry, Open):
         accounts[entry.account] = {
             'open': entry.date.__str__(),
