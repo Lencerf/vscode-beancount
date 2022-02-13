@@ -59,12 +59,16 @@ for entry in entries:
                 narrations.add(f'{entry.narration}')
             tags.update(entry.tags)
             links.update(entry.links)
+        txn_commodities = set()
         for posting in entry.postings:
-            commodities.add(posting.units.currency)
+            txn_commodities.add(posting.units.currency)
             if hasattr(posting, 'flag') and posting.flag == "!":
                 flagged_entries.append(get_flag_metadata(posting))
             if posting.meta and posting.meta.get('__automatic__', False) is True:
-                automatics[posting.meta['filename']][posting.meta['lineno']] = posting.units.to_string()
+                # only send the posting if more than 2 legs in txn, or multiple commodities
+                if len(entry.postings) > 2 or len(txn_commodities) > 1:
+                    automatics[posting.meta['filename']][posting.meta['lineno']] = posting.units.to_string()
+        commodities.update(txn_commodities)
     elif isinstance(entry, Open):
         accounts[entry.account] = {
             'open': entry.date.__str__(),
