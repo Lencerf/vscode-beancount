@@ -2,10 +2,6 @@ import assert = require('assert');
 import * as vscode from 'vscode';
 import { Extension } from './extension';
 
-interface InlayHintStyle {
-    decorationType: vscode.TextEditorDecorationType;
-    decorationOptions: vscode.DecorationOptions;
-};
 type Automatics = { [file: string]: { [line: string]: string } };
 
 const HINT_DECO = vscode.window.createTextEditorDecorationType({
