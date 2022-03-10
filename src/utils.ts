@@ -1,12 +1,13 @@
-import {spawn} from 'child_process';
+import {spawn, SpawnOptionsWithoutStdio} from 'child_process';
 
 export function runCmd(
     cmd: string,
     args: string[],
     callBack: (stdout: string) => void,
+    options?: SpawnOptionsWithoutStdio,
     logger?: (str: string) => void,
 ) {
-  const child = spawn(cmd, args);
+  const child = spawn(cmd, args, options);
   if (logger) {
     child.on('error', (e) => logger('error: ' + e));
     child.stderr.on('data', (e) => logger('stderr: ' + e));
