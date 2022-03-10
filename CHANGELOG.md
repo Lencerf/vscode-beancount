@@ -1,5 +1,8 @@
 ## Change Log
 
+### 0.8.1 (2022-03-09)
+* Support relative path to python (Add [#27](https://github.com/Lencerf/vscode-beancount/pull/27) back)
+
 ### 0.8.0 (2021-07-10)
 * Support alias `~` for home directory on `python3Path` config [@whusnoopy](https://github.com/Lencerf/vscode-beancount/pull/59).
 * Support windows % variables paths [@huruka](https://github.com/huruka/vscode-beancount/commit/f66ae343f744cf539e3e964d4c01691b5ff23859).
