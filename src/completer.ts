@@ -273,12 +273,16 @@ implements vscode.CompletionItemProvider, vscode.HoverProvider {
               position,
               this.wordPattern,
           );
-          for (const account of Object.keys(this.accounts)) {
+          for (const accountName of Object.keys(this.accounts)) {
+            const account = this.accounts[accountName];
+            if (account.close !== null && account.close !== '') {
+              continue;
+            }
             const item = new CompletionItem(
-                account,
+                accountName,
                 CompletionItemKind.EnumMember,
             );
-            item.documentation = this.describeAccount(account);
+            item.documentation = this.describeAccount(accountName);
             item.range = wordRange;
             list.push(item);
           }
