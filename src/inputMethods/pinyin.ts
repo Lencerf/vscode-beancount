@@ -1,4 +1,4 @@
-import {InputMethod} from './inputMethod';
+import {InputMethod, InputMethodConfig} from './inputMethod';
 import {readFileSync} from 'fs';
 
 export class Pinyin implements InputMethod {
@@ -14,14 +14,16 @@ export class Pinyin implements InputMethod {
     }
   }
 
-  getLetterRepresentation(w: string): string {
+  getLetterRepresentation(w: string, config?: InputMethodConfig): string {
+    const punctuationReg = /[,.\:\-\\/!?]/i;
     const reg = /[0-9a-zA-Z]/i;
     const result = [];
     for (let str of w) {
       if (!str.match(reg)) {
-        str = this._pyData.get(str) || '';
+        let defatultStr = config?.keepPunctuation && str.match(punctuationReg) ? str : '';
+        str = this._pyData.get(str) || defatultStr;
       }
-      result.push(str)
+      result.push(str);
     }
     return result.join('');
   }
