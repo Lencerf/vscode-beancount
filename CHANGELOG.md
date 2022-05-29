@@ -1,5 +1,9 @@
 ## Change Log
 
+### 0.8.2 (2022-05-29)
+* Skip closed accounts when prompting complete items [@mengqi92](https://github.com/Lencerf/vscode-beancount/pull/70).
+* Bump minimist from 1.2.5 to 1.2.6.
+
 ### 0.8.1 (2022-03-09)
 * Support relative path to python (Add [#27](https://github.com/Lencerf/vscode-beancount/pull/27) back)
 
