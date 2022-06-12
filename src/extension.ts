@@ -8,6 +8,7 @@ import {ActionProvider} from './actionProvider';
 import {Completer} from './completer';
 import {Formatter} from './formatter';
 import {runCmd} from './utils';
+import {SymbolProvider} from './symbolProvider';
 
 export function activate(context: vscode.ExtensionContext) {
   const extension = new Extension(context);
@@ -79,6 +80,13 @@ export function activate(context: vscode.ExtensionContext) {
   if (vscode.workspace.getConfiguration('beancount')['runFavaOnActivate']) {
     extension.favaManager.openFava(false);
   }
+
+  context.subscriptions.push(
+      vscode.languages.registerDocumentSymbolProvider(
+          {scheme: 'file', language: 'beancount'},
+          extension.symbolProvider,
+      ),
+  );
 }
 
 export function deactivate() { }
@@ -92,6 +100,7 @@ export class Extension {
   logger: vscode.OutputChannel;
   flagWarnings: FlagWarnings;
   context: vscode.ExtensionContext;
+  symbolProvider: SymbolProvider;
 
   constructor(context: vscode.ExtensionContext) {
     this.context = context;
@@ -106,6 +115,7 @@ export class Extension {
     this.flagWarnings = vscode.workspace.getConfiguration('beancount')[
         'flagWarnings'
     ];
+    this.symbolProvider = new SymbolProvider();
   }
 
   resolveToAbsolutePath(path: string) {
