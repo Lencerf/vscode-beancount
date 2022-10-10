@@ -10,8 +10,8 @@ import {
 } from 'vscode';
 import {Extension} from './extension';
 import {EOL} from 'os';
-import {countOccurrences} from './utils';
-import {InputMethod} from './inputMethods/inputMethod';
+import {countOccurrences, pushIfEmpty} from './utils';
+import {InputMethod, InputMethodConfig} from './inputMethods/inputMethod';
 import {Pinyin} from './inputMethods/pinyin';
 
 interface Account {
@@ -95,6 +95,12 @@ implements vscode.CompletionItemProvider, vscode.HoverProvider {
       return '';
     }
   }
+
+  findLetterExpression (text: string, config?: InputMethodConfig) : string[] {
+    return this.inputMethods
+      .map((inputMethod) => inputMethod.getLetterRepresentation(text, config))
+      .filter((text) => text.length > 0)
+  };
 
   provideHover(
       document: vscode.TextDocument,
@@ -204,24 +210,22 @@ implements vscode.CompletionItemProvider, vscode.HoverProvider {
               kind: CompletionItemKind,
               suffix: string,
           ) => {
-            let findOne = false;
-            for (const inputMethod of this.inputMethods) {
-              const letters = inputMethod.getLetterRepresentation(text);
-              if (letters.length > 0) {
-                findOne = true;
-                const item = new CompletionItem(
+            const lettersExpressions : string[] = this.findLetterExpression(text);
+            const completionItems = lettersExpressions.map((letters) => {
+              const item = new CompletionItem(
                     letters + '(' + text + ')',
                     kind,
                 );
                 item.insertText = text + suffix;
-                list.push(item);
-              }
-            }
-            if (!findOne) {
+                return item;
+            })
+            if (completionItems.length === 0) {
               const item = new CompletionItem(text, kind);
               item.insertText = text + suffix;
               list.push(item);
+              completionItems.push(item)
             }
+            list.push(...completionItems);
           };
           const list: CompletionItem[] = [];
           if (numQuotes === 1) {
@@ -278,19 +282,31 @@ implements vscode.CompletionItemProvider, vscode.HoverProvider {
             if (account.close !== null && account.close !== '') {
               continue;
             }
-            const item = new CompletionItem(
-                accountName,
-                CompletionItemKind.EnumMember,
-            );
-            item.documentation = this.describeAccount(accountName);
-            item.range = wordRange;
-            list.push(item);
+            const labelToItemFunc = (accountName: string, label? : string) : CompletionItem => {
+                const item = new CompletionItem(
+                  label ? `${label}(${accountName})` : accountName,
+                  CompletionItemKind.EnumMember,
+                );
+                item.documentation = this.describeAccount(accountName);
+                item.range = wordRange;
+                item.insertText = accountName;
+                return item;
+            }
+            list.push(
+              ...pushIfEmpty(
+                this.findLetterExpression(accountName, { keepPunctuation: true })
+                .map((letters) => {
+                  const item = labelToItemFunc(accountName, letters);
+                  return item;
+                }), labelToItemFunc(accountName))
+              );
           }
           this.commodities.forEach((v, i, a) => {
             const item = new CompletionItem(v, CompletionItemKind.Unit);
             item.range = wordRange;
             list.push(item);
           });
+          console.log('[VSCode Beancount Log]', 'provideCompleteionItems', 'case default', 'completion items list', list);
           resolve(list);
           return;
         }

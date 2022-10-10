@@ -24,3 +24,10 @@ export function runCmd(
 export function countOccurrences(s: string, c: RegExp) {
   return (s.match(c) || []).length;
 }
+
+export function pushIfEmpty <T> (array: T[], defaultValue: T) : T[] {
+  if (array.length === 0) {
+    array.push(defaultValue);
+  }
+  return array;
+}
