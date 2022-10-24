@@ -4,29 +4,27 @@ import {existsSync} from 'fs';
 import {Extension} from './extension';
 
 export class FavaManager implements vscode.Disposable {
-  private _terminal: vscode.Terminal;
-  private _terminalClosed: boolean;
+  private _terminal: vscode.Terminal | null;
   private extension: Extension;
 
   constructor(extension: Extension) {
-    this._terminal = vscode.window.createTerminal('Fava');
-    this._terminalClosed = false;
+    this._terminal = null;
     this.extension = extension;
   }
 
   onDidCloseTerminal() {
-    this._terminalClosed = true;
+    this._terminal = null;
   }
 
   openFava(showPrompt = false) {
     this.extension.logger.appendLine('will launch fava...');
-    const beanFile = this.extension.getMainBeanFile(); // this is the file given to fava
+    const beanFile = this.extension.getMainBeanFile(); // file given to fava
     if (beanFile.length === 0 || !existsSync(beanFile)) {
       this.extension.logger.appendLine('quit launching fava.');
       vscode.window.showInformationMessage('No valid bean file is available.');
       return;
     }
-    if (this._terminalClosed) {
+    if (this._terminal === null) {
       this._terminal = vscode.window.createTerminal('Fava');
       this.extension.logger.appendLine('created Fava terminal');
     }
@@ -41,7 +39,8 @@ export class FavaManager implements vscode.Disposable {
     if (showPrompt) {
       this._terminal.show();
       const result = vscode.window.showInformationMessage(
-          'Fava is running in the terminal below. Do you want to open a browser to view the balances?',
+          `Fava is running in the terminal below. Do you want to open a browser
+          to view the balances?`,
           'Yes',
       );
       result.then((value: string | undefined) => {
@@ -55,6 +54,8 @@ export class FavaManager implements vscode.Disposable {
     }
   }
   dispose() {
-    this._terminal.dispose();
+    if (this._terminal !== null) {
+      this._terminal.dispose();
+    }
   }
 }
