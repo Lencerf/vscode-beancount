@@ -1,5 +1,9 @@
 ## Change Log
 
+### 0.9.1 (2022-10-23)
+* "Input Method" Support on Account Name [@zinc0x1E](https://github.com/Lencerf/vscode-beancount/pull/75)
+* Do not create fava terminal as default, fix [#77](https://github.com/Lencerf/vscode-beancount/issues/77)
+
 ### 0.9.0 (2022-06-11)
 * Add an outline or SymbolProvider [@isometimescode](https://github.com/Lencerf/vscode-beancount/issues/72)
 

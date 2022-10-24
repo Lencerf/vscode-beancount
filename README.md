@@ -70,12 +70,13 @@ see GitHub [issue page](https://github.com/Lencerf/vscode-beancount/issues)
 
 ## Release Notes
 
+### 0.9.1
+* "Input Method" Support on Account Name [@zinc0x1E](https://github.com/Lencerf/vscode-beancount/pull/75)
+* Do not create fava terminal as default, fix [#77](https://github.com/Lencerf/vscode-beancount/issues/77)
+
 ### 0.9.0
 * Add an outline or SymbolProvider [@isometimescode](https://github.com/Lencerf/vscode-beancount/issues/72)
 
 ### 0.8.2
 * Skip closed accounts when prompting complete items [@mengqi92](https://github.com/Lencerf/vscode-beancount/pull/70).
 * Bump minimist from 1.2.5 to 1.2.6.
-
-### 0.8.1
-* Support relative path to python (Add [#27](https://github.com/Lencerf/vscode-beancount/pull/27) back)
