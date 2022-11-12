@@ -215,7 +215,6 @@ export class Extension {
         const errorsCompletions = text.split('\n', 4);
         this.provideDiagnostics(errorsCompletions[0], errorsCompletions[2]);
         this.completer.updateData(errorsCompletions[1]);
-        this.logger.appendLine('Data refreshed.');
         this.hintUpdater.updateData(errorsCompletions[3]);
       },
       cwd ? { cwd } : undefined,
