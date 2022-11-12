@@ -1,4 +1,3 @@
-import assert = require('assert');
 import * as vscode from 'vscode';
 import { Extension } from './extension';
 
@@ -25,7 +24,6 @@ export class HintsUpdater {
     }
 
     updateData(data: string) {
-        this.extension.logger.appendLine("Got data");
         this.automatics = JSON.parse(data);
         vscode.window.visibleTextEditors.filter(this.isTrackedEditor, this).forEach(this.renderDecorations, this);
     }
@@ -48,7 +46,7 @@ export class HintsUpdater {
         return units.padStart(endpos - curLine.length + units.split(" ")[1].length, SPACE);
     }
 
-    private onDidChangeVisibleTextEditors(e: vscode.TextEditor[]) {
+    private onDidChangeVisibleTextEditors(e: readonly vscode.TextEditor[]) {
         this.extension.logger.appendLine(`Changed visible text editors`);
         // if there is any tracked beancount file open
         e.filter(this.isTrackedEditor, this).forEach(this.renderDecorations, this);
@@ -59,7 +57,6 @@ export class HintsUpdater {
         this.extension.logger.appendLine(`Rendering hints for ${file}`);
 
         const hints = Object.entries(this.automatics[file]).map(([lineno, units]) => {
-            assert(editor);
             const line = editor.document.lineAt((+lineno) - 1);
             const prevLine = editor.document.lineAt((+lineno) - 2);
             const contentText = this.padAmount(prevLine.text, line.text, units);
