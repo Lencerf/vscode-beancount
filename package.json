@@ -7,6 +7,7 @@
   "engines": {
     "vscode": "^1.72.0"
   },
+  "icon": "images/icon.png",
   "repository": {
     "type": "git",
     "url": "https://github.com/Lencerf/vscode-beancount.git"
