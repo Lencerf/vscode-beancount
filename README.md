@@ -95,6 +95,10 @@ see GitHub [issue page](https://github.com/Lencerf/vscode-beancount/issues)
 
 ## Release Notes
 
+### 0.10.0
+
+- New icon [@pluwen](https://github.com/Lencerf/vscode-beancount/pull/89)
+
 ### 0.9.1
 
 - "Input Method" Support on Account Name
@@ -106,9 +110,3 @@ see GitHub [issue page](https://github.com/Lencerf/vscode-beancount/issues)
 
 - Add an outline or SymbolProvider
   [@isometimescode](https://github.com/Lencerf/vscode-beancount/issues/72)
-
-### 0.8.2
-
-- Skip closed accounts when prompting complete items
-  [@mengqi92](https://github.com/Lencerf/vscode-beancount/pull/70).
-- Bump minimist from 1.2.5 to 1.2.6.
