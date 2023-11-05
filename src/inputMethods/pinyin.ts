@@ -1,10 +1,10 @@
-import {InputMethod, InputMethodConfig} from './inputMethod';
-import {readFileSync} from 'fs';
+import { InputMethod, InputMethodConfig } from "./inputMethod";
+import { readFileSync } from "fs";
 
 export class Pinyin implements InputMethod {
   private _pyData: Map<string, string>;
   constructor(pyDataPath: string) {
-    const rawData = readFileSync(pyDataPath, 'utf-8');
+    const rawData = readFileSync(pyDataPath, "utf-8");
     const parsedData = JSON.parse(rawData);
     this._pyData = new Map<string, string>();
     for (const letter of Object.keys(parsedData)) {
@@ -20,11 +20,12 @@ export class Pinyin implements InputMethod {
     const result = [];
     for (let str of w) {
       if (!str.match(reg)) {
-        let defatultStr = config?.keepPunctuation && str.match(punctuationReg) ? str : '';
+        let defatultStr =
+          config?.keepPunctuation && str.match(punctuationReg) ? str : "";
         str = this._pyData.get(str) || defatultStr;
       }
       result.push(str);
     }
-    return result.join('');
+    return result.join("");
   }
 }

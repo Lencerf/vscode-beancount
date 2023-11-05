@@ -1,18 +1,24 @@
-import * as vscode from 'vscode';
+import * as vscode from "vscode";
 
 interface BlockData {
-  name: string,
-  level: number,
-  kind: vscode.SymbolKind,
-  start: vscode.TextLine,
-  end: vscode.TextLine,
+  name: string;
+  level: number;
+  kind: vscode.SymbolKind;
+  start: vscode.TextLine;
+  end: vscode.TextLine;
 }
 
 class LevelDocumentSymbol extends vscode.DocumentSymbol {
   level: number;
 
-  constructor(name: string, detail: string, kind: vscode.SymbolKind,
-      range: vscode.Range, selectionRange: vscode.Range, level: number) {
+  constructor(
+    name: string,
+    detail: string,
+    kind: vscode.SymbolKind,
+    range: vscode.Range,
+    selectionRange: vscode.Range,
+    level: number
+  ) {
     super(name, detail, kind, range, selectionRange);
     this.level = level;
   }
@@ -21,7 +27,7 @@ class LevelDocumentSymbol extends vscode.DocumentSymbol {
 export class SymbolProvider implements vscode.DocumentSymbolProvider {
   private parseText(text: string): BlockData {
     const data: BlockData = {
-      name: '',
+      name: "",
       level: 0,
       kind: vscode.SymbolKind.Class,
       start: {} as vscode.TextLine,
@@ -31,11 +37,11 @@ export class SymbolProvider implements vscode.DocumentSymbolProvider {
       const element = text[i];
 
       // avoid any comments like ;#region
-      if (element === ';') {
+      if (element === ";") {
         break;
       }
 
-      if (element === '*') {
+      if (element === "*") {
         data.level++;
       } else {
         data.name += element;
@@ -50,31 +56,25 @@ export class SymbolProvider implements vscode.DocumentSymbolProvider {
 
   private createSymbol(block: BlockData): LevelDocumentSymbol {
     return new LevelDocumentSymbol(
-        block.name,
-        '',
-        block.kind,
+      block.name,
+      "",
+      block.kind,
 
-        // line number range for entire symbol block
-        new vscode.Range(block.start.range.start, block.end.range.end),
+      // line number range for entire symbol block
+      new vscode.Range(block.start.range.start, block.end.range.end),
 
-        // where to put line highlighting
-        new vscode.Range(
-            new vscode.Position(
-                block.start.lineNumber,
-                block.level+1,
-            ),
-            new vscode.Position(
-                block.start.lineNumber,
-                block.start.text.length,
-            ),
-        ),
-        block.level,
+      // where to put line highlighting
+      new vscode.Range(
+        new vscode.Position(block.start.lineNumber, block.level + 1),
+        new vscode.Position(block.start.lineNumber, block.start.text.length)
+      ),
+      block.level
     );
   }
 
   async provideDocumentSymbols(
-      document: vscode.TextDocument,
-      _token: vscode.CancellationToken,
+    document: vscode.TextDocument,
+    _token: vscode.CancellationToken
   ): Promise<vscode.DocumentSymbol[]> {
     const allSymbols: LevelDocumentSymbol[] = [];
     let lineNumber = 0;
@@ -85,7 +85,7 @@ export class SymbolProvider implements vscode.DocumentSymbolProvider {
 
       // blocks start with 1 or 2 asterisks (*)
       // https://beancount.github.io/docs/beancount_language_syntax.html#comments
-      if (!currentLine.text.startsWith('*')) {
+      if (!currentLine.text.startsWith("*")) {
         continue;
       }
 
@@ -102,7 +102,7 @@ export class SymbolProvider implements vscode.DocumentSymbolProvider {
       // search for the end of this heading block
       while (lineNumber < document.lineCount) {
         const line = document.lineAt(lineNumber);
-        if (!line.text.startsWith('*')) {
+        if (!line.text.startsWith("*")) {
           result.end = line;
           lineNumber++;
         } else {
@@ -111,7 +111,7 @@ export class SymbolProvider implements vscode.DocumentSymbolProvider {
       }
 
       // check if this symbol should be a child or not
-      const lastSymbol = allSymbols[allSymbols.length-1];
+      const lastSymbol = allSymbols[allSymbols.length - 1];
       if (lastSymbol && lastSymbol.level < result.level) {
         lastSymbol.children.push(this.createSymbol(result));
       } else {

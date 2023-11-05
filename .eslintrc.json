@@ -1,21 +1,30 @@
 {
-    "env": {
-        "browser": true,
-        "es2021": true
-    },
-    "extends": [
-        "google"
-    ],
+    "root": true,
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
-        "ecmaVersion": 12,
+        "ecmaVersion": 6,
         "sourceType": "module"
     },
     "plugins": [
         "@typescript-eslint"
     ],
     "rules": {
-        "require-jsdoc": "off",
-        "max-len": "warn"
-    }
+        "@typescript-eslint/naming-convention": [
+            "warn",
+            {
+                "selector": "import",
+                "format": [ "camelCase", "PascalCase" ]
+            }
+        ],
+        "@typescript-eslint/semi": "warn",
+        "curly": "warn",
+        "eqeqeq": "warn",
+        "no-throw-literal": "warn",
+        "semi": "off"
+    },
+    "ignorePatterns": [
+        "out",
+        "dist",
+        "**/*.d.ts"
+    ]
 }
