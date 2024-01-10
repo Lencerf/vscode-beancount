@@ -454,7 +454,7 @@
 		</dict>
 		<dict>
 			<key>name</key>
-			<string>meta.directive.notetotext.beancount</string>
+			<string>meta.directive.beancount.notetotext</string>
 			<key>comment</key>
 			<string>Note as Oneliner Transaction directive</string>
 			<key>begin</key>
@@ -502,62 +502,91 @@
 				</dict>
 				<dict>
 					<key>include</key>
+					<string>#comments</string>
+				</dict>
+				<dict>
+					<key>include</key>
 					<string>#account</string>
 				</dict>
 				<dict>
 					<key>name</key>
-					<string>punctuation.separator.beancount</string>
+					<string>meta.directive.arguments.beancount.notetotext</string>
 					<key>match</key>
-					<string>(?&lt;=\s)\"</string>
-				</dict>
-				<dict>
-					<key>include</key>
-					<string>#cost</string>
-				</dict>
-				<dict>
-					<key>include</key>
-					<string>#amount</string>
-				</dict>
-				<dict>
-					<key>begin</key>
-					<string>(\*|\!)</string>
-					<key>beginCaptures</key>
+					<string>(?&lt;=\s)(\")(.*?)(\s+\*\s+)((.*?)(\s\|\s))?(.*?)(\*\")</string>
+					<key>captures</key>
 					<dict>
-						<key>0</key>
+						<key>1</key>
 						<dict>
 							<key>name</key>
-							<string>support.function.directive.beancount</string>
+							<string>punctuation.definition.arguments.begin.beancount.notetotext</string>
+						</dict>
+						<key>2</key>
+						<dict>
+							<key>patterns</key>
+							<array>
+								<dict>
+									<key>include</key>
+									<string>#account</string>
+								</dict>
+								<dict>
+									<key>include</key>
+									<string>#amount</string>
+								</dict>
+								<dict>
+									<key>include</key>
+									<string>#cost</string>
+								</dict>
+								<dict>
+									<key>include</key>
+									<string>#illegal</string>
+								</dict>
+							</array>
+						</dict>
+						<key>3</key>
+						<dict>
+							<key>comment</key>
+							<string>*</string>
+							<key>name</key>
+							<string>punctuation.separator.arguments.beancount.notetotext</string>
+						</dict>
+						<key>5</key>
+						<dict>
+							<key>comment</key>
+							<string>$payee</string>
+							<key>name</key>
+							<string>constant.other.payee.beancount.notetotext</string>
+						</dict>
+						<key>6</key>
+						<dict>
+							<key>comment</key>
+							<string>|</string>
+							<key>name</key>
+							<string>punctuation.separator.arguments.beancount.notetotext</string>
+						</dict>
+						<key>7</key>
+						<dict>
+							<key>name</key>
+							<string>string.unquoted.beancount.notetotext</string>
+							<key>patterns</key>
+							<array>
+								<dict>
+									<key>include</key>
+									<string>#tag</string>
+								</dict>
+								<dict>
+									<key>include</key>
+									<string>#link</string>
+								</dict>
+							</array>
+						</dict>
+						<key>8</key>
+						<dict>
+							<key>comment</key>
+							<string>*"</string>
+							<key>name</key>
+							<string>punctuation.definition.arguments.end.beancount.notetotext</string>
 						</dict>
 					</dict>
-					<key>end</key>
-					<string>(\*\")</string>
-					<key>endCaptures</key>
-					<dict>
-						<key>0</key>
-						<dict>
-							<key>name</key>
-							<string>punctuation.separator.beancount</string>
-						</dict>
-					</dict>
-					<key>patterns</key>
-					<array>
-						<dict>
-							<key>name</key>
-							<string>constant.character.escape.beancount</string>
-							<key>match</key>
-							<string>\\.</string>
-						</dict>
-						<dict>
-							<key>include</key>
-							<string>#tag</string>
-						</dict>
-						<dict>
-							<key>name</key>
-							<string>string.quoted.double.beancount</string>
-							<key>match</key>
-							<string>([^\"])</string>
-						</dict>
-					</array>
 				</dict>
 				<dict>
 					<key>include</key>
