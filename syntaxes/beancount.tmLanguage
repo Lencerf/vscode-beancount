@@ -877,7 +877,7 @@
 						<key>1</key>
 						<dict>
 							<key>name</key>
-							<string>variable.account.beancount</string>
+							<string>variable.other.account.beancount</string>
 						</dict>
 						<key>2</key>
 						<dict>
