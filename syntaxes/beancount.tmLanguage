@@ -920,7 +920,7 @@
 				<key>3</key>
 				<dict>
 					<key>name</key>
-					<string>entity.type.commodity.beancount</string>
+					<string>entity.name.type.commodity.beancount</string>
 				</dict>
 			</dict>
 			<key>match</key>
@@ -961,7 +961,7 @@
 				<key>3</key>
 				<dict>
 					<key>name</key>
-					<string>entity.type.commodity.beancount</string>
+					<string>entity.name.type.commodity.beancount</string>
 				</dict>
 			</dict>
 			<key>match</key>
@@ -987,7 +987,7 @@
 			<key>match</key>
 			<string>([A-Z][A-Z0-9\'\.\_\-]{0,22}[A-Z0-9])</string>
 			<key>name</key>
-			<string>entity.type.commodity.beancount</string>
+			<string>entity.name.type.commodity.beancount</string>
 		</dict>
 		<key>cost</key>
 		<dict>
