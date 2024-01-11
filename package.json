@@ -105,6 +105,18 @@
           ".bean"
         ],
         "configuration": "./language-configuration.json"
+      },
+      {
+        "id": "beancount-oneline",
+        "aliases": [
+          "Beancount (with oneline plugin)",
+          "beancount with oneline plugin"
+        ],
+        "extensions": [
+          ".beancount",
+          ".bean"
+        ],
+        "configuration": "./language-configuration.json"
       }
     ],
     "grammars": [
@@ -112,6 +124,11 @@
         "language": "beancount",
         "scopeName": "text.beancount",
         "path": "./syntaxes/beancount.tmLanguage"
+      },
+      {
+        "language": "beancount-oneline",
+        "scopeName": "text.beancount.oneline",
+        "path": "./syntaxes/beancount-oneline.tmLanguage"
       }
     ],
     "snippets": [
