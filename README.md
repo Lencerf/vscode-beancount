@@ -21,7 +21,7 @@ VSCode extension for the text-based double-entry accounting tool
    ([@vlamacko](https://github.com/Lencerf/vscode-beancount/pull/7))
 7. Region folding - use indentation
    ([#5](https://github.com/Lencerf/vscode-beancount/issues/5)), or special
-   comments ([#11](https://github.com/Lencerf/vscode-beancount/pull/11))
+   comments ([#11](https://github.com/Lencerf/vscode-beancount/pull/11)). For org-mode style folding see [vscode-org-fold](https://marketplace.visualstudio.com/items?itemName=dumbPy.vscode-org-fold)
 8. (Experimental) Use Pinyin initial letters to input existing Chinese
    narrations and payees quickly. 使用拼音首字母快速输入现有的中文受款人和描述
    。[See details](https://github.com/Lencerf/vscode-beancount/blob/master/InputMethods.md).
