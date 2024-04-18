@@ -13,20 +13,16 @@ export default class DocumentLinkProvider implements vscode.DocumentLinkProvider
         }
 
         const links: DocumentLink[] = [];
-        // debugger;
         for (const match of text.matchAll(/include\s+"([^"]+.(?:beancount|bean))"/g)) {
             const includedFileName = match[1];
 
             const range = this.create_range(document, match);
             if (range === undefined) {
                 // Nothing matched.
-                debugger;
                 console.error("nothing matched");
                 continue;
             }
 
-            // debugger;
-            console.info('includedFileName: ', includedFileName);
             const link = new DocumentLink(range, vscode.Uri.joinPath(workspaceRootUri, includedFileName));
             link.tooltip = "Follow link";
             links.push(link);
