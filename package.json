@@ -113,8 +113,8 @@
           "beancount with oneline plugin"
         ],
         "extensions": [
-          ".onebeancount",
-          ".onebean"
+          ".beancount",
+          ".bean"
         ],
         "configuration": "./language-configuration.json"
       },
