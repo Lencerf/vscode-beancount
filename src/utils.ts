@@ -1,3 +1,4 @@
+import { TextDocument, Uri, window, workspace } from 'vscode';
 import { spawn, SpawnOptionsWithoutStdio } from "child_process";
 
 export function runCmd(
@@ -30,4 +31,19 @@ export function pushIfEmpty<T>(array: T[], defaultValue: T): T[] {
     array.push(defaultValue);
   }
   return array;
+}
+
+export function getWorkspaceRootUri(): Uri | undefined {
+  const document = getCurrentTextDocument();
+  if (document) {
+    const fileUri = document.uri;
+    const workspaceFolder = workspace.getWorkspaceFolder(fileUri);
+    if (workspaceFolder) {
+      return workspaceFolder.uri;
+    }
+  }
+}
+
+export function getCurrentTextDocument(): TextDocument | undefined {
+  return window.activeTextEditor?.document;
 }
