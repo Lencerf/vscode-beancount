@@ -7,9 +7,11 @@ import { Completer } from "./completer";
 import { Formatter } from "./formatter";
 import { runCmd } from "./utils";
 import { SymbolProvider } from "./symbolProvider";
+import DocumentLinkProvider from "./documentLinkProvider";
 
 export function activate(context: vscode.ExtensionContext) {
   const extension = new Extension(context);
+  const beancountDocumentSelector = { scheme: "file", language: "beancount" };
 
   vscode.commands.registerCommand("beancount.runFava", () =>
     extension.favaManager.openFava(true)
@@ -25,7 +27,7 @@ export function activate(context: vscode.ExtensionContext) {
 
   context.subscriptions.push(
     vscode.languages.registerCompletionItemProvider(
-      { scheme: "file", language: "beancount" },
+      beancountDocumentSelector,
       extension.completer,
       "2",
       "#",
@@ -35,13 +37,13 @@ export function activate(context: vscode.ExtensionContext) {
   );
   context.subscriptions.push(
     vscode.languages.registerHoverProvider(
-      { scheme: "file", language: "beancount" },
+      beancountDocumentSelector,
       extension.completer
     )
   );
   context.subscriptions.push(
     vscode.languages.registerCodeActionsProvider(
-      { scheme: "file", language: "beancount" },
+      beancountDocumentSelector,
       extension.actionProvider
     )
   );
@@ -83,13 +85,17 @@ export function activate(context: vscode.ExtensionContext) {
 
   context.subscriptions.push(
     vscode.languages.registerDocumentSymbolProvider(
-      { scheme: "file", language: "beancount" },
+      beancountDocumentSelector,
       extension.symbolProvider
-    )
-  );
+    ));
+  context.subscriptions.push(
+    vscode.languages.registerDocumentLinkProvider(
+      beancountDocumentSelector,
+      extension.documentLinkProvider
+    ));
 }
 
-export function deactivate() {}
+export function deactivate() { }
 
 export class Extension {
   completer: Completer;
@@ -101,6 +107,7 @@ export class Extension {
   flagWarnings: FlagWarnings;
   context: vscode.ExtensionContext;
   symbolProvider: SymbolProvider;
+  documentLinkProvider: DocumentLinkProvider;
 
   constructor(context: vscode.ExtensionContext) {
     this.context = context;
@@ -114,6 +121,7 @@ export class Extension {
     this.flagWarnings =
       vscode.workspace.getConfiguration("beancount")["flagWarnings"];
     this.symbolProvider = new SymbolProvider();
+    this.documentLinkProvider = new DocumentLinkProvider();
   }
 
   resolveToAbsolutePath(path: string) {
