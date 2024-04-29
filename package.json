@@ -117,6 +117,9 @@
           ".bean"
         ],
         "configuration": "./language-configuration.json"
+      },
+      {
+        "id": "beancount-markdown-injection"
       }
     ],
     "grammars": [
@@ -129,6 +132,17 @@
         "language": "beancount-oneline",
         "scopeName": "text.beancount.oneline",
         "path": "./syntaxes/beancount-oneline.tmLanguage"
+      },
+      {
+        "language": "beancount-markdown-injection",
+        "scopeName": "markdown.beancount.codeblock",
+        "path": "./syntaxes/beancount-markdown-injection.json",
+        "injectTo": [
+          "text.html.markdown"
+        ],
+        "embeddedLanguages": {
+          "meta.embedded.block.beancount": "beancount"
+        }
       }
     ],
     "snippets": [
