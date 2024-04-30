@@ -21,7 +21,9 @@ VSCode extension for the text-based double-entry accounting tool
    ([@vlamacko](https://github.com/Lencerf/vscode-beancount/pull/7))
 7. Region folding - use indentation
    ([#5](https://github.com/Lencerf/vscode-beancount/issues/5)), or special
-   comments ([#11](https://github.com/Lencerf/vscode-beancount/pull/11)). For org-mode style folding see [vscode-org-fold](https://marketplace.visualstudio.com/items?itemName=dumbPy.vscode-org-fold)
+   comments ([#11](https://github.com/Lencerf/vscode-beancount/pull/11)). For
+   org-mode style folding see
+   [vscode-org-fold](https://marketplace.visualstudio.com/items?itemName=dumbPy.vscode-org-fold)
 8. (Experimental) Use Pinyin initial letters to input existing Chinese
    narrations and payees quickly. 使用拼音首字母快速输入现有的中文受款人和描述
    。[See details](https://github.com/Lencerf/vscode-beancount/blob/master/InputMethods.md).
@@ -95,6 +97,18 @@ see GitHub [issue page](https://github.com/Lencerf/vscode-beancount/issues)
 
 ## Release Notes
 
+### 0.11.0
+
+- Allow syntax highlight in markdown
+  [@hotshotxwl](https://github.com/Lencerf/vscode-beancount/pull/101)
+- Support opening files from 'include' directive by adding DocumentLinkProvider
+  [@mengqi92](https://github.com/Lencerf/vscode-beancount/pull/99)
+- Add org-mode-fold to README.md
+  [@dumbPy](https://github.com/Lencerf/vscode-beancount/pull/96)
+- oneliner version syntx with file suffix `.beancount.oneline` or
+  `.bean.oneline`.
+  [@Akuukis](https://github.com/Lencerf/vscode-beancount/pull/95)
+
 ### 0.10.0
 
 - New icon [@pluwen](https://github.com/Lencerf/vscode-beancount/pull/89)
@@ -105,8 +119,3 @@ see GitHub [issue page](https://github.com/Lencerf/vscode-beancount/issues)
   [@zinc0x1E](https://github.com/Lencerf/vscode-beancount/pull/75)
 - Do not create fava terminal as default, fix
   [#77](https://github.com/Lencerf/vscode-beancount/issues/77)
-
-### 0.9.0
-
-- Add an outline or SymbolProvider
-  [@isometimescode](https://github.com/Lencerf/vscode-beancount/issues/72)

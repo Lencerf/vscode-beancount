@@ -1,5 +1,17 @@
 ## Change Log
 
+### 0.11.0 (2024-04-29)
+
+- Allow syntax highlight in markdown
+  [@hotshotxwl](https://github.com/Lencerf/vscode-beancount/pull/101)
+- Support opening files from 'include' directive by adding DocumentLinkProvider
+  [@mengqi92](https://github.com/Lencerf/vscode-beancount/pull/99)
+- Add org-mode-fold to README.md
+  [@dumbPy](https://github.com/Lencerf/vscode-beancount/pull/96)
+- oneliner version syntx with file suffix `.beancount.oneline` or
+  `.bean.oneline`.
+  [@Akuukis](https://github.com/Lencerf/vscode-beancount/pull/95)
+
 ### 0.10.0 (2023-11-05)
 
 - New icon [@pluwen](https://github.com/Lencerf/vscode-beancount/pull/89)
