@@ -28,22 +28,21 @@ export class HintsUpdater {
         vscode.window.visibleTextEditors.filter(this.isTrackedEditor, this).forEach(this.renderDecorations, this);
     }
 
-    private getCurrencyCol(linetext: string) {
-        let res = linetext.match(/\s*(\S+)\s+(?<amount>[0-9.\-]+)(?<whitespace>\s*)(?<currency>\S+)/);
-        let amt = res?.groups?.amount;
+    private getDotPos(linetext: string) {
+        // FIXME: this is very brittle. can we get this info from beancount?
+        const res = linetext.match(/\s*(\S+)\s+(?<amount>-?[0-9.]+)(?<whitespace>\s*)(?<currency>[a-zA-Z]+)/);
+        const amt = res?.groups?.amount;
         if (!amt)
-            return undefined;
-
-        return { pos: linetext.indexOf(amt), amount: res?.groups?.amount ?? "", whitespace: res?.groups?.whitespace ?? "", currency: res?.groups?.currency ?? "" };
+            return null;
+        return linetext.indexOf(amt) + amt.indexOf(".");
     }
 
-    private padAmount(prevLine: string, curLine: string, units: string) {
-        const groups = this.getCurrencyCol(prevLine);
-        if (!groups)
-            return units;
-        const endpos = groups.pos + groups.amount.length + groups.whitespace.length;
+    private padUnits(dotPos: number, curLine: string, units: string) {
+        const numSpaces = dotPos - curLine.length - units.indexOf(".");
+        // when curLine is too long, numSpaces could be <= 0. just use one space
+        const finalPad = Math.max(numSpaces, 1);
         const SPACE = '\u00a0';
-        return units.padStart(endpos - curLine.length + units.split(" ")[1].length, SPACE);
+        return SPACE.repeat(finalPad) + units;
     }
 
     private onDidChangeVisibleTextEditors(e: readonly vscode.TextEditor[]) {
@@ -58,8 +57,24 @@ export class HintsUpdater {
 
         const hints = Object.entries(this.automatics[file]).map(([lineno, units]) => {
             const line = editor.document.lineAt((+lineno) - 1);
-            const prevLine = editor.document.lineAt((+lineno) - 2);
-            const contentText = this.padAmount(prevLine.text, line.text, units);
+            let dotPos = null;
+            for (let prevLineNo = (+lineno) - 2; prevLineNo >= 0; prevLineNo--) {
+                const prevLine = editor.document.lineAt(prevLineNo);
+                if (prevLine.isEmptyOrWhitespace) continue;
+                if (prevLine.firstNonWhitespaceCharacterIndex == 0) {
+                    // probably hit the start of a transaction, bail
+                    break;
+                }
+                dotPos = this.getDotPos(prevLine.text);
+                if (dotPos !== undefined) {
+                    break;
+                };
+            }
+            if (dotPos === null) {
+                // get values from config
+                dotPos = vscode.workspace.getConfiguration("beancount")["separatorColumn"] - 1;
+            }
+            const contentText = this.padUnits(dotPos, line.text, units);
 
             return {
                 range: line.range,
