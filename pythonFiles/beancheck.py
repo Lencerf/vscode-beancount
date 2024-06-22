@@ -1,5 +1,6 @@
 ''' load beancount file and print errors
 '''
+from collections import defaultdict
 from sys import argv
 from beancount import loader
 from beancount.core import flags
@@ -39,6 +40,7 @@ error_list = [{"file": e.source['filename'], "line": e.source['lineno'], "messag
 
 output = {}
 accounts = {}
+automatics = defaultdict(dict)
 commodities = set()
 payees = set()
 narrations = set()
@@ -57,10 +59,16 @@ for entry in entries:
                 narrations.add(f'{entry.narration}')
             tags.update(entry.tags)
             links.update(entry.links)
+        txn_commodities = set()
         for posting in entry.postings:
-            commodities.add(posting.units.currency)
+            txn_commodities.add(posting.units.currency)
             if hasattr(posting, 'flag') and posting.flag == "!":
                 flagged_entries.append(get_flag_metadata(posting))
+            if posting.meta and posting.meta.get('__automatic__', False) is True:
+                # only send the posting if more than 2 legs in txn, or multiple commodities
+                if len(entry.postings) > 2 or len(txn_commodities) > 1:
+                    automatics[posting.meta['filename']][posting.meta['lineno']] = posting.units.to_string()
+        commodities.update(txn_commodities)
     elif isinstance(entry, Open):
         accounts[entry.account] = {
             'open': entry.date.__str__(),
@@ -103,3 +111,4 @@ output['links'] = list(links)
 print(json.dumps(error_list))
 print(json.dumps(output))
 print(json.dumps(flagged_entries))
+print(json.dumps(automatics))
