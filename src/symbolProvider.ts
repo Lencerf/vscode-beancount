@@ -86,28 +86,28 @@ class SymbolsHierarchyBuilder {
   children 
   */
   allRootSymbols: LevelDocumentSymbol[] = [];
-  
+
   constructor() {
     this.lastSymbolsPerLevel = [];
     this.allRootSymbols = [];
   }
 
   addBlockData(blockData: BlockData) {
-    
+
     let symbol: LevelDocumentSymbol = createSymbol(blockData);
 
     if (symbol.level < 1) {
       throw new Error("Symbol level should be greater than 0");
     }
-    
+
     if (symbol.level === 1) {
       this.allRootSymbols.push(symbol);
       this.lastSymbolsPerLevel = [symbol];
       return;
-    } 
+    }
 
     let diffWithLastLevel: number = symbol.level - this.lastSymbolsPerLevel.length;
-    
+
     /*
     First handing  the situation when the level of the new symbol is smaller than the level of the last symbol
 
@@ -125,7 +125,7 @@ class SymbolsHierarchyBuilder {
     * * * 1.1.1 level 3   <= previous level 
     * *   1.1.2 level 2   <= current level
     */
-    if (diffWithLastLevel <= 0 ) {
+    if (diffWithLastLevel <= 0) {
       // Push this symbol as a child of the last symbol with the level one level up the hierarchy 
       // (which means one level lower in terms of the level number)
       // Since the 1st element of array keeps the level 1, but has an index 0, we need to subtract 2 from the level
@@ -144,7 +144,7 @@ class SymbolsHierarchyBuilder {
     *    1     level 1   <= previous level 
     **   1.1   level 2   < = current level
     */
-    if (diffWithLastLevel == 1 ) {
+    if (diffWithLastLevel === 1) {
       // Push this symbol as a child of the last symbol with the level one level up the hierarchy 
       // (which means one level lower in terms of the level number)
       this.lastSymbolsPerLevel[symbol.level - 2].children.push(symbol);
@@ -231,7 +231,7 @@ export class SymbolProvider implements vscode.DocumentSymbolProvider {
   ): Promise<vscode.DocumentSymbol[]> {
 
 
-    const  symbolsHierarchyBuilder = new SymbolsHierarchyBuilder();
+    const symbolsHierarchyBuilder = new SymbolsHierarchyBuilder();
 
     let lineNumber = 0;
 
@@ -266,9 +266,9 @@ export class SymbolProvider implements vscode.DocumentSymbolProvider {
         }
       }
 
-        symbolsHierarchyBuilder.addBlockData(blockData);
+      symbolsHierarchyBuilder.addBlockData(blockData);
     }
 
-    return  symbolsHierarchyBuilder.getSymbolsHierarchy();
+    return symbolsHierarchyBuilder.getSymbolsHierarchy();
   }
 }
