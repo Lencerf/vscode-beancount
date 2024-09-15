@@ -1,5 +1,10 @@
 ## Change Log
 
+### 0.12.0 (2024-09-15)
+
+- Add support for multi-level code outline from headings
+  [@Ev2geny](https://github.com/Lencerf/vscode-beancount/pull/110)
+
 ### 0.11.0 (2024-04-29)
 
 - Allow syntax highlight in markdown

@@ -97,6 +97,11 @@ see GitHub [issue page](https://github.com/Lencerf/vscode-beancount/issues)
 
 ## Release Notes
 
+### 0.12.0 (2024-09-15)
+
+- Add support for multi-level code outline from headings
+  [@Ev2geny](https://github.com/Lencerf/vscode-beancount/pull/110)
+
 ### 0.11.0
 
 - Allow syntax highlight in markdown
@@ -112,10 +117,3 @@ see GitHub [issue page](https://github.com/Lencerf/vscode-beancount/issues)
 ### 0.10.0
 
 - New icon [@pluwen](https://github.com/Lencerf/vscode-beancount/pull/89)
-
-### 0.9.1
-
-- "Input Method" Support on Account Name
-  [@zinc0x1E](https://github.com/Lencerf/vscode-beancount/pull/75)
-- Do not create fava terminal as default, fix
-  [#77](https://github.com/Lencerf/vscode-beancount/issues/77)
