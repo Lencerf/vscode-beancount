@@ -684,6 +684,27 @@
 				<dict>
 					<key>name</key>
 					<string>support.function.directive.beancount</string>
+					<key>patterns</key>
+					<array>
+						<dict>
+							<key>name</key>
+							<string>support.function.directive.txn.completed.beancount</string>
+							<key>match</key>
+							<string>txn|[*]</string>
+						</dict>
+						<dict>
+							<key>name</key>
+							<string>support.function.directive.txn.incomplete.beancount</string>
+							<key>match</key>
+							<string>!</string>
+						</dict>
+						<dict>
+							<key>name</key>
+							<string>support.function.directive.txn.padding.beancount</string>
+							<key>match</key>
+							<string>P</string>
+						</dict>
+					</array>
 				</dict>
 				<key>7</key>
 				<dict>
