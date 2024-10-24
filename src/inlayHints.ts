@@ -52,6 +52,9 @@ export class HintsUpdater {
     }
 
     private renderDecorations(editor: vscode.TextEditor) {
+        if (!vscode.workspace.getConfiguration("beancount")["inlayHints"]) {
+            return;
+        }
         const file = editor.document.fileName;
         this.extension.logger.appendLine(`Rendering hints for ${file}`);
 

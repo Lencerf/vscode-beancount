@@ -84,6 +84,11 @@
             "M": null
           },
           "description": "Provide a map from flag value (a string) to VS Code severity level, or null to not show a warning for this flag."
+        },
+        "beancount.inlayHints": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show value inferred by beancount when the amount is not specified in the last leg of the transaction"
         }
       }
     },
