@@ -66,7 +66,7 @@ export class HintsUpdater {
                     break;
                 }
                 dotPos = this.getDotPos(prevLine.text);
-                if (dotPos !== undefined) {
+                if (dotPos !== null) {
                     break;
                 };
             }
