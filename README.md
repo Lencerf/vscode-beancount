@@ -97,6 +97,11 @@ see GitHub [issue page](https://github.com/Lencerf/vscode-beancount/issues)
 
 ## Release Notes
 
+### 0.13.0 (2024-11-09)
+
+- Add Inlay Hints for last legs of transactions with elided amounts
+  [@iamkroot](https://github.com/Lencerf/vscode-beancount/pull/69)
+
 ### 0.12.0 (2024-09-15)
 
 - Add support for multi-level code outline from headings
@@ -113,7 +118,3 @@ see GitHub [issue page](https://github.com/Lencerf/vscode-beancount/issues)
 - oneliner version syntx with file suffix `.beancount.oneline` or
   `.bean.oneline`.
   [@Akuukis](https://github.com/Lencerf/vscode-beancount/pull/95)
-
-### 0.10.0
-
-- New icon [@pluwen](https://github.com/Lencerf/vscode-beancount/pull/89)
