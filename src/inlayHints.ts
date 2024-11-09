@@ -32,8 +32,9 @@ export class HintsUpdater {
         // FIXME: this is very brittle. can we get this info from beancount?
         const res = linetext.match(/\s*(\S+)\s+(?<amount>-?[0-9.]+)(?<whitespace>\s*)(?<currency>[a-zA-Z]+)/);
         const amt = res?.groups?.amount;
-        if (!amt)
+        if (!amt) {
             return null;
+        }
         return linetext.indexOf(amt) + amt.indexOf(".");
     }
 
@@ -63,8 +64,10 @@ export class HintsUpdater {
             let dotPos = null;
             for (let prevLineNo = (+lineno) - 2; prevLineNo >= 0; prevLineNo--) {
                 const prevLine = editor.document.lineAt(prevLineNo);
-                if (prevLine.isEmptyOrWhitespace) continue;
-                if (prevLine.firstNonWhitespaceCharacterIndex == 0) {
+                if (prevLine.isEmptyOrWhitespace) {
+                    continue;
+                }
+                if (prevLine.firstNonWhitespaceCharacterIndex === 0) {
                     // probably hit the start of a transaction, bail
                     break;
                 }
