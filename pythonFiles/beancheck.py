@@ -1,7 +1,7 @@
 ''' load beancount file and print errors
 '''
 from collections import defaultdict
-from sys import argv
+from sys import argv, stdout, __stdout__
 from beancount import loader
 from beancount.core import flags
 from beancount.core.data import Transaction, Open, Close
@@ -9,7 +9,7 @@ from beancount.core.display_context import Align
 from beancount.core.realization import dump_balances, realize
 import io
 import json
-
+import os
 
 reverse_flag_map = {
     flag_value: flag_name[5:]
@@ -33,7 +33,9 @@ def get_flag_metadata(thing):
     }
 
 
+stdout = open(os.devnull, 'w')
 entries, errors, options = loader.load_file(argv[1])
+stdout = __stdout__
 completePayeeNarration = "--payeeNarration" in argv
 
 error_list = [{"file": e.source['filename'], "line": e.source['lineno'], "message": e.message} for e in errors]
