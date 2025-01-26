@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { Extension } from './extension';
 
-type Automatics = { [file: string]: { [line: string]: string } };
+type Automatics = { [file: string]: { [line: string]: [string] } };
 
 const HINT_DECO = vscode.window.createTextEditorDecorationType({
     ["after"]: {
@@ -80,7 +80,8 @@ export class HintsUpdater {
                 // get values from config
                 dotPos = vscode.workspace.getConfiguration("beancount")["separatorColumn"] - 1;
             }
-            const contentText = this.padUnits(dotPos, line.text, units);
+            const hint = units.join(", ");
+            const contentText = this.padUnits(dotPos, line.text, hint);
 
             return {
                 range: line.range,

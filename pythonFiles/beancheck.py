@@ -69,7 +69,8 @@ for entry in entries:
             if posting.meta and posting.meta.get('__automatic__', False) is True:
                 # only send the posting if more than 2 legs in txn, or multiple commodities
                 if len(entry.postings) > 2 or len(txn_commodities) > 1:
-                    automatics[posting.meta['filename']][posting.meta['lineno']] = posting.units.to_string()
+                    amounts = automatics[posting.meta['filename']].setdefault(posting.meta['lineno'], [])
+                    amounts.append(posting.units.to_string())
         commodities.update(txn_commodities)
     elif isinstance(entry, Open):
         accounts[entry.account] = {
