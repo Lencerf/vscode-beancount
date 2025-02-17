@@ -5,12 +5,8 @@ import { getWorkspaceRootUri } from "./utils";
 export default class DocumentLinkProvider implements vscode.DocumentLinkProvider {
     public provideDocumentLinks(document: TextDocument): vscode.DocumentLink[] {
         const text = document.getText();
-
-        const workspaceRootUri = getWorkspaceRootUri();
-        if (workspaceRootUri === undefined) {
-            console.error('Invalid workspace root path.');
-            return [];
-        }
+        // Get the directory of current document
+        const currentDir = vscode.Uri.joinPath(document.uri, '..');
 
         const links: DocumentLink[] = [];
         for (const match of text.matchAll(/include\s+"([^"]+.(?:beancount|bean))"/g)) {
@@ -18,12 +14,12 @@ export default class DocumentLinkProvider implements vscode.DocumentLinkProvider
 
             const range = this.create_range(document, match);
             if (range === undefined) {
-                // Nothing matched.
                 console.error("nothing matched");
                 continue;
             }
 
-            const link = new DocumentLink(range, vscode.Uri.joinPath(workspaceRootUri, includedFileName));
+            // Create link relative to current document's directory
+            const link = new DocumentLink(range, vscode.Uri.joinPath(currentDir, includedFileName));
             link.tooltip = "Follow link";
             links.push(link);
         }
