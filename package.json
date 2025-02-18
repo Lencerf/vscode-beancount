@@ -176,7 +176,7 @@
     "@typescript-eslint/parser": "^6.9.0",
     "eslint": "^8.52.0",
     "glob": "^10.3.10",
-    "mocha": "^10.2.0",
+    "mocha": "^10.8.2",
     "typescript": "^5.2.2",
     "ts-loader": "^9.5.0",
     "webpack": "^5.94.0",
