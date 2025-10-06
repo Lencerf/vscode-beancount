@@ -1,5 +1,16 @@
 ## Change Log
 
+### 0.14.0 (2025-10-05)
+
+- fix: path should be relative in include directive
+  [@ethan-pw](https://github.com/Lencerf/vscode-beancount/pull/117)
+- Inlay hints - support inferring from multiple postings
+  [@jonchan51](https://github.com/Lencerf/vscode-beancount/pull/114)
+- silence print calls from `loader.load_file`
+  [@Francis-Gurr](https://github.com/Lencerf/vscode-beancount/pull/113)
+- Differentiate between different transaction flags
+  [@Steffo99](https://github.com/Lencerf/vscode-beancount/pull/111)
+
 ### 0.13.0 (2024-11-09)
 
 - Add Inlay Hints for last legs of transactions with elided amounts

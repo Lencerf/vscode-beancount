@@ -103,6 +103,17 @@ see GitHub [issue page](https://github.com/Lencerf/vscode-beancount/issues)
 
 ## Release Notes
 
+### 0.14.0 (2025-10-05)
+
+- fix: path should be relative in include directive
+  [@ethan-pw](https://github.com/Lencerf/vscode-beancount/pull/117)
+- Inlay hints - support inferring from multiple postings
+  [@jonchan51](https://github.com/Lencerf/vscode-beancount/pull/114)
+- silence print calls from `loader.load_file`
+  [@Francis-Gurr](https://github.com/Lencerf/vscode-beancount/pull/113)
+- Differentiate between different transaction flags
+  [@Steffo99](https://github.com/Lencerf/vscode-beancount/pull/111)
+
 ### 0.13.0 (2024-11-09)
 
 - Add Inlay Hints for last legs of transactions with elided amounts
@@ -112,15 +123,3 @@ see GitHub [issue page](https://github.com/Lencerf/vscode-beancount/issues)
 
 - Add support for multi-level code outline from headings
   [@Ev2geny](https://github.com/Lencerf/vscode-beancount/pull/110)
-
-### 0.11.0
-
-- Allow syntax highlight in markdown
-  [@hotshotxwl](https://github.com/Lencerf/vscode-beancount/pull/101)
-- Support opening files from 'include' directive by adding DocumentLinkProvider
-  [@mengqi92](https://github.com/Lencerf/vscode-beancount/pull/99)
-- Add org-mode-fold to README.md
-  [@dumbPy](https://github.com/Lencerf/vscode-beancount/pull/96)
-- oneliner version syntx with file suffix `.beancount.oneline` or
-  `.bean.oneline`.
-  [@Akuukis](https://github.com/Lencerf/vscode-beancount/pull/95)
