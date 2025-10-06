@@ -9,6 +9,12 @@ VSCode extension for the text-based double-entry accounting tool
 [![rating](https://img.shields.io/visual-studio-marketplace/r/Lencerf.beancount)](https://marketplace.visualstudio.com/items?itemName=Lencerf.beancount)
 [![license](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://raw.githubusercontent.com/Lencerf/vscode-beancount/master/LICENSE.txt)
 
+> [!IMPORTANT]
+>
+> Looking for maintainers! If you are interested in helping review and merge PRs
+> from the community, checkout
+> [#122](https://github.com/Lencerf/vscode-beancount/discussions/122).
+
 ## Features
 
 1. Syntax highlight (syntax file from
