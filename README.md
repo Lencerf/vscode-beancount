@@ -103,6 +103,11 @@ see GitHub [issue page](https://github.com/Lencerf/vscode-beancount/issues)
 
 ## Release Notes
 
+### 0.15.0 (2026-10-26)
+
+- feat(syntax): add query directive syntax highlighting
+  [@slimslickner](https://github.com/Lencerf/vscode-beancount/pull/141)
+
 ### 0.14.0 (2025-10-05)
 
 - fix: path should be relative in include directive
@@ -118,8 +123,3 @@ see GitHub [issue page](https://github.com/Lencerf/vscode-beancount/issues)
 
 - Add Inlay Hints for last legs of transactions with elided amounts
   [@iamkroot](https://github.com/Lencerf/vscode-beancount/pull/69)
-
-### 0.12.0 (2024-09-15)
-
-- Add support for multi-level code outline from headings
-  [@Ev2geny](https://github.com/Lencerf/vscode-beancount/pull/110)

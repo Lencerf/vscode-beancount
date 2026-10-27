@@ -1,5 +1,10 @@
 ## Change Log
 
+### 0.15.0 (2026-10-26)
+
+- feat(syntax): add query directive syntax highlighting
+  [@slimslickner](https://github.com/Lencerf/vscode-beancount/pull/141)
+
 ### 0.14.0 (2025-10-05)
 
 - fix: path should be relative in include directive
