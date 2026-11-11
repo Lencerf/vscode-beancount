@@ -255,6 +255,11 @@ export class Completer
             list.push(...completionItems);
           };
           const list: CompletionItem[] = [];
+          // A transaction with a single string has only a narration, so
+          // narrations are also offered for the first string unless disabled.
+          const narrationAsFirstString = vscode.workspace
+            .getConfiguration("beancount")
+            .get<boolean>("completeNarrationAsFirstString", true);
           if (numQuotes === 1) {
             this.payees.forEach((payee, i, a) => {
               insertItemWithLetters(
@@ -265,7 +270,7 @@ export class Completer
               );
             });
           }
-          if (numQuotes <= 3) {
+          if (numQuotes === 3 || (numQuotes === 1 && narrationAsFirstString)) {
             this.narrations.forEach((narration, i, a) => {
               insertItemWithLetters(
                 list,

@@ -6,6 +6,9 @@
   narration (opt-in via `beancount.completeTransaction`), based on
   [PR #31](https://github.com/Lencerf/vscode-beancount/pull/31) by Mathieu
   Schopfer
+- Add `beancount.completeNarrationAsFirstString` to stop suggesting narrations
+  for the first quoted string of a transaction
+  ([#147](https://github.com/Lencerf/vscode-beancount/issues/147))
 
 ### 0.15.0 (2026-10-26)
 
