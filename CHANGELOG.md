@@ -11,6 +11,8 @@
   ([#147](https://github.com/Lencerf/vscode-beancount/issues/147))
 - Fix payee and narration suggestions being listed twice when no input method
   provides letters for them
+- Fix postings that start with a flag such as `*` being highlighted as errors
+  ([#116](https://github.com/Lencerf/vscode-beancount/issues/116))
 
 ### 0.15.0 (2026-10-26)
 
