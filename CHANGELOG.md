@@ -9,6 +9,8 @@
 - Add `beancount.completeNarrationAsFirstString` to stop suggesting narrations
   for the first quoted string of a transaction
   ([#147](https://github.com/Lencerf/vscode-beancount/issues/147))
+- Fix payee and narration suggestions being listed twice when no input method
+  provides letters for them
 
 ### 0.15.0 (2026-10-26)
 

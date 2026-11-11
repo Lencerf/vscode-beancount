@@ -249,7 +249,6 @@ export class Completer
             if (completionItems.length === 0) {
               const item = new CompletionItem(text, kind);
               item.insertText = text + suffix;
-              list.push(item);
               completionItems.push(item);
             }
             list.push(...completionItems);
