@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  extension:
+    name: Extension (lint, build, test)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 26
+          cache: npm
+      - run: npm ci
+      - name: Build production bundle
+        run: npm run package
+      # `npm test` first runs `pretest` (compile the tests, build with webpack
+      # and lint), then starts VS Code, which needs a display.
+      - name: Lint and test
+        run: xvfb-run -a npm test
+
+  beancheck:
+    name: beancheck.py
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - run: pip install beancount
+      - name: Run beancheck.py on an example ledger
+        run: |
+          bean-example --seed 0 -o "$RUNNER_TEMP/example.beancount"
+          python pythonFiles/beancheck.py "$RUNNER_TEMP/example.beancount" --payeeNarration > "$RUNNER_TEMP/beancheck.out"
+          python - "$RUNNER_TEMP/beancheck.out" <<'EOF'
+          import json
+          import sys
+
+          lines = open(sys.argv[1], encoding="utf-8").read().splitlines()
+          assert len(lines) == 4, f"expected 4 lines of JSON, got {len(lines)}"
+          errors, completions, flagged, automatics = (json.loads(line) for line in lines)
+          assert errors == [], errors
+          for key in ("accounts", "commodities", "payees", "narrations"):
+              assert completions[key], f"no {key} in the output"
+          print(f"ok: {len(completions['accounts'])} accounts, {len(completions['payees'])} payees")
+          EOF
