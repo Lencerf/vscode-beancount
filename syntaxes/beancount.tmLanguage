@@ -1236,9 +1236,9 @@
 		<key>posting</key>
 		<dict>
 			<key>begin</key>
-			<string>^\s+(?=([A-Z\!]))</string>
+			<string>^\s+(?=([A-Z\!]|[*&amp;#?%]\s))</string>
 			<key>end</key>
-			<string>(?=(^\s*$|^\S|^\s*[A-Z]))</string>
+			<string>(?=(^\s*$|^\S|^\s*([A-Z\!]|[*&amp;#?%]\s)))</string>
 			<key>name</key>
 			<string>meta.posting.beancount</string>
 			<key>patterns</key>
