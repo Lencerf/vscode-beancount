@@ -30,6 +30,24 @@ jobs:
       - name: Lint and test
         run: xvfb-run -a npm test
 
+  # Temporary: measurements for issue #123. Remove before merging.
+  perf:
+    name: Key handling measurements (#123)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 26
+          cache: npm
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - run: pip install beancount
+      - run: npm ci
+      - run: npm run compile-tests && npm run compile
+      - run: xvfb-run -a node out/test/perf/runPerf.js
+
   beancheck:
     name: beancheck.py
     runs-on: ubuntu-latest
