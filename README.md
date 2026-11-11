@@ -43,6 +43,11 @@ This extension contributes the following settings:
   BTC) once a decimal point is inserted.
 - `beancount.completePayeeNarration`: Controls whether the auto completion list
   should include payee and narration fields.
+- `beancount.completeNarrationAsFirstString`: Controls whether narrations are
+  suggested, together with payees, for the first quoted string of a
+  transaction. A transaction with a single string has only a narration, so this
+  is enabled by default. Set it to `false` to suggest only payees there;
+  narrations are still suggested for the second string.
 - `beancount.completeTransaction`: Set to `true` to complete whole
   transactions. After typing a date and a flag (e.g. `2024-01-31 * `), type the
   first letters of a payee or narration (or press `Ctrl+Space`) to insert the
