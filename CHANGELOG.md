@@ -13,6 +13,8 @@
   provides letters for them
 - Fix postings that start with a flag such as `*` being highlighted as errors
   ([#116](https://github.com/Lencerf/vscode-beancount/issues/116))
+- Highlight arithmetic expressions in amounts, such as `((40.00/3) + 5) USD`
+  ([#104](https://github.com/Lencerf/vscode-beancount/issues/104))
 
 ### 0.15.0 (2026-10-26)
 
