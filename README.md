@@ -64,6 +64,8 @@ This extension contributes the following settings:
   activated.
 - `beancount.favaPath`: Specify the path of Fava if Fava is not installed in the
   main Python installation.
+- `beancount.favaPort`: Specify the port Fava listens on. Defaults to `5000`;
+  change it if port 5000 is already in use.
 - `beancount.python3Path`: Specify the path of Python if beancount is not
   installed in the main Python installation.
 - `beancount.fixedCJKWidth`: Set to true to treat CJK aka East Asian characters
