@@ -65,6 +65,13 @@
           "default": "fava",
           "description": "Specify the path of Fava if Fava is not installed in the main Python installation."
         },
+        "beancount.favaPort": {
+          "type": "integer",
+          "default": 5000,
+          "minimum": 1,
+          "maximum": 65535,
+          "description": "Specify the port Fava listens on. Change this if port 5000 is already in use."
+        },
         "beancount.python3Path": {
           "type": "string",
           "default": "python3",

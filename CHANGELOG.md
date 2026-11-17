@@ -15,6 +15,8 @@
   ([#116](https://github.com/Lencerf/vscode-beancount/issues/116))
 - Highlight arithmetic expressions in amounts, such as `((40.00/3) + 5) USD`
   ([#104](https://github.com/Lencerf/vscode-beancount/issues/104))
+- Add `beancount.favaPort` so Fava can run on a port other than 5000
+  ([#91](https://github.com/Lencerf/vscode-beancount/issues/91))
 
 ### 0.15.0 (2026-10-26)
 
