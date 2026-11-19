@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import { isAbsolute } from "path";
 import { DocumentLink, Range, TextDocument } from "vscode";
 import { getWorkspaceRootUri } from "./utils";
 
@@ -18,8 +19,12 @@ export default class DocumentLinkProvider implements vscode.DocumentLinkProvider
                 continue;
             }
 
-            // Create link relative to current document's directory
-            const link = new DocumentLink(range, vscode.Uri.joinPath(currentDir, includedFileName));
+            // Beancount resolves relative includes against the including file,
+            // while absolute includes are used as they are.
+            const target = isAbsolute(includedFileName)
+                ? vscode.Uri.file(includedFileName)
+                : vscode.Uri.joinPath(currentDir, includedFileName);
+            const link = new DocumentLink(range, target);
             link.tooltip = "Follow link";
             links.push(link);
         }
